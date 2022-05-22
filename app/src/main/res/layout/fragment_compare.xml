@@ -1,0 +1,678 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".Fragment.CompareFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"
+                android:layout_weight=".1"
+                android:gravity="center"
+                android:src="@drawable/icon_arrow_left" />
+
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="10dp"
+                android:layout_weight=".9"
+                android:fontFamily="@font/roboto"
+                android:gravity="center"
+                android:text="Compare"
+                android:textColor="@color/colorPrimary"
+                android:textSize="18sp" />
+
+
+        </LinearLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+
+                <FrameLayout
+                    android:id="@+id/compare_prod_1_layout"
+                    android:visibility="gone"
+                    tools:visibility="visible"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@color/white">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <LinearLayout
+
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginRight="10dp"
+                                android:orientation="vertical">
+
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical">
+
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="300dp">
+
+                                        <RelativeLayout
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:layout_margin="10dp"
+                                            android:background="@drawable/bg_top_level">
+
+                                            <ImageView
+                                                android:id="@+id/compare_prod_1_img"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="match_parent"
+                                                android:layout_marginStart="5dp"
+                                                android:layout_marginTop="5dp"
+                                                android:layout_marginEnd="5dp"
+                                                android:layout_marginBottom="5dp"
+                                                tools:src="@drawable/top_deal_whashing" />
+                                        </RelativeLayout>
+
+                                    </LinearLayout>
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:layout_marginLeft="10dp"
+                                        android:layout_marginRight="10dp"
+                                        android:layout_weight="1"
+                                        android:gravity="center|left"
+                                        android:orientation="vertical">
+
+
+                                        <TextView
+                                            android:id="@+id/compare_prod_1_name_txt"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:fontFamily="@font/roboto_medium"
+                                            tools:text="KIMATSU AIR COOLER Model: D-60"
+                                            android:textColor="@color/black"
+                                            android:textSize="13sp" />
+
+
+                                        <TextView
+                                            android:id="@+id/compare_prod_1_price_txt"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginTop="10dp"
+                                            android:fontFamily="@font/roboto_medium"
+                                            tools:text="KD 500"
+                                            android:textColor="@color/colorPrimary"
+                                            android:textSize="15sp" />
+
+
+                                        <TableRow
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginTop="10dp">
+
+                                            <TextView
+                                                style="@style/table_textview_2"
+                                                android:text="Availability" />
+
+                                            <TextView
+                                                android:id="@+id/compare_prod_1_stock_txt"
+                                                style="@style/table_textview_value_2"
+                                                android:layout_weight="1"
+                                                tools:text="In Stock"
+                                                android:textColor="#2CA216" />
+
+                                        </TableRow>
+
+
+                                        <TableRow
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginTop="10dp">
+
+                                            <TextView
+                                                style="@style/table_textview_2"
+                                                android:text="Installation Charge" />
+
+                                            <TextView
+                                                android:id="@+id/compare_prod_1_charge_txt"
+                                                style="@style/table_textview_value_2"
+                                                android:layout_weight="1"
+                                                tools:text="10"
+                                                android:textColor="#2CA216" />
+
+                                        </TableRow>
+
+                                        <TableRow
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginTop="10dp">
+
+                                            <TextView
+                                                style="@style/table_textview_2"
+                                                android:text="Hand Over" />
+
+                                            <TextView
+                                                android:id="@+id/compare_prod_1_delivery_txt"
+                                                style="@style/table_textview_value_2"
+                                                android:layout_weight="1"
+                                                tools:text="delivery or pickup"
+                                                android:textColor="#2CA216" />
+
+                                        </TableRow>
+
+
+                                        <LinearLayout
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:orientation="vertical">
+
+
+                                            <TextView
+                                                style="@style/table_textview_value"
+
+                                                android:text="Description" />
+
+
+                                            <TextView
+                                                android:id="@+id/compare_prod_1_description_txt"
+                                                style="@style/multilined_description_textview"
+                                                android:text="Display Type: LED SMART TV Panel" />
+
+                                            <Button
+                                                android:id="@+id/compare_prod_1_add_cart_btn"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="35dp"
+                                                android:layout_marginTop="10dp"
+                                                android:background="@drawable/bg_buttom_primarycolour"
+                                                android:fontFamily="@font/roboto"
+                                                android:text="Add to cart"
+                                                android:textAllCaps="false"
+                                                android:textSize="12sp"
+                                                app:backgroundTint="@null" />
+
+
+                                            <Button
+                                                android:id="@+id/compare_prod_1_buy_now_btn"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="35dp"
+                                                android:layout_marginTop="10dp"
+                                                android:background="@drawable/bg_buttom_yellow"
+                                                android:fontFamily="@font/roboto"
+                                                android:text="Buy now"
+                                                android:layout_marginBottom="10dp"
+                                                android:textAllCaps="false"
+                                                android:textSize="12sp"
+                                                app:backgroundTint="@null" />
+                                        </LinearLayout>
+
+                                    </LinearLayout>
+
+                                </LinearLayout>
+
+
+                            </LinearLayout>
+
+
+                        </LinearLayout>
+
+
+                    </RelativeLayout>
+
+                </FrameLayout>
+
+
+                <FrameLayout
+                    android:id="@+id/compare_prod_2_layout"
+                    android:visibility="gone"
+                    tools:visibility="visible"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@color/white">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <LinearLayout
+
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginRight="10dp"
+                                android:orientation="vertical">
+
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical">
+
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="300dp">
+
+                                        <RelativeLayout
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:layout_margin="10dp"
+                                            android:background="@drawable/bg_top_level">
+
+                                            <ImageView
+                                                android:id="@+id/compare_prod_2_img"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="match_parent"
+                                                android:layout_marginStart="5dp"
+                                                android:layout_marginTop="5dp"
+                                                android:layout_marginEnd="5dp"
+                                                android:layout_marginBottom="5dp"
+                                                tools:src="@drawable/top_deal_whashing" />
+                                        </RelativeLayout>
+
+                                    </LinearLayout>
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:layout_marginLeft="10dp"
+                                        android:layout_marginRight="10dp"
+                                        android:layout_weight="1"
+                                        android:gravity="center|left"
+                                        android:orientation="vertical">
+
+
+                                        <TextView
+                                            android:id="@+id/compare_prod_2_name_txt"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:fontFamily="@font/roboto_medium"
+                                            tools:text="KIMATSU AIR COOLER Model: D-60"
+                                            android:textColor="@color/black"
+                                            android:textSize="13sp" />
+
+
+                                        <TextView
+                                            android:id="@+id/compare_prod_2_price_txt"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginTop="10dp"
+                                            android:fontFamily="@font/roboto_medium"
+                                            tools:text="KD 500"
+                                            android:textColor="@color/colorPrimary"
+                                            android:textSize="15sp" />
+
+
+                                        <TableRow
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginTop="10dp">
+
+                                            <TextView
+                                                style="@style/table_textview_2"
+                                                android:text="Availability" />
+
+                                            <TextView
+                                                android:id="@+id/compare_prod_2_stock_txt"
+                                                style="@style/table_textview_value_2"
+                                                android:layout_weight="1"
+                                                tools:text="In Stock"
+                                                android:textColor="#2CA216" />
+
+                                        </TableRow>
+
+
+                                        <TableRow
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginTop="10dp">
+
+                                            <TextView
+                                                style="@style/table_textview_2"
+                                                android:text="Installation Charge" />
+
+                                            <TextView
+                                                android:id="@+id/compare_prod_2_charge_txt"
+                                                style="@style/table_textview_value_2"
+                                                android:layout_weight="1"
+                                                tools:text="10"
+                                                android:textColor="#2CA216" />
+
+                                        </TableRow>
+
+                                        <TableRow
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginTop="10dp">
+
+                                            <TextView
+                                                style="@style/table_textview_2"
+                                                android:text="Hand Over" />
+
+                                            <TextView
+                                                android:id="@+id/compare_prod_2_delivery_txt"
+                                                style="@style/table_textview_value_2"
+                                                android:layout_weight="1"
+                                                tools:text="delivery or pickup"
+                                                android:textColor="#2CA216" />
+
+                                        </TableRow>
+
+
+                                        <LinearLayout
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:orientation="vertical">
+
+
+                                            <TextView
+                                                style="@style/table_textview_value"
+
+                                                android:text="Description" />
+
+
+                                            <TextView
+                                                android:id="@+id/compare_prod_2_description_txt"
+                                                style="@style/multilined_description_textview"
+                                                android:text="Display Type: LED SMART TV Panel" />
+
+                                            <Button
+                                                android:id="@+id/compare_prod_2_add_cart_btn"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="35dp"
+                                                android:layout_marginTop="10dp"
+                                                android:background="@drawable/bg_buttom_primarycolour"
+                                                android:fontFamily="@font/roboto"
+                                                android:text="Add to cart"
+                                                android:textAllCaps="false"
+                                                android:textSize="12sp"
+                                                app:backgroundTint="@null" />
+
+
+                                            <Button
+                                                android:id="@+id/compare_prod_2_buy_now_btn"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="35dp"
+                                                android:layout_marginTop="10dp"
+                                                android:background="@drawable/bg_buttom_yellow"
+                                                android:fontFamily="@font/roboto"
+                                                android:text="Buy now"
+                                                android:layout_marginBottom="10dp"
+                                                android:textAllCaps="false"
+                                                android:textSize="12sp"
+                                                app:backgroundTint="@null" />
+                                        </LinearLayout>
+
+                                    </LinearLayout>
+
+                                </LinearLayout>
+
+
+                            </LinearLayout>
+
+
+                        </LinearLayout>
+
+
+                    </RelativeLayout>
+
+                </FrameLayout>
+
+
+                <!--<FrameLayout
+                    android:id="@+id/compare_prod_2_layout"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@color/white">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <LinearLayout
+
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginRight="10dp"
+                                android:orientation="vertical">
+
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical">
+
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="300dp">
+
+                                        <RelativeLayout
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:layout_margin="10dp"
+                                            android:background="@drawable/bg_top_level">
+
+                                            <ImageView
+
+                                                android:layout_width="match_parent"
+                                                android:layout_height="match_parent"
+                                                android:layout_marginStart="5dp"
+                                                android:layout_marginTop="5dp"
+                                                android:layout_marginEnd="5dp"
+                                                android:layout_marginBottom="5dp"
+
+                                                android:src="@drawable/top_deal_whashing" />
+                                        </RelativeLayout>
+
+                                    </LinearLayout>
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:layout_marginLeft="10dp"
+                                        android:layout_marginRight="10dp"
+                                        android:layout_weight="1"
+                                        android:gravity="center|left"
+                                        android:orientation="vertical">
+
+
+                                        <TextView
+
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:fontFamily="@font/roboto_medium"
+                                            android:text="KIMATSU AIR COOLER Model: D-60"
+                                            android:textColor="@color/black"
+                                            android:textSize="13sp" />
+
+
+                                        <TextView
+
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginTop="10dp"
+                                            android:fontFamily="@font/roboto_medium"
+                                            android:text="KD 500"
+                                            android:textColor="@color/colorPrimary"
+                                            android:textSize="15sp" />
+
+
+                                        <TableRow
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginTop="10dp">
+
+                                            <TextView
+                                                style="@style/table_textview"
+                                                android:text="Availability" />
+
+                                            <TextView
+
+                                                style="@style/table_textview_value"
+                                                android:text="In Stock"
+                                                android:textColor="#2CA216" />
+
+                                        </TableRow>
+
+
+                                        <TableRow
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginTop="10dp">
+
+                                            <TextView
+                                                style="@style/table_textview"
+                                                android:text="Installation Charge" />
+
+                                            <TextView
+
+                                                style="@style/table_textview_value"
+                                                android:text="10"
+                                                android:textColor="#2CA216" />
+
+                                        </TableRow>
+
+                                        <TableRow
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginTop="10dp">
+
+                                            <TextView
+                                                style="@style/table_textview"
+                                                android:text="Hand Over" />
+
+                                            <TextView
+
+                                                style="@style/table_textview_value"
+                                                android:text="delivery or pickup"
+                                                android:textColor="#2CA216" />
+
+                                        </TableRow>
+
+
+                                        <LinearLayout
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:orientation="vertical">
+
+
+                                            <TextView
+                                                style="@style/table_textview_value"
+
+                                                android:text="Description" />
+
+
+                                            <TextView
+                                                style="@style/description_textview"
+                                                android:text="Display Type: LED SMART TV Panel" />
+
+                                            <TextView
+                                                style="@style/description_textview"
+                                                android:text="Size: 75 INCH 4K UHD" />
+
+                                            <TextView
+                                                style="@style/description_textview"
+                                                android:text="Resolution: 3840*2160 " />
+
+                                            <TextView
+                                                style="@style/description_textview"
+                                                android:text="Aspect Ratio: 16:9" />
+
+                                            <Button
+                                                android:layout_width="match_parent"
+                                                android:layout_height="35dp"
+                                                android:layout_marginTop="10dp"
+                                                android:background="@drawable/bg_buttom_primarycolour"
+                                                android:fontFamily="@font/roboto"
+                                                android:text="Add to cart"
+                                                android:textAllCaps="false"
+                                                android:textSize="12sp"
+                                                app:backgroundTint="@null" />
+
+
+                                            <Button
+                                                android:layout_width="match_parent"
+                                                android:layout_height="35dp"
+                                                android:layout_marginTop="10dp"
+                                                android:background="@drawable/bg_buttom_yellow"
+                                                android:fontFamily="@font/roboto"
+                                                android:text="Buy now"
+                                                android:layout_marginBottom="10dp"
+                                                android:textAllCaps="false"
+                                                android:textSize="12sp"
+                                                app:backgroundTint="@null" />
+                                        </LinearLayout>
+
+                                    </LinearLayout>
+
+                                </LinearLayout>
+
+
+                            </LinearLayout>
+
+
+                        </LinearLayout>
+
+
+                    </RelativeLayout>
+
+                </FrameLayout>-->
+
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+
+    </LinearLayout>
+
+</layout>

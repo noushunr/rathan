@@ -1,0 +1,312 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bottom_sheet"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    app:behavior_hideable="true"
+    app:behavior_peekHeight="35dp"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+
+    <com.google.android.material.card.MaterialCardView
+
+        style="@style/CustomCardViewStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        app:cardElevation="15dp">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:orientation="vertical">
+
+
+            <View
+
+                android:layout_width="80dp"
+                android:layout_height="10dp"
+                android:layout_gravity="center|top"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/bg_botom_sheet_slide_icon" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+
+                <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+
+                    android:stretchColumns="0,2">
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            style="@style/table_textview"
+                            android:text="Sub total" />
+
+                        <TextView
+                            android:id="@+id/cartTotalTxt"
+                            style="@style/table_textview_value"/>
+
+                    </TableRow>
+
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            style="@style/table_textview"
+                            android:text="Installation charge" />
+
+                        <TextView
+                            android:id="@+id/cartInstallationTxt"
+                            style="@style/table_textview_value" />
+
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            style="@style/table_textview"
+                            android:text="Delivery Charge" />
+
+                        <TextView
+                            android:id="@+id/cartDelivaryChargeTxt"
+                            style="@style/table_textview_value" />
+
+                    </TableRow>
+
+
+                </TableLayout>
+
+
+            </LinearLayout>
+
+
+            <View
+                android:id="@+id/view3"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:background="#FFC1BABA" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:gravity="center"
+                android:visibility="gone"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                android:weightSum="1">
+
+
+                <EditText
+
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight=".7"
+                    android:background="@drawable/bg_search_box"
+                    android:fontFamily="@font/roboto_medium"
+                    android:hint="Coupon Code"
+                    android:imeOptions="actionDone"
+                    android:inputType="textCapSentences"
+                    android:maxLines="1"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="5dp"
+                    android:textColor="#000"
+                    android:textSize="13sp" />
+
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight=".3"
+                    android:background="@drawable/bg_offer_float_soldout"
+                    android:fontFamily="@font/roboto_medium"
+                    android:gravity="center"
+                    android:text="Apply"
+                    android:textAllCaps="false"
+                    android:textColor="#fff"
+                    android:textSize="12dp" />
+
+            </LinearLayout>
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="?actionBarSize"
+                android:layout_marginTop="20dp"
+                android:id="@+id/ll_coupon_code_fld"
+                android:layout_marginBottom="20dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/bg_offer"
+                android:gravity="center">
+
+
+                <EditText
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight=".8"
+                    android:fontFamily="@font/roboto_medium"
+                    android:hint="Enter Coupon Code"
+                    android:imeOptions="actionDone"
+                    android:inputType="textCapSentences"
+                    android:maxLines="1"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp"
+                    android:textColor="#000"
+                    android:background="@null"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_weight=".2"
+                    android:gravity="center"
+                    android:layout_height="35dp"
+                    android:fontFamily="@font/roboto_medium"
+                    android:text="APPLY"
+                    android:textColor="@color/black"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+
+
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center|left"
+                android:orientation="vertical">
+
+
+
+
+
+                <RadioGroup
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:weightSum="1"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center|left"
+                    android:id="@+id/radioGroup">
+
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:text="Pickup"
+                        android:id="@+id/radioButtonpickup"
+                        android:gravity="center|left"
+                        android:checked="true"
+                        android:textSize="15dp" />
+
+
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:text="Home delivery"
+                        android:gravity="center|left"
+                        android:id="@+id/radioButtonhomedelivery"
+                        android:checked="false"
+                        android:textSize="15dp"
+                        />
+                </RadioGroup>
+
+
+
+
+
+
+
+
+            </LinearLayout>
+
+
+
+
+            <View
+
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:background="#FFC1BABA" />
+
+            <LinearLayout
+                android:id="@+id/linearLayout2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                android:weightSum="1">
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        style="@style/table_textview"
+                        android:text="TOTAL" />
+
+                    <TextView
+                        android:id="@+id/cartAllTotaltxt"
+                        style="@style/table_textview_value"/>
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:gravity="center|right">
+
+                    <Button
+                        android:id="@+id/btn_checkout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/bg_bottom_nav"
+                        android:fontFamily="@font/roboto_medium"
+                        android:gravity="center"
+                        android:text="CHECKOUT"
+                        android:textAllCaps="false"
+                        android:textColor="#fff"
+                        android:textSize="16dp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</LinearLayout>

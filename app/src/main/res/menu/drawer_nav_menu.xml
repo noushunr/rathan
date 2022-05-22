@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/back"
+        android:title=""
+        android:icon="@drawable/icon_arrow_left"/>
+
+    <item
+        android:id="@+id/all_Category"
+        android:title="All Category"
+        android:icon="@drawable/icon_edit_profile"/>
+    <item
+        android:id="@+id/store_locator"
+        android:title="Store Locator"
+        android:icon="@drawable/icon_address"/>
+    <item
+        android:id="@+id/deals_and_offer"
+        android:title="Deals &amp; Offer"
+        android:icon="@drawable/icon_deals_offer"/>
+
+    <item
+        android:id="@+id/bundle_offer"
+        android:title="Bundle Offers"
+        android:icon="@drawable/icon_bundle_offer"/>
+    <item
+        android:id="@+id/contact_us"
+        android:title="Contact Us"
+        android:icon="@drawable/icon_contac_us"/>
+
+    <item
+        android:id="@+id/installment_payment"
+        android:title="Installment payment"
+        android:icon="@drawable/icon_installment_payment"/>
+
+
+    <item
+        android:id="@+id/my_wishlist"
+        android:title="My Wishlist"
+        android:icon="@drawable/icon_wishlist"/>
+
+    <item
+        android:id="@+id/language"
+        android:title="Language"
+        android:icon="@drawable/icon_language"/>
+    <item
+        android:id="@+id/terms_condition"
+        android:title="Terms &amp; Conditions"
+        android:icon="@drawable/icon_star"/>
+
+    <item
+        android:id="@+id/return_policy"
+        android:title="Return Policy"
+        android:icon="@drawable/icon_star"/>
+
+</menu>

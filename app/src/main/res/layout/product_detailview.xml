@@ -1,0 +1,317 @@
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinatorLayout_home"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                >
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/top_deal"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginEnd="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:src="@drawable/top_deal_whashing" />
+
+
+                    <LinearLayout
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginBottom="20dp"
+                        android:background="@drawable/bg_circle_primery_colour"
+                        android:gravity="center">
+
+                        <ImageView
+                            android:id="@+id/button"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/fav_icon_black" />
+
+                    </LinearLayout>
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:gravity="center|left"
+                android:orientation="vertical">
+
+
+                <TextView
+                    android:id="@+id/top_deal_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_medium"
+                    android:text="KIMATSU AIR COOLER Model: D-60"
+                    android:textColor="@color/black"
+                    android:textSize="20sp" />
+
+                <View
+
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="#FFC1BABA" />
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        style="@style/table_textview"
+                        android:text="Sku" />
+
+                    <TextView
+
+                        style="@style/table_textview_value"
+                        android:text="0250005" />
+
+                </TableRow>
+
+                <View
+
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="#FFC1BABA" />
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        style="@style/table_textview"
+                        android:text="Availability" />
+
+                    <TextView
+
+                        style="@style/table_textview_value"
+                        android:text="In Stock"
+                        android:textColor="#2CA216" />
+
+                </TableRow>
+
+                <View
+
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="#FFC1BABA" />
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        style="@style/table_textview"
+                        android:text="By Brand" />
+
+                    <ImageView
+
+                        style="@style/table_textview_value"
+                        android:layout_width="50dp"
+                        android:src="@drawable/icon_brand"
+                        android:text="In Stock" />
+
+                </TableRow>
+
+
+                <View
+
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="#FFC1BABA" />
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/table_textview"
+                        android:text="Handover: Delivery and Store Pickup" />
+
+                    <TextView
+                        style="@style/table_textview"
+                        android:text="Handover: Delivery and Store Pickup" />
+
+                    <TextView
+                        style="@style/table_textview"
+                        android:text="Installation Charge: 0.000" />
+
+
+                    <TextView
+                        style="@style/table_textview_value"
+
+                        android:text="Description" />
+
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto"
+                        android:text="Display Type: LED SMART TV Panel \nSize: 75 INCH 4K UHD Resolution: 3840*2160 \nAspect Ratio: 16:9 \nContrast Ratio: 1:1200 \nHDMI Ports: 3 USB Ports: 2"
+                        android:textColor="@color/black"
+                        android:textSize="15dp" />
+
+
+                    <TextView
+                        style="@style/table_textview_value"
+                        android:layout_marginTop="20dp"
+                        android:text="Related products"
+                        android:textSize="16sp" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recy_realated_product"
+                        android:layout_marginTop="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight=".5"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/table_textview"
+                    android:text="Quantity: " />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:background="#FFC1BABA"
+                    android:orientation="horizontal"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/cart_decrement"
+                        android:layout_width="30dp"
+                        android:layout_height="match_parent"
+
+                        android:textSize="25sp"
+                        android:textColor="#000000"
+                        android:text="—"
+                        android:gravity="center"
+                        android:clickable="true"
+                        android:focusable="true"/>
+
+                    <TextView
+                        android:id="@+id/cart_qty"
+                        android:layout_width="40dp"
+                        android:layout_height="match_parent"
+                        android:text="0"
+                        android:textSize="12sp"
+                        android:gravity="center"
+                        android:textColor="@android:color/black" />
+
+                    <TextView
+                        android:id="@+id/cart_increment"
+                        android:layout_width="30dp"
+                        android:layout_height="match_parent"
+                        android:padding="0dp"
+                        android:textSize="25sp"
+                        android:textColor="@android:color/black"
+                        android:text="+"
+                        android:gravity="center"
+                        android:clickable="true"
+                        android:focusable="true"/>
+
+                </LinearLayout>
+
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight=".5"
+                android:paddingRight="10dp"
+                android:orientation="vertical"
+                android:gravity="center|right">
+
+                <TextView
+
+                    style="@style/table_textview_value"
+                   android:layout_gravity="center|right"
+                    android:textSize="20dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorPrimary"
+                    android:text="KD 3950" />
+
+                <Button
+                    android:id="@+id/btn_continue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:background="@drawable/bg_bottom_nav"
+                    android:fontFamily="@font/roboto_medium"
+                    android:gravity="center|right"
+                    android:text="Continue"
+                    android:textAllCaps="false"
+                    android:textColor="#fff"
+                    android:textSize="16dp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </RelativeLayout>
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

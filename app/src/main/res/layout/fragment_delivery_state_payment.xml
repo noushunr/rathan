@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinatorLayout_home"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                android:orientation="vertical">
+
+                <com.kofigyan.stateprogressbar.StateProgressBar
+                    android:id="@+id/state_progress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:spb_animationDuration="1000"
+                    app:spb_currentStateDescriptionColor="@color/black"
+                    app:spb_currentStateNumber="three"
+                    app:spb_descriptionTopSpaceIncrementer="10dp"
+                    app:spb_maxStateNumber="three"
+                    app:spb_stateBackgroundColor="#FBFBFB"
+                    app:spb_stateDescriptionColor="@color/black"
+                    app:spb_stateForegroundColor="@color/colorPrimary"
+                    app:spb_stateNumberBackgroundColor="#808080"
+                    app:spb_stateNumberForegroundColor="#eeeeee"
+
+                    />
+
+            </LinearLayout>
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_marginTop="10dp"
+                android:gravity="center">
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    app:cardCornerRadius="5dp"
+                    app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:background="#F3F3F3"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="1"
+                        android:gravity="center|top"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_marginTop="5dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/roboto_bold"
+                                android:text="username"
+                                android:gravity="center|left"
+                                android:layout_marginBottom="5dp"
+                                android:textColor="@color/black"
+                                android:textSize="15sp" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/roboto"
+                                android:layout_marginTop="5dp"
+                                android:text="5th Floor, abcon atruum"
+                                android:textColor="@color/black"
+                                android:textSize="14sp" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/roboto"
+                                android:text="Ahmed Al sharq, Kuwait"
+                                android:textColor="@color/black"
+                                android:textSize="14sp" />
+
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="10dp"
+                                android:fontFamily="@font/roboto"
+                                android:text="Mob: +965 123 4569"
+                                android:textColor="@color/black"
+                                android:textSize="14sp" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/roboto"
+                                android:text="E-mail: info@gmail.com"
+                                android:textColor="@color/black"
+                                android:textSize="14sp" />
+
+
+                        </LinearLayout>
+                    </LinearLayout>
+
+
+
+
+                </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+            </LinearLayout>
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="?actionBarSize"
+                android:layout_marginTop="10dp"
+                android:background="#FAEFE9"
+                android:orientation="horizontal"
+                android:weightSum="2">
+              <LinearLayout
+                  android:layout_width="0dp"
+                  android:layout_weight="1.5"
+                  android:gravity="center|left"
+                  android:orientation="vertical"
+                  android:paddingStart="20dp"
+                  android:layout_height="match_parent">
+
+                  <TextView
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:fontFamily="@font/roboto"
+                      android:gravity="center|start"
+                      android:text="Pay Using Royalty Coin"
+                      android:textColor="@color/black"
+                      android:textSize="14sp" />
+
+                  <LinearLayout
+                      android:layout_width="match_parent"
+                      android:gravity="center|left"
+                      android:orientation="horizontal"
+                      android:layout_height="wrap_content">
+
+                      <TextView
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:fontFamily="@font/roboto"
+                          android:gravity="center|start"
+                          android:text="Balance   "
+                          android:textColor="@color/black"
+                          android:textSize="14sp" />
+                      <TextView
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:fontFamily="@font/roboto"
+                          android:gravity="center|start"
+                          app:drawableStartCompat="@drawable/icon_coin_small"
+                          android:text="100"
+                          android:textColor="@color/black"
+                          android:textSize="14sp" />
+
+                  </LinearLayout>
+
+
+
+
+
+              </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight=".5"
+                    android:gravity="center"
+                    android:layout_height="match_parent">
+                <Switch
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    tools:ignore="UseSwitchCompatOrMaterialXml" />
+                </LinearLayout>
+            </LinearLayout>
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="?actionBarSize"
+                android:layout_marginTop="10dp"
+                android:background="#E5F6F9"
+                android:orientation="horizontal"
+                android:weightSum="2">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1.5"
+                    android:gravity="center|left"
+                    android:orientation="vertical"
+                    android:paddingStart="20dp"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto"
+                        android:gravity="center|start"
+                        android:text="Pay Using Wallet"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:gravity="center|left"
+                        android:orientation="horizontal"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/roboto"
+                            android:gravity="center|start"
+                            android:text="Balance   "
+                            android:textColor="@color/black"
+                            android:textSize="14sp" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/roboto"
+                            android:gravity="center|start"
+                            app:drawableStartCompat="@drawable/icon_coin_small"
+                            android:text="100"
+                            android:textColor="@color/black"
+                            android:textSize="14sp" />
+
+                    </LinearLayout>
+
+
+
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight=".5"
+                    android:gravity="center"
+                    android:layout_height="match_parent">
+                    <Switch
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        tools:ignore="UseSwitchCompatOrMaterialXml" />
+                </LinearLayout>
+            </LinearLayout>
+
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:gravity="center|left"
+                android:layout_marginTop="10dp"
+                android:paddingStart="20dp"
+                android:orientation="horizontal"
+                android:layout_height="?actionBarSize">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:gravity="center|start"
+                    android:src="@drawable/green_tick" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_medium"
+                    android:gravity="center|start"
+                    android:text="KNET"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+
+
+
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:gravity="center|start"
+                    android:src="@drawable/icon_knet_payment" />
+
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+
+
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_weight=".5"
+                android:orientation="vertical"
+                android:paddingLeft="10dp">
+
+                <TextView
+                    style="@style/table_textview"
+                    android:text="Total" />
+
+                <TextView
+
+                    style="@style/table_textview_value"
+                    android:text="KD 3950" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight=".5"
+                android:gravity="center">
+
+                <Button
+                    android:id="@+id/btn_continue"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/bg_bottom_nav"
+                    android:fontFamily="@font/roboto_medium"
+                    android:gravity="center"
+                    android:text="Continue"
+                    android:textAllCaps="false"
+                    android:textColor="#fff"
+                    android:textSize="16dp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+

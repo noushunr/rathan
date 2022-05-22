@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:gravity="center"
+    android:id="@+id/ll_pickupstore"
+    android:layout_marginTop="10dp"
+    android:background="@drawable/bg_location_list_alert"
+    android:orientation="horizontal"
+    android:weightSum="2">
+
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1.4"
+        android:gravity="center|left"
+        android:paddingLeft="10dp"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:id="@+id/txt_store_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto_bold"
+            android:text="Jaha store"
+            android:textColor="#6A6868"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/txt_store_add"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/roboto"
+            android:text="Souq Al Quaisariya ,Al Jahra"
+            android:textColor="@color/black"
+            android:textSize="13sp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/roboto"
+            android:text="View location"
+            android:drawablePadding="5dp"
+            android:drawableStart="@drawable/ic_place"
+            android:textColor="@color/colorPrimary"
+            android:textSize="13sp" />
+
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight=".6"
+        android:gravity="right|top">
+
+
+        <LinearLayout
+            android:id="@+id/imageLayout"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/radio_icon"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+
+</LinearLayout>

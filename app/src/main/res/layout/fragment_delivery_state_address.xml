@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinatorLayout_home"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                android:orientation="vertical">
+
+                <com.kofigyan.stateprogressbar.StateProgressBar
+                    android:id="@+id/state_progress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:spb_animationDuration="1000"
+                    app:spb_currentStateDescriptionColor="@color/black"
+                    app:spb_currentStateNumber="one"
+                    app:spb_descriptionTopSpaceIncrementer="10dp"
+                    app:spb_maxStateNumber="three"
+                    app:spb_stateBackgroundColor="#FBFBFB"
+                    app:spb_stateDescriptionColor="@color/black"
+                    app:spb_stateForegroundColor="@color/colorPrimary"
+                    app:spb_stateNumberBackgroundColor="#808080"
+                    app:spb_stateNumberForegroundColor="#eeeeee"
+
+                    />
+
+            </LinearLayout>
+
+            <include
+                layout="@layout/adress_list_single_item"
+                android:layout_marginTop="50dp"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"/>
+            <!--        <androidx.recyclerview.widget.RecyclerView-->
+            <!--            android:id="@+id/recycler_address"-->
+            <!--            android:layout_width="match_parent"-->
+            <!--            android:layout_marginTop="20dp"-->
+            <!--            android:layout_marginLeft="5dp"-->
+            <!--            android:layout_marginRight="5dp"-->
+            <!--            tools:itemCount="1"-->
+            <!--            tools:listitem="@layout/adress_list_single_item"-->
+            <!--            android:layout_height="match_parent" />-->
+
+        </LinearLayout>
+
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/flot_add_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="30dp"
+            android:layout_marginBottom="120dp"
+            android:background="#FA4248"
+            android:padding="0dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/plus_icon"
+            app:borderWidth="0dp"
+            app:useCompatPadding="true" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_weight=".5"
+                android:orientation="vertical"
+                android:paddingLeft="10dp">
+
+                <TextView
+                    style="@style/table_textview"
+                    android:text="Total" />
+
+                <TextView
+
+                    style="@style/table_textview_value"
+                    android:text="KD 3950" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight=".5"
+                android:gravity="center">
+
+                <Button
+                    android:id="@+id/btn_continue"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/bg_bottom_nav"
+                    android:fontFamily="@font/roboto_medium"
+                    android:gravity="center"
+                    android:text="Continue"
+                    android:textAllCaps="false"
+                    android:textColor="#fff"
+                    android:textSize="16dp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+

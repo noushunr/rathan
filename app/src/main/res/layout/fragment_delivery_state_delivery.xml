@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinatorLayout_home"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                android:orientation="vertical">
+
+                <com.kofigyan.stateprogressbar.StateProgressBar
+                    android:id="@+id/state_progress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:spb_currentStateDescriptionColor="@color/black"
+                    app:spb_currentStateNumber="two"
+                    app:spb_descriptionTopSpaceIncrementer="10dp"
+                    app:spb_maxStateNumber="three"
+
+                    app:spb_animationDuration="2000"
+                    app:spb_stateBackgroundColor="#FBFBFB"
+                    app:spb_stateDescriptionColor="@color/black"
+                    app:spb_stateForegroundColor="@color/colorPrimary"
+                    app:spb_stateNumberBackgroundColor="#808080"
+                    app:spb_stateNumberForegroundColor="#eeeeee"
+
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="50dp"
+                android:layout_marginRight="10dp"
+                android:gravity="center|left"
+
+                android:orientation="vertical">
+
+
+                <RadioGroup
+                    android:id="@+id/day_radioGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center|left"
+                    android:weightSum="1">
+
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:checked="true"
+
+
+                        android:gravity="center|left"
+                        android:text="Same Day"
+                        android:textSize="15dp" />
+
+
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:layout_marginTop="20dp"
+                        android:checked="false"
+                        android:gravity="center|left"
+
+                        android:text="Next Day"
+                        android:textSize="15dp" />
+
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:layout_marginTop="20dp"
+                        android:checked="false"
+                        android:gravity="center|left"
+
+                        android:text="Choose date"
+                        android:textSize="15dp" />
+                </RadioGroup>
+
+
+                <TextView
+                    style="@style/table_textview"
+                    android:layout_marginTop="20dp"
+                    android:text="Prefered Delivery Time"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="15dp" />
+
+
+                <RadioGroup
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center|left"
+                    android:weightSum="1">
+
+
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:layout_marginTop="20dp"
+                        android:checked="true"
+                        android:gravity="center|left"
+
+                        android:text="Morning"
+                        android:textSize="15dp" />
+
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:layout_marginTop="20dp"
+                        android:checked="false"
+                        android:gravity="center|left"
+
+                        android:text="Evening"
+                        android:textSize="15dp" />
+                </RadioGroup>
+
+
+            </LinearLayout>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="20dp"
+                android:paddingLeft="10dp"
+                android:background="@drawable/bg_offer"
+                android:hint="Order Notes(Optional)"
+                android:layout_marginRight="10dp" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_weight=".5"
+                android:paddingLeft="10dp"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/table_textview"
+                    android:text="Total" />
+
+                <TextView
+
+                    style="@style/table_textview_value"
+                    android:text="KD 3950" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight=".5"
+                android:gravity="center">
+
+                <Button
+                    android:id="@+id/btn_continue"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+
+                   android:layout_marginRight="10dp"
+                    android:background="@drawable/bg_bottom_nav"
+                    android:fontFamily="@font/roboto_medium"
+                    android:gravity="center"
+                    android:text="Continue"
+                    android:textAllCaps="false"
+                    android:textColor="#fff"
+                    android:textSize="16dp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

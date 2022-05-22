@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+
+    android:background="@android:color/transparent"
+    android:orientation="vertical">
+
+    <com.google.android.material.card.MaterialCardView
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="5dp"
+        app:cardCornerRadius="10dp">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:gravity="center|top"
+            android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="20dp"
+        android:fontFamily="@font/roboto_bold"
+        android:gravity="center"
+        android:text="Pickup will be available with in 12 hours of \n placing an order"
+        android:textColor="@color/colorPrimary"
+        android:textSize="18sp" />
+
+    <View
+
+        android:layout_width="match_parent"
+        android:layout_height=".5dp"
+        android:layout_gravity="center|top"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="15dp"
+        android:background="#6A6868" />
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:id="@+id/recy_pickup_storelist"
+                android:layout_height="match_parent"
+
+                />
+
+
+
+
+
+
+    <View
+
+        android:layout_width="match_parent"
+        android:layout_height="100dp" />
+
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+</LinearLayout>

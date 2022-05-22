@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:weightSum="3"
+    android:gravity="center"
+    android:layout_marginBottom="10dp"
+    android:layout_marginLeft="10dp"
+    android:orientation="horizontal"
+    android:layout_height="120dp">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_wishlist_item"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+
+                android:src="@drawable/img_backpack" />
+
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="1.2"
+        android:gravity="center|left"
+        android:orientation="vertical"
+        android:paddingLeft="10dp"
+        android:layout_height="match_parent">
+
+
+        <TextView
+            android:id="@+id/nameTxt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto_medium"
+            android:text="Smart Back Pack"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            android:ellipsize="end"
+            android:maxLines="2"/>
+        <TextView
+            android:id="@+id/priceTxt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#00C569"
+            android:textSize="15sp"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/roboto"
+            android:text="KD 200"/>
+
+
+        <Button
+            android:id="@+id/addToCartBtn"
+            android:layout_width="wrap_content"
+            android:textAllCaps="false"
+            android:layout_marginTop="10dp"
+           android:fontFamily="@font/roboto"
+            android:textSize="12sp"
+            android:gravity="center|left"
+            app:backgroundTint="@null"
+            app:icon="@drawable/icon_cart_white"
+            android:background="@drawable/bg_buttom_green"
+            android:layout_height="35dp"
+            android:text="Add to cart"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight=".8"
+        android:gravity="center|right"
+        android:layout_height="match_parent">
+
+
+        <LinearLayout
+            android:layout_width="40dp"
+            android:gravity="center"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/bg_circle_primery_colour"
+            android:layout_height="40dp">
+        <ImageView
+            android:id="@+id/deleteBtn"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/icon_delete"/>
+
+
+    </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>
