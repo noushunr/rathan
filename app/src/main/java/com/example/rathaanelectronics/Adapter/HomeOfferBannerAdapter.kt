@@ -25,6 +25,7 @@ class HomeOfferBannerAdapter(
     activity: FragmentActivity?,
     allcategory_data: MutableList<Data>,
     listener: HomeOfferBannerClickListener,
+    isArabic: Boolean,
 
     ) :
     RecyclerView.Adapter<HomeOfferBannerAdapter.ViewHolder>() {

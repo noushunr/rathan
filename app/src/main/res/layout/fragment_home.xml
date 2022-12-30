@@ -24,8 +24,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
                 android:orientation="vertical">
 
 
@@ -33,6 +33,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="?actionBarSize"
                     android:gravity="center"
+                    android:visibility="gone"
                     android:orientation="horizontal">
 
 
@@ -40,7 +41,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_margin="5dp"
-                        android:gravity="center|left"
+                        android:gravity="center|start"
+                        android:visibility="gone"
                         android:orientation="horizontal"
                         android:weightSum="1">
 
@@ -53,12 +55,14 @@
                             android:drawableStart="@drawable/icon_search"
                             android:drawableEnd="@drawable/cancel_close_icon"
                             android:fontFamily="@font/roboto_medium"
-                            android:hint="Iphone ix max"
+                            android:hint="Search Here"
+                            android:textColorHint="@color/black"
+                            android:drawablePadding="10dp"
                             android:imeOptions="actionDone"
                             android:inputType="textCapSentences"
                             android:maxLines="1"
-                            android:paddingLeft="5dp"
-                            android:paddingRight="5dp"
+                            android:paddingStart="10dp"
+                            android:paddingEnd="10dp"
                             android:textColor="#000"
                             android:textSize="15sp" />
 
@@ -77,7 +81,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="110dp"
 
-                    android:gravity="center|right"
+                    android:gravity="center|end"
                     android:orientation="horizontal"
                     android:weightSum="1">
 
@@ -114,54 +118,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-
                     android:orientation="vertical">
-
-
-                    <RadioGroup
-                        android:id="@+id/deals_radiogroup"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:visibility="gone"
-                        android:weightSum="3">
-
-                        <RadioButton
-                            android:id="@+id/HotDeals"
-                            android:layout_width="0dp"
-
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:button="@null"
-                            android:checked="true"
-                            android:fontFamily="@font/roboto_medium"
-                            android:gravity="center"
-                            android:text="HotDeals"
-                            android:textColor="@color/black"/>
-
-                        <RadioButton
-                            android:id="@+id/New_Arrival"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:button="@null"
-                            android:fontFamily="@font/roboto_medium"
-                            android:gravity="center"
-                            android:text="New Arrival"
-                            android:textColor="@color/black"/>
-
-                        <RadioButton
-                            android:id="@+id/Top20"
-
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:button="@null"
-                            android:fontFamily="@font/roboto_medium"
-                            android:gravity="center"
-                            android:text="Top20"
-                            android:textColor="@color/black" />
-                    </RadioGroup>
 
 
                     <androidx.recyclerview.widget.RecyclerView
@@ -176,6 +133,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
                         android:visibility="visible"
+                        android:background="@color/white"
+                        android:layoutDirection="locale"
+                        android:layout_gravity="start"
                         app:tabGravity="start"
                         app:tabIndicatorHeight="0dp"
                         app:tabMode="auto"
@@ -183,11 +143,12 @@
                         app:tabTextAppearance="@style/MineCustomTabText"
                         app:tabTextColor="@color/colorPrimary" />
 
-                    <com.example.rathaanelectronics.Common.WrapViewPager
+                    <com.example.rathaanelectronics.Common.CustomPager
                         android:id="@+id/viewpager"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
+                        android:layoutDirection="locale"
                         android:visibility="visible" />
 
 
@@ -202,7 +163,7 @@
                     tools:listitem="@layout/list_offer_banner"
                     app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                     app:spanCount="2"
-                    tools:itemCount="5"
+                    tools:itemCount="2"
                     android:layout_marginVertical="20dp"/>
 
                 <!--<LinearLayout
@@ -304,19 +265,24 @@
                 <com.google.android.material.tabs.TabLayout
                     android:id="@+id/tabs2"
                     android:layout_width="match_parent"
-                    android:layout_height="20dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
+                    android:background="@color/white"
+                    android:layout_gravity="start"
+                    android:layoutDirection="locale"
                     app:tabGravity="start"
-                    app:tabIndicatorHeight="0dp"
+                    app:tabIndicatorHeight="1dp"
                     app:tabMode="scrollable"
+                    app:tabIndicatorColor="@color/colorPrimary"
                     app:tabSelectedTextColor="@color/black"
                     app:tabTextAppearance="@style/MineCustomTabText"
                     app:tabTextColor="@color/colorPrimary" />
 
-                <com.example.rathaanelectronics.Common.WrapViewPager
+                <com.example.rathaanelectronics.Common.CustomPager
                     android:id="@+id/viewpager2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layoutDirection="locale"
                     android:layout_marginTop="20dp" />
 
 
@@ -340,7 +306,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight=".8"
                             android:fontFamily="@font/roboto"
-                            android:text="Deals &amp; Offer"
+                            android:text="@string/best_sellers"
                             android:textColor="@color/black"
                             android:textSize="15sp" />
 
@@ -348,13 +314,13 @@
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight=".2"
-                            android:gravity="center|right">
+                            android:gravity="center|end">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/roboto_medium"
-                                android:text="View all"
+                                android:text="@string/view_all"
                                 android:textColor="@color/colorPrimary"
                                 android:textSize="15sp" />
                         </LinearLayout>
@@ -385,4 +351,13 @@
 
     </LinearLayout>
 
+    <ProgressBar
+        style="?android:attr/progressBarStyleLarge"
+        android:id="@+id/progress_circular"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_centerInParent="true"
+        android:indeterminate="true"
+        android:visibility="gone" />
 </FrameLayout>

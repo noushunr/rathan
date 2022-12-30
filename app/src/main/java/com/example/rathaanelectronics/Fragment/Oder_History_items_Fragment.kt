@@ -2,16 +2,28 @@ package com.example.rathaanelectronics.Fragment
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.rathaanelectronics.Adapter.Oder_history_item_list_Adapter
-import com.example.rathaanelectronics.Adapter.Oder_history_list_Adapter
+import com.example.rathaanelectronics.Common.LoadingDialog
+import com.example.rathaanelectronics.Managers.MyPreferenceManager
+import com.example.rathaanelectronics.Model.OrderDetailsModel
 import com.example.rathaanelectronics.R
+import com.example.rathaanelectronics.Rest.ApiConstants
+import com.example.rathaanelectronics.Rest.ApiInterface
+import com.example.rathaanelectronics.Rest.ServiceGenerator
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -25,15 +37,19 @@ private const val ARG_PARAM2 = "param2"
  */
 class Oder_History_items_Fragment : Fragment() {
     // TODO: Rename and change types of parameters
-    private var param1: String? = null
+    private var orderId: String? = null
     private var param2: String? = null
+    private var manager: MyPreferenceManager? = null
+    lateinit var rvOrderItems:RecyclerView
+    lateinit var tvOrderId: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
+            orderId = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+        manager = MyPreferenceManager(activity)
     }
 
     @SuppressLint("WrongConstant")
@@ -43,17 +59,81 @@ class Oder_History_items_Fragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view= inflater.inflate(R.layout.fragment_oder__history_items_, container, false)
-
+        val ivBack = view.findViewById<ImageView>(R.id.iv_back)
+        ivBack.setOnClickListener { activity?.onBackPressed() }
 
         setHasOptionsMenu(true);
 
-        val recycler_oder_history_items =  view.findViewById<RecyclerView>(R.id.recycler_oder_history_items)
-        val Oder_history_item_list_Adapter = Oder_history_item_list_Adapter(activity)
-
-        recycler_oder_history_items.layoutManager = LinearLayoutManager(activity, LinearLayout.VERTICAL, false)
-        recycler_oder_history_items.adapter =Oder_history_item_list_Adapter
+        rvOrderItems =  view.findViewById<RecyclerView>(R.id.recycler_oder_history_items)
+        tvOrderId = view.findViewById(R.id.tv_order_id);
+        tvOrderId.text = getString(R.string.order_id,orderId)
+        rvOrderItems.layoutManager = LinearLayoutManager(activity, LinearLayout.VERTICAL, false)
 
         return view
+    }
+
+    override fun onResume() {
+        super.onResume()
+        getOrderList()
+    }
+
+    private fun getOrderList() {
+        var token = ""
+        if (manager?.getUserToken().isNullOrEmpty())
+            token = manager?.guestToken!!
+        else
+            token = manager?.userToken!!
+        LoadingDialog.showLoadingDialog(requireContext(),"")
+        val apiService = ServiceGenerator.createService(ApiInterface::class.java)
+        val call: Call<OrderDetailsModel> = apiService.getOrderDetails(
+            ApiConstants.LG_APP_KEY,
+            token,
+            orderId
+        )
+        call.enqueue(object : Callback<OrderDetailsModel?> {
+
+
+            override fun onResponse(
+                call: Call<OrderDetailsModel?>?,
+                response: Response<OrderDetailsModel?>
+            ) {
+                LoadingDialog.cancelLoading()
+                if (response.isSuccessful()) {
+
+                    val status: String = response.body()!!.status.toString()
+                    val message: String? = response.body()!!.message
+
+
+
+                    if (status == "true") {
+                        if (response.body()?.data != null) {
+                            if (!response.body()?.data?.orderDetails.isNullOrEmpty()){
+                                val Oder_history_item_list_Adapter = Oder_history_item_list_Adapter(activity,response.body()?.data?.orderDetails!!,manager?.locale.equals("ar"))
+
+                                rvOrderItems.adapter =Oder_history_item_list_Adapter
+                            }
+                        }
+                    } else {
+                        Toast.makeText(
+                            activity,
+                            message,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
+                } else {
+
+                }
+            }
+
+
+            override fun onFailure(call: Call<OrderDetailsModel?>?, t: Throwable?) {
+                // something went completely south (like no internet connection)
+                Log.e("onFailure", t.toString())
+                LoadingDialog.cancelLoading()
+            }
+        })
+
     }
 
     companion object {

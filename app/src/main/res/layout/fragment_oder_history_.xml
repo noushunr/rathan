@@ -21,9 +21,9 @@
             <ImageView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginBottom="15dp"
+                android:id="@+id/iv_back"
+                android:layout_marginStart="5dp"
+                android:paddingVertical="15dp"
                 android:layout_weight=".1"
                 android:gravity="center"
                 android:src="@drawable/icon_arrow_left" />
@@ -43,7 +43,7 @@
 
                 android:fontFamily="@font/roboto_medium"
                 android:gravity="center"
-                android:text="Order History"
+                android:text="@string/order_history"
                 android:textColor="@color/black"
                 android:textSize="18sp" />
 
@@ -67,8 +67,8 @@
         android:id="@+id/recycler_oder_history"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp" />
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp" />
 </LinearLayout>
 
 

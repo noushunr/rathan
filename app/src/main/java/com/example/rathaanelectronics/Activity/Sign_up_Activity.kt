@@ -10,6 +10,7 @@ import android.view.View
 import com.example.rathaanelectronics.R
 import java.util.regex.Pattern
 import android.content.SharedPreferences
+import android.content.res.Configuration
 
 import com.example.rathaanelectronics.Rest.ApiConstants
 
@@ -23,13 +24,16 @@ import android.util.Log
 
 import android.view.LayoutInflater
 import android.widget.*
+import com.example.rathaanelectronics.Common.LoadingDialog
 import com.example.rathaanelectronics.Managers.ConnectivityReceiver.isConnected
+import com.example.rathaanelectronics.Managers.MyPreferenceManager
 import com.example.rathaanelectronics.Model.SignUpModel
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.lang.Exception
+import java.util.*
 
 
 class Sign_up_Activity : AppCompatActivity() {
@@ -52,7 +56,18 @@ class Sign_up_Activity : AppCompatActivity() {
     var userlevel: String? = null
     var createpass: String? = null
     var confirmpass: String? = null
+    private var manager: MyPreferenceManager? = null
 
+    override fun attachBaseContext(newBase: Context?) {
+        super.attachBaseContext(getLanguageAwareContext(newBase!!))
+    }
+    private fun getLanguageAwareContext(context: Context): Context? {
+        if (manager == null)
+            manager = MyPreferenceManager(context)
+        val configuration: Configuration = context.resources.configuration
+        configuration.setLocale(Locale(manager?.locale))
+        return context.createConfigurationContext(configuration)
+    }
 
     private val PASSWORD_PATTERN = Pattern.compile(
         "^" +
@@ -74,9 +89,9 @@ class Sign_up_Activity : AppCompatActivity() {
 
         btn_sign_up!!.setOnClickListener {
             doRegister(
-                edt_login_username!!.text.toString(),
-                edt_login_userEmail!!.text.toString(),
-                edt_login_userPassword!!.text.toString()
+                edt_login_username!!.text.toString().trim(),
+                edt_login_userEmail!!.text.toString().trim(),
+                edt_login_userPassword!!.text.toString().trim()
             )
 
         }
@@ -108,7 +123,7 @@ class Sign_up_Activity : AppCompatActivity() {
 
         if (!isDataValid(Name)) {
             isError = true
-            edt_login_username!!.setError("Field can't be empty")
+            edt_login_username!!.setError(getString(R.string.empty_field_error))
             mFocusView = edt_login_username
         }
 //        if (!isDataValid(lName)) {
@@ -118,22 +133,22 @@ class Sign_up_Activity : AppCompatActivity() {
 //        }
         if (!isDataValid(email)) {
             isError = true
-            edt_login_userEmail!!.setError("Field can't be empty")
+            edt_login_userEmail!!.setError(getString(R.string.empty_field_error))
             mFocusView = edt_login_userEmail
         }
         if (!isDataValid(pass)) {
             isError = true
-            edt_login_userPassword!!.setError("Field can't be empty")
+            edt_login_userPassword!!.setError(getString(R.string.empty_field_error))
             mFocusView = edt_login_userPassword
         }
         if (!isValidEmail(email)) {
             isError = true
-            edt_login_userEmail!!.setError("Enter valid email")
+            edt_login_userEmail!!.setError(getString(R.string.invalid_email))
             mFocusView = edt_login_userEmail
         }
         if (!isValidPass(pass)) {
             isError = true
-            edt_login_userPassword!!.setError("Password must contain Lower Case, Upper Case, Digits & Minimum length must be equal or greater than 8")
+            edt_login_userPassword!!.setError(getString(R.string.invalid_password))
             mFocusView = edt_login_userPassword
         }
 //        if (!isDataValid(phone)) {
@@ -164,7 +179,7 @@ class Sign_up_Activity : AppCompatActivity() {
 
             } else {
 
-                Toast.makeText(this@Sign_up_Activity, "No internet connection", Toast.LENGTH_LONG)
+                Toast.makeText(this@Sign_up_Activity, getString(R.string.no_internet_connection), Toast.LENGTH_LONG)
                     .show()
 
             }
@@ -193,7 +208,7 @@ class Sign_up_Activity : AppCompatActivity() {
 
 
     fun user_SignUp(Name: String, email: String, pass: String) {
-
+        LoadingDialog.showLoadingDialog(this,"")
         val apiService = ServiceGenerator.createService(ApiInterface::class.java)
         val call: Call<SignUpModel> =
             apiService.signup(
@@ -213,17 +228,12 @@ class Sign_up_Activity : AppCompatActivity() {
 
 
             override fun onResponse(call: Call<SignUpModel?>?, response: Response<SignUpModel?>) {
-                Log.e("Signup Response", response.toString() + "")
+                LoadingDialog.cancelLoading()
                 if (response.isSuccessful()) {
 
                     val status: Boolean = response.body()!!.status
                     val messege: String = response.body()!!.message
                     val responce: String = response.body()!!.data.response.signUp
-
-                    Log.e("status", status.toString() + "")
-                    Log.e("messege", messege.toString() + "")
-                    Log.e("responce", responce.toString() + "")
-
                     if (status && messege == "Success") {
 
                         startActivity(Intent(this@Sign_up_Activity, Sign_in_Activity::class.java))
@@ -240,17 +250,17 @@ class Sign_up_Activity : AppCompatActivity() {
 
                     }
                 } else {
-                    Toast.makeText(
-                        this@Sign_up_Activity,
-                        response.message(),
-                        Toast.LENGTH_SHORT
-                    ).show()
+//                    Toast.makeText(
+//                        this@Sign_up_Activity,
+//                        response.message(),
+//                        Toast.LENGTH_SHORT
+//                    ).show()
                 }
             }
 
             override fun onFailure(call: Call<SignUpModel?>?, t: Throwable?) {
+                LoadingDialog.cancelLoading()
                 // something went completely south (like no internet connection)
-                Log.e("onFailure", t.toString())
             }
         })
     }

@@ -1,24 +1,34 @@
 package com.example.rathaanelectronics.Fragment.DealsCategory
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.rathaanelectronics.Adapter.Top_deals_list_Adapter
 import com.example.rathaanelectronics.Common.EqualSpacingItemDecoration
 import com.example.rathaanelectronics.Fragment.MainCategoryFragment
+import com.example.rathaanelectronics.Fragment.Product_Detail_view_Fragment
 import com.example.rathaanelectronics.Interface.HotdealsItemClick
+import com.example.rathaanelectronics.Interface.ShowToolBar
 import com.example.rathaanelectronics.Managers.MyPreferenceManager
+import com.example.rathaanelectronics.Model.CartCountModel
+import com.example.rathaanelectronics.Model.CommonResponseModel
 import com.example.rathaanelectronics.Model.DealsModel
+import com.example.rathaanelectronics.Model.Product
 import com.example.rathaanelectronics.R
 import com.example.rathaanelectronics.Rest.ApiConstants
 import com.example.rathaanelectronics.Rest.ApiInterface
 import com.example.rathaanelectronics.Rest.ServiceGenerator
+import kotlinx.android.synthetic.main.fragment_home.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -40,8 +50,10 @@ class HotDealsFragment : Fragment(), HotdealsItemClick {
     private var param1: String? = null
     private var param2: String? = null
     lateinit var hot_deals: RecyclerView
-    var Hotdeals_data: List<DealsModel.Datum> = ArrayList<DealsModel.Datum>()
+    var Hotdeals_data: List<Product> = ArrayList<Product>()
     private var manager: MyPreferenceManager? = null
+    lateinit var progressBar : ProgressBar
+    var showToolBar : ShowToolBar?=null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,7 +77,7 @@ class HotDealsFragment : Fragment(), HotdealsItemClick {
         // val top_deals_list_Adapter = Top_deals_list_Adapter(requireActivity())
 
         hot_deals = view.findViewById<View>(R.id.hot_deals) as RecyclerView
-
+        progressBar = view.findViewById(R.id.progress_circular)
         val numberOfColumns = 2
         hot_deals.layoutManager = GridLayoutManager(activity, numberOfColumns)
         hot_deals.addItemDecoration(
@@ -75,46 +87,68 @@ class HotDealsFragment : Fragment(), HotdealsItemClick {
             )
         )
 
+        progressBar.visibility = View.VISIBLE
         Hotdeal()
 
         return view
     }
 
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
 
+        showToolBar = context as ShowToolBar
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        showToolBar = null
+    }
 
     fun Hotdeal() {
 
+        var token = ""
+        if (manager?.getUserToken().isNullOrEmpty())
+            token = manager?.guestToken!!
+        else
+            token = manager?.userToken!!
 //        var loadingDialogue = LoadingDialogue()
 //        loadingDialogue?.showLoadingDialog(context,"Loading..")
         val apiService = ServiceGenerator.createService(ApiInterface::class.java)
-        val call: Call<DealsModel> = apiService.HotDeals(ApiConstants.LG_APP_KEY,
-            manager?.getGuestToken())
-        call.enqueue(object : Callback<DealsModel?> {
+        var call: Call<DealsModel>?= null
+        if (param1.equals("1")){
+            call = apiService.HotDeals(ApiConstants.LG_APP_KEY,
+                token)
+        }else if (param1.equals("2")){
+            call = apiService.NewArrivals(ApiConstants.LG_APP_KEY,
+                token)
+        }else if (param1.equals("3")){
+            call = apiService.TopTwenty(ApiConstants.LG_APP_KEY,
+                token)
+        }
+
+        call?.enqueue(object : Callback<DealsModel?> {
 
 
             override fun onResponse(call: Call<DealsModel?>?, response: Response<DealsModel?>) {
 //                loadingDialogue.cancelLoading()
-                Log.e("Signin Response", response.toString() + "")
+                progressBar.visibility = View.GONE
                 if (response.isSuccessful()) {
 
                     val status: String = response.body()!!.status.toString()
                     val messege: String? = response.body()!!.message
 
-                    Log.e("status", status.toString() + "")
-                    Log.e("messege", messege.toString() + "")
-
                     if (status == "true") {
                         Hotdeals_data = response.body()!!.data!!
 
-                        Log.e("Hotdeals_data", Hotdeals_data.size.toString())
                     }
 
 
                     hot_deals.adapter = Top_deals_list_Adapter(
                         requireActivity(),
                         Hotdeals_data,
-                        this@HotDealsFragment
+                        this@HotDealsFragment,
+                        manager?.locale.equals("ar",ignoreCase = true)
                     )
 
 
@@ -126,6 +160,7 @@ class HotDealsFragment : Fragment(), HotdealsItemClick {
             override fun onFailure(call: Call<DealsModel?>?, t: Throwable?) {
                 // something went completely south (like no internet connection)
                 Log.e("onFailure", t.toString())
+                progressBar.visibility = View.GONE
 //                loadingDialogue?.ca
             }
         })
@@ -151,20 +186,222 @@ class HotDealsFragment : Fragment(), HotdealsItemClick {
             }
     }
 
-    override fun onHotdealsClicked(position: Int, item: DealsModel.Datum?) {
-        val subcategory = MainCategoryFragment()
+    override fun onHotdealsClicked(position: Int, item: Product?) {
+//        val subcategory = MainCategoryFragment()
+//        val transaction = activity?.supportFragmentManager?.beginTransaction()
+//        transaction?.replace(R.id.frame, subcategory)
+//        transaction?.addToBackStack(null)
+//        transaction?.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+//        transaction?.commit()
+
+        showToolBar?.showToolBar(false)
+
+        val bundle = Bundle()
+        bundle.putString("productId", item?.productId)
+        val subcategory = Product_Detail_view_Fragment()
+        subcategory.arguments = bundle
         val transaction = activity?.supportFragmentManager?.beginTransaction()
         transaction?.replace(R.id.frame, subcategory)
         transaction?.addToBackStack(null)
         transaction?.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
         transaction?.commit()
 
-
     }
 
     override fun onAddToWishlistButtonClick(productId: String) {
-        //TODO("Not yet implemented")
+        addToWishlist(productId)
     }
 
+    override fun onDeleteFromWishListButtonClick(productId: String) {
+        removeFromWishlist(productId)
+    }
 
+    fun addToWishlist(productId: String) {
+        progressBar.visibility = View.VISIBLE
+        var token = ""
+        if (manager?.getUserToken().isNullOrEmpty())
+            token = manager?.guestToken!!
+        else
+            token = manager?.userToken!!
+        val apiService = ServiceGenerator.createService(ApiInterface::class.java)
+        val call: Call<CommonResponseModel> = apiService.addToWishList(
+            ApiConstants.LG_APP_KEY,
+            token, productId
+        )
+
+        call.enqueue(object : Callback<CommonResponseModel?> {
+
+
+            override fun onResponse(
+                call: Call<CommonResponseModel?>?,
+                response: Response<CommonResponseModel?>
+            ) {
+                progressBar.visibility = View.GONE
+                if (response.isSuccessful()) {
+
+                    val status: String = response.body()!!.status.toString()
+                    val message: String? = response.body()!!.message
+
+                    if (status == "true") {
+                        val toast = Toast.makeText(context, getString(R.string.wishlist_added), Toast.LENGTH_LONG)
+                        toast.setGravity(Gravity.CENTER, 0, 0)
+                        toast.show()
+                        getCartCount()
+                        var position = 0
+                        Hotdeals_data?.forEachIndexed { index, product ->
+                            if (productId == product.productId){
+                                position = index
+                                Hotdeals_data[index].wishlistExist = 1
+                                return@forEachIndexed
+                            }
+                            hot_deals.adapter?.notifyItemChanged(position)
+                        }
+//                        Toast.makeText(
+//                            activity,
+//                            "Wish list added successfully",
+//                            Toast.LENGTH_SHORT
+//                        ).show()
+                    } else {
+                        Toast.makeText(
+                            activity,
+                            message,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
+                } else {
+                    Toast.makeText(
+                        activity,
+                        getString(R.string.wishlist_added_failed),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+
+
+            override fun onFailure(call: Call<CommonResponseModel?>?, t: Throwable?) {
+                // something went completely south (like no internet connection)
+                progressBar.visibility = View.GONE
+                Log.e("onFailure", t.toString())
+            }
+        })
+    }
+
+    fun removeFromWishlist(productId: String) {
+        progressBar.visibility = View.VISIBLE
+        var token = ""
+        if (manager?.getUserToken().isNullOrEmpty())
+            token = manager?.guestToken!!
+        else
+            token = manager?.userToken!!
+        val apiService = ServiceGenerator.createService(ApiInterface::class.java)
+        val call: Call<CommonResponseModel> = apiService.deleteWishList(
+            ApiConstants.LG_APP_KEY,
+            token, productId
+        )
+
+        call.enqueue(object : Callback<CommonResponseModel?> {
+
+
+            override fun onResponse(
+                call: Call<CommonResponseModel?>?,
+                response: Response<CommonResponseModel?>
+            ) {
+                progressBar.visibility = View.GONE
+                if (response.isSuccessful()) {
+
+                    val status: String = response.body()!!.status.toString()
+                    val message: String? = response.body()!!.message
+                    if (status == "true") {
+                        val toast = Toast.makeText(context, getString(R.string.wishlist_removed), Toast.LENGTH_LONG)
+                        toast.setGravity(Gravity.CENTER, 0, 0)
+                        toast.show()
+                        getCartCount()
+                        var position = 0
+                        Hotdeals_data?.forEachIndexed { index, product ->
+                            if (productId == product.productId){
+                                position = index
+                                Hotdeals_data[index].wishlistExist = 0
+                                return@forEachIndexed
+                            }
+                            hot_deals.adapter?.notifyItemChanged(position)
+                        }
+//                        Toast.makeText(
+//                            activity,
+//                            "Wish list added successfully",
+//                            Toast.LENGTH_SHORT
+//                        ).show()
+                    } else {
+                        Toast.makeText(
+                            activity,
+                            message,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
+                } else {
+                    Toast.makeText(
+                        activity,
+                        getString(R.string.wishlist_removed_failed),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+
+
+            override fun onFailure(call: Call<CommonResponseModel?>?, t: Throwable?) {
+                // something went completely south (like no internet connection)
+                progressBar.visibility = View.GONE
+                Log.e("onFailure", t.toString())
+            }
+        })
+    }
+    fun getCartCount() {
+
+
+        var token = ""
+        if (manager?.getUserToken().isNullOrEmpty())
+            token = manager?.guestToken!!
+        else
+            token = manager?.userToken!!
+        val apiService = ServiceGenerator.createService(ApiInterface::class.java)
+        val call: Call<CartCountModel> = apiService.getCartCount(
+            ApiConstants.LG_APP_KEY,
+            token
+        )
+
+        call.enqueue(object : Callback<CartCountModel?> {
+
+
+            override fun onResponse(
+                call: Call<CartCountModel?>?,
+                response: Response<CartCountModel?>
+            ) {
+                if (response.isSuccessful()) {
+
+                    val status: String = response.body()!!.status.toString()
+                    val message: String? = response.body()!!.message
+                    if (status == "true") {
+                        var cartCount = response.body()!!.data?.count
+                        var wishListCount = response.body()!!.data?.wishlistCount
+                        showToolBar?.updateCartCount(cartCount!!)
+                        showToolBar?.updateWalletCount(response.body()!!.data?.wishlistCount!!)
+
+
+                    } else {
+                    }
+
+                } else {
+
+                }
+            }
+
+
+            override fun onFailure(call: Call<CartCountModel?>?, t: Throwable?) {
+                // something went completely south (like no internet connection)
+                Log.e("onFailure", t.toString())
+            }
+        })
+
+    }
 }

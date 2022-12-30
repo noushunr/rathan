@@ -22,8 +22,8 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:layout_marginLeft="5dp"
-            android:gravity="center|left"
+            android:layout_marginStart="5dp"
+            android:gravity="center|start"
             android:orientation="vertical">
 
 
@@ -39,6 +39,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/tv_total"
                 android:layout_marginTop="10dp"
                 android:fontFamily="@font/roboto"
                 android:text="Total: KD 200"
@@ -48,6 +49,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/tv_date"
                 android:layout_marginTop="10dp"
                 android:fontFamily="@font/roboto"
                 android:text="Date: 16/5/2021"
@@ -61,7 +63,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center|right">
+            android:gravity="center|end">
 
 
             <LinearLayout
@@ -72,11 +74,11 @@
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="35dp"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginEnd="10dp"
                     android:id="@+id/oder_history_status"
                     android:background="@drawable/bg_buttom_green"
                     android:fontFamily="@font/roboto"
-                    android:text="Deliverd"
+                    android:text="@string/deliverd"
                     android:textAllCaps="false"
                     android:textSize="12sp"
                     app:backgroundTint="@null" />

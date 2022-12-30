@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     android:fillViewport="true">
 
     <FrameLayout
@@ -15,6 +16,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:orientation="vertical"
+            android:background="@color/white"
             android:weightSum="2">
 
 
@@ -59,7 +61,8 @@
                     android:layout_marginTop="30dp"
                     android:fontFamily="@font/roboto"
                     android:gravity="center"
-                    android:text="Welcome to Al Rathaan"
+                    android:layout_marginHorizontal="10dp"
+                    android:text="@string/welcome_ratan"
                     android:textColor="#fff"
                     android:textSize="25dp" />
 
@@ -71,6 +74,7 @@
                 android:layout_height="0dp"
                 android:layout_weight=".7"
                 android:gravity="center|top"
+
                 android:orientation="vertical">
 
 
@@ -78,21 +82,24 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:cardCornerRadius="30dp"
+                    app:cardBackgroundColor="@color/white"
+                    android:background="@color/white"
                     app:cardElevation="7dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginLeft="30dp"
-                        android:layout_marginRight="30dp"
+                        android:layout_marginStart="30dp"
+                        android:layout_marginEnd="30dp"
+                        android:background="@color/white"
                         android:gravity="center"
                         android:orientation="vertical">
 
                         <ImageView
                             android:id="@+id/centerImage"
-                            android:layout_width="249dp"
-                            android:layout_height="71dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:layout_centerHorizontal="true"
                             android:layout_centerVertical="true"
                             android:layout_marginTop="20dp"
@@ -105,8 +112,11 @@
                             android:layout_height="60dp"
                             android:layout_marginTop="30dp"
                             android:fontFamily="@font/roboto_medium"
-                            android:hint="User Name"
-                            android:paddingLeft="10dp"
+                            android:backgroundTint="@color/colorPrimary"
+                            android:hint="@string/user_name"
+                            android:paddingStart="10dp"
+
+                            android:textColorHint="@color/grey"
                             android:textColor="#000000"
                             android:textSize="12sp" />
 
@@ -117,9 +127,12 @@
                             android:layout_height="60dp"
                             android:layout_marginTop="4dp"
                             android:fontFamily="@font/roboto_medium"
-                            android:hint="Password"
-                            android:paddingLeft="10dp"
-                            android:textColor="@color/colorPrimary"
+                            android:backgroundTint="@color/colorPrimary"
+                            android:hint="@string/password"
+                            android:inputType="textPassword"
+                            android:textColorHint="@color/grey"
+                            android:paddingStart="10dp"
+                            android:textColor="@color/black"
                             android:textSize="12sp" />
 
 
@@ -132,7 +145,7 @@
                             android:background="@drawable/bg_bottom_nav"
                             android:fontFamily="@font/roboto_medium"
                             android:gravity="center"
-                            android:text="SIGN IN"
+                            android:text="@string/sign_in"
 
                             android:textColor="#fff"
                             android:textSize="16dp" />
@@ -151,8 +164,8 @@
                                 android:layout_height="50dp"
                                 android:fontFamily="@font/roboto_medium"
                                 android:gravity="center"
-                                android:text="Forgot"
-                                android:textColor="#000"
+                                android:text="@string/forgot_password"
+                                android:textColor="@color/colorPrimary"
                                 android:textSize="12dp" />
 
 
@@ -162,7 +175,9 @@
                                 android:layout_height="50dp"
                                 android:fontFamily="@font/roboto_medium"
                                 android:gravity="center"
-                                android:text="Password"
+                                android:layout_marginStart="2dp"
+                                android:text="@string/password"
+                                android:visibility="gone"
                                 android:textColor="#ec5155"
                                 android:textSize="15dp" />
 
@@ -181,6 +196,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
+
                     android:orientation="horizontal">
 
                     <TextView
@@ -189,7 +205,7 @@
                         android:layout_height="50dp"
                         android:fontFamily="@font/roboto_medium"
                         android:gravity="center"
-                        android:text="Don't have an account?"
+                        android:text="@string/dont_have_account"
                         android:textColor="#000"
                         android:textSize="12dp" />
 
@@ -200,7 +216,8 @@
                         android:layout_height="50dp"
                         android:fontFamily="@font/roboto_medium"
                         android:gravity="center"
-                        android:text="Sign up"
+                        android:text="@string/sign_up"
+                        android:layout_marginStart="5dp"
                         android:textColor="#ec5155"
                         android:textSize="15dp" />
 

@@ -19,17 +19,17 @@ class CategoryProductModel {
     @Expose
     var message: String? = null
 
-    data class CategoryProductData (
+    data class CategoryProductData(
         @SerializedName("subcategories")
         @Expose
         var subcategories: MutableList<SubCategory>? = null,
 
         @SerializedName("products")
         @Expose
-        var products: MutableList<CategoryProduct>? = null
+        var products: MutableList<Product>? = null
     )
 
-    data class CategoryProduct (
+    data class CategoryProduct(
         @SerializedName("product_id")
         @Expose
         var productId: String? = null,
@@ -124,10 +124,14 @@ class CategoryProductModel {
 
         @SerializedName("wishlist_exist")
         @Expose
-        var wishlistExist: String? = null
+        var wishlistExist: Int? = 0,
+
+        @SerializedName("sameday_delivery")
+        @Expose
+        var samedayDelivery: String? = null
     )
 
-    data class SubCategory (
+    data class SubCategory(
         @SerializedName("subcategory_id")
         @Expose
         var subcategory_id: String? = null,

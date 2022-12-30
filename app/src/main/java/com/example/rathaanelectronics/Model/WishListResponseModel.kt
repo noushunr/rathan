@@ -31,6 +31,10 @@ class WishListResponseModel {
             @Expose
             var wishlistProdId: String? = null
 
+            @SerializedName("wishlist_bundle_offerid")
+            @Expose
+            var wishlistBundleOfferid: String? = null
+
             @SerializedName("product_id")
             @Expose
             var productId: String? = null
@@ -62,6 +66,22 @@ class WishListResponseModel {
             @SerializedName("product_quantity")
             @Expose
             var productQuantity: String? = null
+
+            @SerializedName("offers_bundle_price")
+            @Expose
+            var offersBundlePrice: String? = null
+
+            @SerializedName("offers_bundle_title")
+            @Expose
+            var offersBundleTitle: String? = null
+
+            @SerializedName("offers_image")
+            @Expose
+            var offersImage: String? = null
+
+            @SerializedName("offers_bundle_title_arab")
+            @Expose
+            var offersBundleTitleArab: String? = null
         }
 
     }

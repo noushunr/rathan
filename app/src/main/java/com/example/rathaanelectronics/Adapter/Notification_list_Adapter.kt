@@ -1,35 +1,24 @@
 package com.example.rathaanelectronics.Adapter
 
 import android.graphics.Color
+import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.FragmentActivity
-
 import androidx.recyclerview.widget.RecyclerView
+import com.example.rathaanelectronics.Model.NotificationModel
 import com.example.rathaanelectronics.R
+import java.text.SimpleDateFormat
+import java.util.*
 
 
-class Notification_list_Adapter(activity: FragmentActivity?) :
+class Notification_list_Adapter(activity: FragmentActivity?,alNotification : List<NotificationModel.Data>) :
     RecyclerView.Adapter<Notification_list_Adapter.ViewHolder>() {
 
-    val name = arrayOf<String>(
-        "Oder id BM106126",
-        "Oder id BM106127",
-        "Oder id BM106128"
-
-    )
-    val status: IntArray = intArrayOf(
-
-        1,
-        0,
-        1,
-    )
-
+    val alNotification = alNotification
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -43,9 +32,9 @@ class Notification_list_Adapter(activity: FragmentActivity?) :
     override fun onBindViewHolder(holder: Notification_list_Adapter.ViewHolder, position: Int) {
 
 
-       // holder.bindItems(name[position], status[position])
+       holder.bindItems(alNotification)
 
-        if(position %2 == 1)
+        if(position %2 == 0)
         {
             holder.ll_notification.setBackgroundColor(Color.parseColor("#FFFFFF"));
 
@@ -56,12 +45,11 @@ class Notification_list_Adapter(activity: FragmentActivity?) :
 
         }
 
-
     }
 
 
     override fun getItemCount(): Int {
-        return 4
+        return alNotification.size
     }
 
 
@@ -70,20 +58,29 @@ class Notification_list_Adapter(activity: FragmentActivity?) :
 
 //        var oder_history_status = itemView.findViewById<ImageView>(R.id.oder_history_status)
 
-        var txt_notification = itemView.findViewById<View>(R.id.txt_notification) as TextView
-        var txt_notification_date = itemView.findViewById<View>(R.id.txt_notification_date) as TextView
+        var tvNotification = itemView.findViewById<View>(R.id.txt_notification) as TextView
+        var tvDate = itemView.findViewById<View>(R.id.txt_notification_date) as TextView
         var ll_notification = itemView.findViewById<View>(R.id.ll_notification) as LinearLayout
 
 
 
 
-        fun bindItems(name: String, status: Int) {
+        fun bindItems(alNotification: List<NotificationModel.Data>) {
+            tvNotification.text = alNotification[adapterPosition].message
+            tvDate.text = getTime(alNotification[adapterPosition].createdAt!!)
 
-
-
-
-
-
+        }
+        fun getTime(date : String) : String{
+            val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+            try {
+                val time: Long = sdf.parse(date).getTime()
+                val now = System.currentTimeMillis()
+                val ago = DateUtils.getRelativeTimeSpanString(time, now, DateUtils.MINUTE_IN_MILLIS)
+                return ago.toString()
+            } catch (e: Exception) {
+                e.printStackTrace()
+                return date
+            }
         }
     }
 }

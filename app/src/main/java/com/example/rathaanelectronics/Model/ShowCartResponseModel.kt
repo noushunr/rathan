@@ -33,6 +33,13 @@ class ShowCartResponseModel {
         @Expose
         var cartTotalWithInstallation: String? = null
 
+        @SerializedName("delivery_available")
+        @Expose
+        var deliveryAvailable: String? = null
+        @SerializedName("pickup_available")
+        @Expose
+        var pickupAailable: String? = null
+
         class CartItems{
             @SerializedName("cart_id")
             @Expose
@@ -58,6 +65,10 @@ class ShowCartResponseModel {
             @Expose
             var productSellPrice: String? = null
 
+            @SerializedName("product_spoffer_price")
+            @Expose
+            var product_spoffer_price: String? = null
+
             @SerializedName("product_image")
             @Expose
             var productImage: String? = null
@@ -69,6 +80,23 @@ class ShowCartResponseModel {
             @SerializedName("product_name_arab")
             @Expose
             var productNameArab: String? = null
+
+
+            @SerializedName("offers_bundle_price")
+            @Expose
+            var offersBundlePrice: String? = null
+
+            @SerializedName("offers_bundle_title")
+            @Expose
+            var offersBundleTitle: String? = null
+
+            @SerializedName("offers_image")
+            @Expose
+            var offersImage: String? = null
+
+            @SerializedName("offers_bundle_title_arab")
+            @Expose
+            var offersBundleTitleArab: String? = null
         }
 
     }

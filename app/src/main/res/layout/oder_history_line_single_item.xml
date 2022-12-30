@@ -13,6 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
+
         android:orientation="horizontal"
         android:weightSum="2">
 
@@ -27,12 +28,12 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/bg_offer"
                 android:gravity="center">
 
                 <ImageView
                     android:layout_width="150dp"
                     android:layout_height="120dp"
+                    android:id="@+id/iv_item"
                     android:src="@drawable/img_backpack" />
 
             </LinearLayout>
@@ -41,23 +42,26 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1.2"
-            android:layout_marginLeft="5dp"
-            android:gravity="center|left"
+            android:layout_marginStart="5dp"
+            android:padding="10dp"
+            android:gravity="center|start"
             android:orientation="vertical">
 
 
             <TextView
-                android:id="@+id/oder_history_name"
+                android:id="@+id/tv_item_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto_medium"
+                android:singleLine="true"
                 android:text="Oder id BM106126"
                 android:textColor="@color/black"
                 android:textSize="15sp" />
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:id="@+id/tv_total"
                 android:layout_marginTop="5dp"
                 android:fontFamily="@font/roboto"
                 android:text="KD 200"
@@ -67,6 +71,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/tv_date"
                 android:layout_marginTop="5dp"
                 android:fontFamily="@font/roboto"
                 android:text="Date: 16/5/2021"
@@ -76,6 +81,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/tv_refund_label"
                 android:layout_marginTop="5dp"
                 android:fontFamily="@font/roboto"
                 android:text="Refund into wallet"
@@ -94,16 +100,17 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center">
+                    >
 
                     <Button
                         android:id="@+id/btn_oder_cancellation"
                         android:layout_width="wrap_content"
                         android:layout_height="35dp"
-                        android:layout_marginRight="10dp"
+                        android:layout_marginEnd="10dp"
                         android:background="@drawable/bg_buttom_primarycolour"
                         android:fontFamily="@font/roboto"
-                        android:text="Cancel"
+                        android:text="@string/cancel"
+                        android:visibility="visible"
                         android:textAllCaps="false"
                         android:textSize="12sp"
                         app:backgroundTint="@null" />
@@ -111,18 +118,18 @@
 
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center">
+                    android:gravity="end">
 
                     <Button
                         android:layout_width="wrap_content"
                         android:layout_height="35dp"
-                        android:layout_marginRight="10dp"
+                        android:layout_marginEnd="10dp"
                         android:id="@+id/oder_history_status"
                         android:background="@drawable/bg_buttom_green"
                         android:fontFamily="@font/roboto"
-                        android:text="Pending"
+                        android:text="@string/pending"
                         android:textAllCaps="false"
                         android:textSize="12sp"
                         app:backgroundTint="@null" />

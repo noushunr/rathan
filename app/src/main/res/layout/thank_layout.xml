@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/transparent"
+    android:background="@color/white"
     android:gravity="bottom|center">
 
 
@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="0dp"
-
+        android:background="@color/white"
         app:cardCornerRadius="20dp"
         app:cardElevation="7dp">
 
@@ -44,10 +44,10 @@
                 <TextView
 
                     android:layout_width="wrap_content"
-                    android:layout_height="50dp"
+                    android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_bold"
                     android:gravity="center"
-                    android:text="Thank You"
+                    android:text="@string/thank_you"
                     android:textColor="#000"
                     android:textSize="30dp" />
 
@@ -55,10 +55,10 @@
                 <TextView
 
                     android:layout_width="wrap_content"
-                    android:layout_height="50dp"
+                    android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_bold"
                     android:gravity="center"
-                    android:text="for your oder"
+                    android:text="@string/for_your_oder"
                     android:textColor="#000"
                     android:textSize="18dp" />
 
@@ -68,7 +68,8 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto"
                     android:gravity="center"
-                    android:text="Your Order is now being processed. We will let you know once the order is picked from the outlet. Check the status of your Order"
+                    android:layout_margin="10dp"
+                    android:text="@string/order_processing"
                     android:textColor="#000"
                     android:textSize="15dp" />
 
@@ -76,11 +77,12 @@
                 <TextView
                     android:id="@+id/backtohome"
                     android:layout_width="wrap_content"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
                     android:fontFamily="@font/roboto_bold"
                     android:gravity="center"
-                    android:text="Back to Home"
+                    android:text="@string/back_to_home"
+                    android:layout_marginBottom="30dp"
                     android:textColor="#000"
                     android:textSize="18dp" />
 

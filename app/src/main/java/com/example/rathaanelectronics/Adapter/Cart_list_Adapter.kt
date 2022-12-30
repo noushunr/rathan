@@ -16,16 +16,16 @@ import com.example.rathaanelectronics.R
 import com.example.rathaanelectronics.Rest.ApiConstants
 
 
-class Cart_list_Adapter(activity: FragmentActivity?,
-                        cartData: List<ShowCartResponseModel.Data.CartItems>,
-                        listener: ManageCartItem
+class Cart_list_Adapter(
+    activity: FragmentActivity?,
+    cartData: List<ShowCartResponseModel.Data.CartItems>,
+    listener: ManageCartItem,
+    isArabic: Boolean
 ) : RecyclerView.Adapter<Cart_list_Adapter.ViewHolder>() {
     var context = activity
     var cartData = cartData
     var listener = listener
-
-
-
+    var isArabic = isArabic
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Cart_list_Adapter.ViewHolder {
         val v = LayoutInflater.from(parent.context).inflate(R.layout.cart_list_single_item, parent, false)
         return ViewHolder(v)
@@ -33,10 +33,28 @@ class Cart_list_Adapter(activity: FragmentActivity?,
 
     override fun onBindViewHolder(holder: Cart_list_Adapter.ViewHolder, position: Int) {
        // holder.bindItems(userList[position])
-        Glide.with(context!!).load(ApiConstants.IMAGE_BASE_URL + cartData.get(position).productImage)
+        var image = cartData.get(position).productImage ?: cartData.get(position).offersImage
+        if (image!=null && image?.contains(",")!!){
+            var result: List<String>? = image?.split(",")?.map { it.trim() }
+            if (result?.size!! >0){
+                image = result[0]
+            }
+
+        }
+        var name = ""
+        if (isArabic)
+            name = (cartData.get(position).productNameArab ?: cartData.get(position).offersBundleTitleArab)!!
+        else
+            name = (cartData.get(position).productName ?: cartData.get(position).offersBundleTitle)!!
+        var productPrice = if (cartData.get(position).product_spoffer_price!=null && cartData.get(position).product_spoffer_price?.toDouble()!!>0)
+            cartData.get(position).product_spoffer_price
+        else
+            cartData.get(position).productSellPrice
+        var price = productPrice ?: cartData.get(position).offersBundlePrice
+        Glide.with(context!!).load(ApiConstants.IMAGE_BASE_URL + image)
             .into(holder.imageView)
-        holder.nameTxtView.setText(cartData.get(position).productName)
-        holder.priceTxtView.setText("KD " + cartData.get(position).productSellPrice)
+        holder.nameTxtView.setText(name)
+        holder.priceTxtView.setText("KD " + price)
         holder.quantityTxtView.setText(cartData.get(position).cartQuantity)
         holder.deleteBtn.setOnClickListener{
             listener.onDeleteCartItem(cartData.get(position).cartId)

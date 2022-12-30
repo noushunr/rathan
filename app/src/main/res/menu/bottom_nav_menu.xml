@@ -2,23 +2,23 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/bnv_home"
-        android:title="Home"
-        android:icon="@drawable/ic_bnv_home"/>
+        android:title="@string/home"
+        android:icon="@drawable/ic_home"/>
     <item
         android:id="@+id/bnv_wishlist"
-        android:title="Wish List"
-        android:icon="@drawable/ic_bnv_wish_list"/>
+        android:title="@string/wishlist"
+        android:icon="@drawable/ic_wishlist_new"/>
     <item
         android:id="@+id/bnv_Cart"
-        android:title="Cart"
-        android:icon="@drawable/ic_bnv_shopping_cart"/>
+        android:title="@string/cart"
+        android:icon="@drawable/ic_cart_new"/>
 
     <item
         android:id="@+id/bnv_profile"
-        android:title="Profile"
-        android:icon="@drawable/ic_bnv_user"/>
+        android:title="@string/profile"
+        android:icon="@drawable/ic_profile_new"/>
     <item
         android:id="@+id/bnv_contact"
-        android:title="Contact"
-        android:icon="@drawable/ic_bnv_dialer"/>
+        android:title="@string/contact"
+        android:icon="@drawable/ic_dialer_new"/>
 </menu>

@@ -12,6 +12,7 @@ public class MyPreferenceManager {
 
 
     // All Shared Preferences Keys
+    private static final String KEY_LOCALE = "key_locale";
     private static final String KEY_IS_LOGIN = "key_is_login";
     private static final String IS_FIRST_LAUNCH = "first_launch";
     private static final String IS_FIRST_LOGIN = "first_login";
@@ -115,6 +116,15 @@ public class MyPreferenceManager {
         editor.commit();
     }
 
+    public String getLocale() {
+        return pref.getString(KEY_LOCALE, "en");
+    }
+
+
+    public void setLocale(String locale) {
+        editor.putString(KEY_LOCALE, locale);
+        editor.commit();
+    }
     public void savedelicioId(String id) {
         // Clearing all data from Shared Preferences
         editor.putString(KEY_DELICIO_ID, id);
@@ -251,6 +261,41 @@ public class MyPreferenceManager {
         return pref.getString(GUEST_TOKEN, "");
     }
 
+    public void isFirstTime(Boolean isFirstTime) {
+        editor.putBoolean("IS_FIRST_TIME", isFirstTime);
+        editor.commit();
+    }
+
+    public Boolean getIsFirstTime() {
+        return pref.getBoolean("IS_FIRST_TIME", true);
+    }
+
+    public void setMin(Float min) {
+        editor.putFloat("min", min);
+        editor.commit();
+    }
+
+    public Float getMin() {
+        return pref.getFloat("min", -1f);
+    }
+
+    public void setMax(Float max) {
+        editor.putFloat("max", max);
+        editor.commit();
+    }
+
+    public Float getMax() {
+        return pref.getFloat("max", -1f);
+    }
+
+    public void saveSameDay(String sameDay) {
+        editor.putString("same_day", sameDay);
+        editor.commit();
+    }
+
+    public String getSameDay() {
+        return pref.getString("same_day", "");
+    }
 
 
     public void saveUserName(String name) {

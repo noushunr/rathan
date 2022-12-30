@@ -1,7 +1,7 @@
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    android:layout_width="match_parent"
+<androidx.coordinatorlayout.widget.CoordinatorLayout android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginRight="10dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_marginEnd="10dp"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <RelativeLayout
@@ -76,7 +76,7 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_marginTop="50dp"
-        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:background="@drawable/bg_offer_float_soldout">
@@ -84,7 +84,7 @@
         <TextView
 
             android:layout_width="80dp"
-            android:text=" 10 % offer"
+            tools:text="20% offer"
             android:layout_height="30dp"
             android:textSize="12sp"
             android:gravity="center"

@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="100dp"
+    xmlns:tools="http://schemas.android.com/tools"
     android:gravity="center"
     android:id="@+id/ll_pickupstore"
-    android:layout_marginTop="10dp"
+    android:layout_margin="10dp"
     android:background="@drawable/bg_location_list_alert"
+
     android:orientation="horizontal"
     android:weightSum="2">
 
 
     <LinearLayout
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1.4"
-        android:gravity="center|left"
-        android:paddingLeft="10dp"
+        android:gravity="center|start"
+        android:paddingStart="10dp"
         android:orientation="vertical">
 
 
@@ -43,8 +44,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:fontFamily="@font/roboto"
-            android:text="View location"
-            android:drawablePadding="5dp"
+            android:text="@string/view_location"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
             android:drawableStart="@drawable/ic_place"
             android:textColor="@color/colorPrimary"
             android:textSize="13sp" />
@@ -54,10 +56,14 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_weight=".6"
-        android:gravity="right|top">
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:id="@+id/ll_radio"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="20dp"
+        android:gravity="end|top">
 
 
         <LinearLayout
@@ -65,7 +71,7 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_marginTop="10dp"
-            android:layout_marginRight="5dp"
+            android:layout_marginEnd="5dp"
             android:background="@drawable/radio_icon"
             android:gravity="center"
             android:orientation="horizontal">
@@ -76,4 +82,4 @@
 
 
 
-</LinearLayout>
+</RelativeLayout>

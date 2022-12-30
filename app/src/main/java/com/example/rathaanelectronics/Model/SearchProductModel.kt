@@ -11,11 +11,18 @@ public class SearchProductModel {
 
     @SerializedName("data")
     @Expose
-    var data: List<DealsModel.Datum>? = null
+    var data: Data? = null
 
     @SerializedName("message")
     @Expose
     var message: String? = null
 
 
+
+    inner class Data {
+        @SerializedName("products")
+        @Expose
+        var data: List<Product>? = null
+
+    }
 }

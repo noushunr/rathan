@@ -1,69 +1,85 @@
-<LinearLayout android:layout_width="match_parent"
-    android:layout_height="100dp"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
-
-<LinearLayout
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
+    android:layout_height="match_parent"
+    android:background="@color/white"
     android:orientation="vertical">
 
-    <TableLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:stretchColumns="0,2">
+        android:orientation="vertical">
 
-        <TableRow
+        <LinearLayout
+            android:id="@+id/ll_header"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                style="@style/table_textview"
-                android:text="Sub total" />
-
-            <TextView
-
-                style="@style/table_textview_value"
-                tools:text="KD 3950" />
-
-        </TableRow>
+            android:layout_height="?actionBarSize"
+            android:orientation="horizontal"
+            android:weightSum="2">
 
 
-        <TableRow
+            <LinearLayout
+                android:id="@+id/ll_back"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight=".2">
+
+                <ImageView
+                    android:id="@+id/iv_back"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="5dp"
+                    android:paddingVertical="15dp"
+                    android:layout_weight=".1"
+                    android:gravity="center"
+                    android:src="@drawable/icon_arrow_left" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1.6"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/tv_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/roboto_medium"
+                    android:gravity="center"
+                    android:text="@string/contact_us"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="18sp" />
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabs2"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:background="@color/white"
+            app:tabGravity="start"
+            android:layoutDirection="locale"
+            app:tabIndicatorColor="@color/colorPrimary"
+            app:tabIndicatorHeight="1dp"
+            app:tabMode="fixed"
+            app:tabSelectedTextColor="@color/black"
+            app:tabTextAppearance="@style/MineCustomTabText"
+            app:tabTextColor="@color/colorPrimary" />
 
-            <TextView
-                style="@style/table_textview"
-                tools:text="Installation charge" />
-
-            <TextView
-
-                style="@style/table_textview_value"
-                tools:text="KD 10" />
-
-        </TableRow>
-
-        <TableRow
+        <com.example.rathaanelectronics.Common.CustomPager
+            android:id="@+id/viewpager2"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                style="@style/table_textview"
-                tools:text="Delivery Charge" />
-
-            <TextView
-
-                style="@style/table_textview_value"
-                tools:text="KD 50" />
-
-        </TableRow>
-
-
-    </TableLayout>
-
-
-</LinearLayout>
+            android:layout_height="match_parent"
+            android:layoutDirection="locale"
+            android:layout_marginTop="10dp" />
+    </LinearLayout>
 </LinearLayout>

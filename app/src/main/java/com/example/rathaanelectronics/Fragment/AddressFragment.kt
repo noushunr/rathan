@@ -15,9 +15,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.rathaanelectronics.Activity.MainActivity
 import com.example.rathaanelectronics.Adapter.Address_list_Adapter
 import com.example.rathaanelectronics.Adapter.Cart_list_Adapter
+import com.example.rathaanelectronics.Common.LoadingDialog
 import com.example.rathaanelectronics.Interface.AddressItemClick
 import com.example.rathaanelectronics.Managers.MyPreferenceManager
 import com.example.rathaanelectronics.Model.AddressResponseModel
+import com.example.rathaanelectronics.Model.CommonResponseModel
 import com.example.rathaanelectronics.Model.ShowCartResponseModel
 import com.example.rathaanelectronics.R
 import com.example.rathaanelectronics.Rest.ApiConstants
@@ -42,7 +44,9 @@ class AdressFragment : Fragment(), AddressItemClick {
     var cart_Fragment = Cart_Fragment()
     private var manager: MyPreferenceManager? = null
     lateinit var recycler_address: RecyclerView
-
+    private lateinit var llBack: LinearLayout
+    lateinit var adapter : Address_list_Adapter
+    var addressList : MutableList<AddressResponseModel.Details> = mutableListOf()
     private var Menufilter: MenuItem? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,9 +69,12 @@ class AdressFragment : Fragment(), AddressItemClick {
         recycler_address = view.findViewById<RecyclerView>(R.id.recycler_address)
         val flot_add_address = view.findViewById<FloatingActionButton>(R.id.flot_add_address)
 
-
+        llBack = view.findViewById(R.id.ll_back)
+        llBack.setOnClickListener{
+            activity?.onBackPressed()
+        }
         //val Address_list_Adapter = Address_list_Adapter(activity)
-        recycler_address.layoutManager = LinearLayoutManager(activity, LinearLayout.VERTICAL, false)
+        recycler_address.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         //recycler_address.adapter = Address_list_Adapter
         fetchAddressList()
 
@@ -84,7 +91,7 @@ class AdressFragment : Fragment(), AddressItemClick {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.cart_menu, menu)
-        this.Menufilter = menu.findItem(R.id.cart).setVisible(true)
+        this.Menufilter = menu.findItem(R.id.cart).setVisible(false)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
@@ -108,10 +115,16 @@ class AdressFragment : Fragment(), AddressItemClick {
     }
 
     private fun fetchAddressList(){
+        LoadingDialog.showLoadingDialog(requireContext(),"")
+        var token = ""
+        if (manager?.getUserToken().isNullOrEmpty())
+            token = manager?.guestToken!!
+        else
+            token = manager?.userToken!!
         val apiService = ServiceGenerator.createService(ApiInterface::class.java)
         val call: Call<AddressResponseModel> = apiService.showAddress(
             ApiConstants.LG_APP_KEY,
-            manager?.getUserToken())
+            token)
 
         call.enqueue(object : Callback<AddressResponseModel?> {
 
@@ -120,19 +133,20 @@ class AdressFragment : Fragment(), AddressItemClick {
                 call: Call<AddressResponseModel?>?,
                 response: Response<AddressResponseModel?>
             ) {
-                Log.e("show cart Response", response.toString() + "")
+                LoadingDialog.cancelLoading()
                 if (response.isSuccessful()) {
 
                     val status: String = response.body()!!.status.toString()
                     val message: String? = response.body()!!.message
 
-                    Log.e("status", status.toString() + "")
-                    Log.e("messege", message.toString() + "")
-
                     if (status == "true") {
-                        val addressData = response.body()?.data?.details
-                        if(addressData != null && addressData?.size > 0){
-                            recycler_address.adapter = Address_list_Adapter(activity, addressData!!,this@AdressFragment)
+                        addressList.clear()
+                        addressList.addAll(response.body()?.data?.details!!)
+                        if (addressList != null && addressList?.size > 0) {
+                            adapter = Address_list_Adapter(
+                                activity,
+                                addressList!!,this@AdressFragment,0)
+                            recycler_address.adapter = adapter
                         }
 
                     }else{
@@ -146,16 +160,13 @@ class AdressFragment : Fragment(), AddressItemClick {
                     }
 
                 } else {
-                    Toast.makeText(
-                        activity,
-                        "Cart fetching failed",
-                        Toast.LENGTH_SHORT
-                    ).show()
+
                 }
             }
 
 
             override fun onFailure(call: Call<AddressResponseModel?>?, t: Throwable?) {
+                LoadingDialog.cancelLoading()
                 // something went completely south (like no internet connection)
                 Log.e("onFailure", t.toString())
             }
@@ -183,10 +194,74 @@ class AdressFragment : Fragment(), AddressItemClick {
     }
 
     override fun editAddressItem(addressItem: AddressResponseModel.Details) {
-        Toast.makeText(activity,"Edit event not handled",Toast.LENGTH_LONG).show()
+        changeFragemnt(AddAddressFragment.newInstance(addressItem,""))
     }
 
-    override fun deleteAddressItem(addressId: String) {
-        Toast.makeText(activity,"delete event not handled",Toast.LENGTH_LONG).show()
+    override fun deleteAddressItem(addressId: String,position:Int) {
+
+        deleteAddress(addressId,position)
+    }
+
+    override fun onSelected(addressItem: AddressResponseModel.Details) {
+
+    }
+
+    private fun deleteAddress(addressId:String, position: Int) {
+        LoadingDialog.showLoadingDialog(requireContext(),"")
+        var token = ""
+        if (manager?.getUserToken().isNullOrEmpty())
+            token = manager?.guestToken!!
+        else
+            token = manager?.userToken!!
+        Log.d("Guest Token",token)
+        val apiService = ServiceGenerator.createService(ApiInterface::class.java)
+        val call: Call<CommonResponseModel> = apiService.deleteAddress(
+            ApiConstants.LG_APP_KEY,
+            token,addressId
+        )
+
+        call.enqueue(object : Callback<CommonResponseModel?> {
+
+
+            override fun onResponse(
+                call: Call<CommonResponseModel?>?,
+                response: Response<CommonResponseModel?>
+            ) {
+                LoadingDialog.cancelLoading()
+                if (response.isSuccessful) {
+
+                    val status: String = response.body()!!.status.toString()
+                    val message: String? = response.body()!!.message
+
+                    if (status == "true") {
+                        Toast.makeText(
+                            activity,
+                            message,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        addressList.removeAt(position)
+                        adapter?.notifyItemRemoved(position)
+
+                    } else {
+//                        recycler_cart.isGone = true
+//                        emptyText.isVisible = true
+                        Toast.makeText(
+                            activity,
+                            message,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
+                } else {
+
+                }
+            }
+
+
+            override fun onFailure(call: Call<CommonResponseModel?>?, t: Throwable?) {
+                // something went completely south (like no internet connection)
+                LoadingDialog.cancelLoading()
+            }
+        })
     }
 }

@@ -1,4 +1,4 @@
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/coordinatorLayout_home"
@@ -35,7 +35,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="center|left"
+                android:gravity="center|start"
                 android:orientation="vertical">
 
 
@@ -48,7 +48,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_medium"
-                    android:text="Apple iphone 12"
+                    tools:text="Apple iphone 12"
                     android:textColor="@color/black"
                     android:textSize="14sp" />
 
@@ -58,43 +58,48 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:fontFamily="@font/roboto"
-                    android:text="Apple"
+                    tools:text="Apple"
                     android:textColor="#FFC1BABA"
                     android:textSize="15sp" />
 
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="10dp"
+                    android:layout_margin="10dp"
                     android:orientation="horizontal"
+                    android:layoutDirection="locale"
                     android:weightSum="1">
 
                     <TextView
                         android:id="@+id/txt_selling_price"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight=".8"
                         android:fontFamily="@font/roboto"
-                        android:text="KD 775"
+                        android:layout_alignParentStart="true"
+                        android:layout_toStartOf="@+id/iv_cart"
+                        tools:text="KD 775"
                         android:textColor="#D62737"
                         android:textSize="15sp" />
 
                     <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/iv_cart"
+                        android:layout_alignParentEnd="true"
                         android:gravity="center"
+                        android:visibility="visible"
                         android:layout_weight=".2">
 
                         <ImageView
                             android:layout_width="20dp"
                             android:layout_height="20dp"
-                            android:layout_gravity="center|right"
+                            android:layout_gravity="center|end"
                             android:scaleType="fitXY"
                             android:src="@drawable/icon_cart_red" />
                     </LinearLayout>
 
-                </LinearLayout>
+                </RelativeLayout>
 
             </LinearLayout>
 
@@ -102,29 +107,111 @@
     </RelativeLayout>
 
     <ImageView
+        android:id="@+id/iv_wish_list_active"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignParentEnd="true"
+        android:layout_gravity="end"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="10dp"
+        app:tint="@color/colorPrimary"
+        android:visibility="gone"
+        android:src="@drawable/wish_list_active" />
+    <ImageView
         android:id="@+id/iv_wish_list"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:layout_gravity="right"
+        android:layout_alignParentEnd="true"
+        android:layout_gravity="end"
         android:layout_marginTop="5dp"
-        android:layout_marginRight="10dp"
-        android:src="@drawable/fav_icon_black"/>
+        android:layout_marginEnd="10dp"
+        android:src="@drawable/ic_wishlist_new" />
 
+    <LinearLayout
+        android:id="@+id/ll_same_day_delivery"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:backgroundTint="@color/colorPrimary"
+        android:background="@drawable/bg_offer_float_offer">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:text="@string/same_day_delivery"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="10sp"
+            android:padding="5dp"
+            android:gravity="center"
+            android:textColor="@color/white"
+            />
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/ll_sold_out"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ll_same_day_delivery"
+        android:gravity="center"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:backgroundTint="@color/colorPrimary"
+        android:background="@drawable/bg_offer_float_soldout">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:text="@string/sold_out"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="10sp"
+            android:padding="5dp"
+            android:gravity="center"
+            android:textColor="@color/white"
+            />
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/ll_best_seller"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/ll_sold_out"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:visibility="gone"
+        tools:visibility="gone"
+        android:background="@drawable/bg_offer_float_best_seller">
+
+        <TextView
+            android:id="@+id/txt_best_seller"
+            android:layout_width="wrap_content"
+            android:text="@string/best_sellers"
+            android:paddingHorizontal="5dp"
+            android:layout_height="25dp"
+            android:textSize="10sp"
+            android:gravity="center"
+            android:textColor="@color/white"
+            />
+
+    </LinearLayout>
     <LinearLayout
         android:id="@+id/ll_offer_float"
         android:layout_width="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="5dp"
-
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/ll_best_seller"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:visibility="gone"
+        tools:visibility="visible"
         android:background="@drawable/bg_offer_float_offer">
 
         <TextView
             android:id="@+id/txt_offer_float"
             android:layout_width="wrap_content"
-            android:text=" 13 % offer"
+            tools:text=" 13 % offer"
             android:paddingHorizontal="5dp"
             android:layout_height="25dp"
             android:textSize="10sp"
@@ -135,4 +222,5 @@
     </LinearLayout>
 
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+</RelativeLayout>

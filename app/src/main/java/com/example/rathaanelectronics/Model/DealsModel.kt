@@ -13,7 +13,7 @@ class DealsModel {
 
     @SerializedName("data")
     @Expose
-    var data: List<Datum>? = null
+    var data: List<Product>? = null
 
     @SerializedName("message")
     @Expose
@@ -72,6 +72,10 @@ class DealsModel {
         @Expose
         var hotPrice: String? = null
 
+        @SerializedName("product_rate")
+        @Expose
+        var productRate: String? = null
+
         @SerializedName("prod_topselling")
         @Expose
         var topSelling: String? = null
@@ -83,6 +87,10 @@ class DealsModel {
         @SerializedName("wishlist_exist")
         @Expose
         var wishlistExist: Int? = 0
+
+        @SerializedName("sameday_delivery")
+        @Expose
+        var samedayDelivery: String? = null
 
     }
 }

@@ -1,12 +1,14 @@
 package com.example.rathaanelectronics.Adapter
 
 import android.graphics.Color
+import android.util.DisplayMetrics
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.isGone
@@ -30,7 +32,8 @@ class RelatedItemsAdapter(
     var context = activity
     var relatedProductData = relatedProductData
     var listener = listener
-
+    var displayMetrics = DisplayMetrics()
+    private var screenWidth = 0
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -40,17 +43,34 @@ class RelatedItemsAdapter(
             .inflate(R.layout.recy_top_deals_single_item, parent, false)
 
         Log.e("Hotdealadapter","done")
-
+        context?.windowManager?.defaultDisplay?.getMetrics(displayMetrics)
+        screenWidth = displayMetrics.widthPixels
         return ViewHolder(v)
     }
 
     override fun onBindViewHolder(holder: RelatedItemsAdapter.ViewHolder, position: Int) {
 
+        val itemPadding = 8
+
+        //here you may change the divide amount from 2.5 to whatever you need
+        val itemWidth = (screenWidth - itemPadding).div(2)
+
+        val layoutParams = holder.itemView.layoutParams
+        layoutParams.height = layoutParams.height
+        layoutParams.width = itemWidth.toInt()
+        holder.itemView.layoutParams = layoutParams
         holder.bindItems(relatedProductData.get(position))
 
         holder.addToWishlistbtn.setOnClickListener{
             relatedProductData.get(position).productId?.let { it1 ->
                 listener.onAddToWishListButtonClicked(
+                    it1
+                )
+            }
+        }
+        holder.addToWishlistbtnActive.setOnClickListener{
+            relatedProductData.get(position).productId?.let { it1 ->
+                listener.onDeleteWishListButtonClicked(
                     it1
                 )
             }
@@ -68,7 +88,7 @@ class RelatedItemsAdapter(
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         val coordinatorLayout_home =
-            itemView.findViewById<CoordinatorLayout>(R.id.coordinatorLayout_home)
+            itemView.findViewById<RelativeLayout>(R.id.coordinatorLayout_home)
         val img_top_deal = itemView.findViewById<ImageView>(R.id.img_top_deal)
         val txt_top_deal_product_name =
             itemView.findViewById<TextView>(R.id.txt_top_deal_product_name)
@@ -78,7 +98,7 @@ class RelatedItemsAdapter(
         val txt_offer_float = itemView.findViewById<TextView>(R.id.txt_offer_float)
         val ll_offer_float = itemView.findViewById<LinearLayout>(R.id.ll_offer_float)
         val addToWishlistbtn = itemView.findViewById<ImageView>(R.id.iv_wish_list)
-
+        val addToWishlistbtnActive = itemView.findViewById<ImageView>(R.id.iv_wish_list_active)
 
         fun bindItems(get: ProductDetailsModel.RelatedProducts) {
 
@@ -94,9 +114,11 @@ class RelatedItemsAdapter(
             ll_offer_float.isGone = true
             txt_offer_float.isGone = true
             if (get?.wishlistExist  == 0){
-                addToWishlistbtn.setBackgroundResource(R.drawable.fav_icon_black)
+                addToWishlistbtn.visibility = View.VISIBLE
+                addToWishlistbtnActive.visibility = View.GONE
             }else{
-                ll_offer_float.setBackgroundResource(R.drawable.un_fave_icon)
+                addToWishlistbtn.visibility = View.GONE
+                addToWishlistbtnActive.visibility = View.VISIBLE
             }
 
 

@@ -1,6 +1,8 @@
 package com.example.rathaanelectronics.Activity
 
+import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
@@ -8,6 +10,7 @@ import android.util.Log
 import android.util.Patterns
 import android.view.View
 import android.widget.*
+import com.example.rathaanelectronics.Common.LoadingDialog
 import com.example.rathaanelectronics.Managers.ConnectivityReceiver
 import com.example.rathaanelectronics.Managers.MyPreferenceManager
 import com.example.rathaanelectronics.Model.ForgotPasswordModel
@@ -19,6 +22,7 @@ import com.example.rathaanelectronics.Rest.ServiceGenerator
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.*
 
 class ForgotPassword : AppCompatActivity() {
 
@@ -28,6 +32,16 @@ class ForgotPassword : AppCompatActivity() {
     private var manager: MyPreferenceManager? = null
     var forgotmsg: String? = null
 
+    override fun attachBaseContext(newBase: Context?) {
+        super.attachBaseContext(getLanguageAwareContext(newBase!!))
+    }
+    private fun getLanguageAwareContext(context: Context): Context? {
+        if (manager == null)
+            manager = MyPreferenceManager(context)
+        val configuration: Configuration = context.resources.configuration
+        configuration.setLocale(Locale(manager?.locale))
+        return context.createConfigurationContext(configuration)
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_forgot_password)
@@ -37,7 +51,7 @@ class ForgotPassword : AppCompatActivity() {
 
 
         btn_frgt.setOnClickListener {
-            doForgot(edt_forgot.text.toString())
+            doForgot(edt_forgot.text.toString().trim())
         }
     }
 
@@ -62,12 +76,12 @@ class ForgotPassword : AppCompatActivity() {
 
         if (!isDataValid(email)) {
             isError = true
-            edt_forgot!!.setError("Field can't be empty")
+            edt_forgot!!.setError(getString(R.string.empty_field_error))
             mFocusView = edt_forgot
         }
         if (!isValidEmail(email)) {
             isError = true
-            edt_forgot!!.setError("Enter valid email")
+            edt_forgot!!.setError(getString(R.string.invalid_email))
             mFocusView = edt_forgot
         }
 
@@ -84,7 +98,7 @@ class ForgotPassword : AppCompatActivity() {
 
             } else {
 
-                Toast.makeText(this@ForgotPassword, "No internet connection", Toast.LENGTH_LONG)
+                Toast.makeText(this@ForgotPassword, getString(R.string.no_internet_connection), Toast.LENGTH_LONG)
                     .show()
 
             }
@@ -109,7 +123,7 @@ class ForgotPassword : AppCompatActivity() {
             apiService.ForgotPassword(
                 LG_APP_KEY, email
             )
-
+        LoadingDialog.showLoadingDialog(this,"")
         call.enqueue(object : Callback<ForgotPasswordModel?> {
 
 
@@ -117,29 +131,27 @@ class ForgotPassword : AppCompatActivity() {
                 call: Call<ForgotPasswordModel?>?,
                 response: Response<ForgotPasswordModel?>
             ) {
-                Log.e("Signup Response", response.toString() + "")
+                LoadingDialog.cancelLoading()
                 if (response.isSuccessful()) {
 
-                    val status: String? = response.body()!!.data?.status
-                    val messege: String? = response.body()!!.data?.message
+                    val status: String? = response.body()!!.status
+                    val messege: String? = response.body()!!.message
 
 
-                    if (status == "true" && messege == "Success") {
-
-
-                        forgotmsg = response.body()!!.data?.responce?.forgotpassword
-
+                    if (status == "true") {
+                        forgotmsg = response.body()!!.data?.forgotpassword
                         txt_goto_email.text = forgotmsg
-                        Log.e("status", status.toString() + "")
-                        Log.e("messege", messege.toString() + "")
-                        Log.e("responce", forgotmsg.toString() + "")
-
-
+                        Toast.makeText(
+                            this@ForgotPassword,
+                            forgotmsg,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        finish()
                     } else {
 
                         Toast.makeText(
                             this@ForgotPassword,
-                            forgotmsg,
+                            messege,
                             Toast.LENGTH_SHORT
                         ).show()
 
@@ -152,6 +164,7 @@ class ForgotPassword : AppCompatActivity() {
 
             override fun onFailure(call: Call<ForgotPasswordModel?>?, t: Throwable?) {
                 // something went completely south (like no internet connection)
+                LoadingDialog.cancelLoading()
                 Log.e("onFailure", t.toString())
             }
         })

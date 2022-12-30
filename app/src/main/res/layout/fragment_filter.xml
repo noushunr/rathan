@@ -10,16 +10,48 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
         android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            android:orientation="horizontal"
+
+            android:weightSum="1">
+
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="5dp"
+                android:id="@+id/iv_back"
+                android:paddingVertical="15dp"
+                android:layout_weight=".1"
+                android:gravity="center"
+                android:src="@drawable/icon_arrow_left" />
+
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="10dp"
+                android:layout_weight=".9"
+                android:fontFamily="@font/roboto"
+                android:gravity="center"
+                android:text="@string/filter"
+                android:textColor="@color/colorPrimary"
+                android:textSize="18sp"/>
+
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
             android:orientation="horizontal">
 
             <TextView
@@ -29,7 +61,7 @@
                 android:layout_weight="1"
                 android:fontFamily="@font/roboto_medium"
                 android:padding="4dp"
-                android:text="Price"
+                android:text="@string/price"
                 android:textAlignment="textStart"
                 android:textColor="@color/black"
                 android:textSize="18sp" />
@@ -53,8 +85,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:visibility="gone"
             android:orientation="horizontal">
 
             <TextView
@@ -82,16 +115,17 @@
         </LinearLayout>
 
         <com.google.android.material.slider.RangeSlider
-            android:id="@+id/filter_range_slider"
+            android:id="@+id/slider"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="50dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="20dp"
+            android:valueFrom="0.0"
+            android:valueTo="10000.0"
+            android:stepSize="10"
+            android:visibility="visible"
             android:outlineSpotShadowColor="#FF0000"
-            android:stepSize="1.0"
-            android:valueFrom="1000.0"
-            android:valueTo="160000.0"
             app:tickVisible="false"
             app:trackColorActive="@color/red"
             app:values="@array/initial_slider_values"
@@ -105,6 +139,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
             android:layout_gravity="center"
+            android:gravity="center"
+
             android:paddingBottom="10dp"
             android:id="@+id/ll_apply"
             android:orientation="horizontal">
@@ -112,27 +148,33 @@
             <androidx.appcompat.widget.AppCompatButton
 
                 android:id="@+id/close"
-                android:layout_width="150dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_toStartOf="@+id/apply"
+                android:layout_marginEnd="10dp"
                 android:background="@drawable/bg_filter_cancel"
                 android:fontFamily="@font/roboto_medium"
-                android:text="Close"
+                android:paddingHorizontal="50dp"
+                android:paddingVertical="10dp"
+                android:text="@string/close"
                 android:textColor="@color/black"
                 android:textSize="16dp"
                 app:backgroundTint="@null" />
 
             <androidx.appcompat.widget.AppCompatButton
 
-                android:layout_width="150dp"
+                android:id="@+id/apply"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
                 android:layout_marginStart="10dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginEnd="10dp"
+                android:paddingHorizontal="50dp"
+                android:paddingVertical="10dp"
                 android:background="@drawable/bg_button_filter_red"
+                android:backgroundTint="@color/colorPrimary"
                 android:fontFamily="@font/roboto_medium"
-                android:text="apply"
+                android:text="@string/apply"
                 android:textColor="#fff"
                 android:textSize="16dp" />
         </RelativeLayout>

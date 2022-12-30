@@ -5,7 +5,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import com.example.rathaanelectronics.Adapter.ViewpagerAdapter
+import com.example.rathaanelectronics.Common.CustomPager
+import com.example.rathaanelectronics.Managers.MyPreferenceManager
 import com.example.rathaanelectronics.R
+import com.google.android.material.tabs.TabLayout
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -21,7 +26,9 @@ class Contact_Fragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-
+    private lateinit var customPager: CustomPager
+    private lateinit var tabs : TabLayout
+    private lateinit var ivBack : ImageView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -35,7 +42,28 @@ class Contact_Fragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_contact_, container, false)
+        val view = inflater.inflate(R.layout.fragment_contact_,container,false)
+        tabs = view.findViewById<TabLayout>(R.id.tabs2)
+        customPager = view.findViewById<View>(R.id.viewpager2) as CustomPager
+        ivBack = view.findViewById(R.id.iv_back)
+        ivBack.setOnClickListener {
+            activity?.onBackPressed()
+        }
+        val adapter = ViewpagerAdapter(childFragmentManager)
+        var manager = MyPreferenceManager(requireContext())
+        if (manager?.locale.equals("ar")){
+            adapter.addFragment(ContactUsFragment.newInstance("",""),getString(R.string.our_address))
+            adapter.addFragment(MessageContactFragment.newInstance("",""),getString(R.string.leave_us_message))
+            customPager.adapter = adapter
+            customPager.currentItem = 1
+        }else{
+            adapter.addFragment(MessageContactFragment.newInstance("",""),getString(R.string.leave_us_message))
+            adapter.addFragment(ContactUsFragment.newInstance("",""),getString(R.string.our_address))
+            customPager.adapter = adapter
+        }
+
+        tabs.setupWithViewPager(customPager)
+        return view
     }
 
     companion object {

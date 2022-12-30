@@ -26,12 +26,13 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
+                    android:id="@+id/ll_back"
                     android:layout_weight=".2">
 
                     <ImageView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="5dp"
+                        android:layout_marginStart="5dp"
                         android:layout_marginTop="15dp"
                         android:layout_marginBottom="15dp"
                         android:layout_weight=".1"
@@ -52,7 +53,7 @@
                         android:layout_height="match_parent"
                         android:fontFamily="@font/roboto_medium"
                         android:gravity="center"
-                        android:text="Shipping Address"
+                        android:text="@string/shipping_address"
                         android:textColor="@color/black"
                         android:textSize="18sp" />
                 </LinearLayout>
@@ -73,17 +74,17 @@
                 android:id="@+id/recycler_address"
                 android:layout_width="match_parent"
                 android:layout_marginTop="5dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
                 android:layout_height="match_parent" />
 
         </LinearLayout>
 
 <LinearLayout
     android:layout_width="wrap_content"
-    android:layout_alignParentRight="true"
+    android:layout_alignParentEnd="true"
     android:layout_alignParentBottom="true"
-    android:layout_marginRight="25dp"
+    android:layout_marginEnd="25dp"
     android:orientation="horizontal"
     android:layout_marginBottom="50dp"
     android:layout_height="wrap_content">
@@ -104,7 +105,7 @@
         android:layout_height="match_parent"
         android:fontFamily="@font/roboto_medium"
         android:gravity="center"
-        android:text="Add New Address"
+        android:text="@string/add_new_address"
         android:textColor="#686565"
         android:textSize="15sp" />
 
@@ -116,9 +117,9 @@
 <!--            android:id="@+id/flot_add_address"-->
 <!--            android:layout_width="wrap_content"-->
 <!--            android:layout_height="wrap_content"-->
-<!--            android:layout_alignParentRight="true"-->
+<!--            android:layout_alignParentEnd="true"-->
 <!--            android:layout_alignParentBottom="true"-->
-<!--            android:layout_marginRight="25dp"-->
+<!--            android:layout_marginEnd="25dp"-->
 <!--            android:layout_marginBottom="50dp"-->
 <!--            android:padding="0dp"-->
 <!--            android:background="#FA4248"-->
@@ -154,7 +155,7 @@
     <!--            <ImageView-->
     <!--                android:layout_width="0dp"-->
     <!--                android:layout_height="match_parent"-->
-    <!--                android:layout_marginLeft="5dp"-->
+    <!--                android:layout_marginStart="5dp"-->
     <!--                android:layout_marginTop="15dp"-->
     <!--                android:layout_marginBottom="15dp"-->
     <!--                android:layout_weight=".1"-->

@@ -2,7 +2,11 @@ package com.example.rathaanelectronics.Managers;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.text.TextUtils;
+import android.util.Log;
+
+import androidx.annotation.NonNull;
 import androidx.multidex.MultiDex;
 
 public class MainApplication extends Application {
@@ -55,6 +59,12 @@ public class MainApplication extends Application {
 
     public void setConnectivityListener(ConnectivityReceiver.ConnectivityReceiverListener listener) {
         ConnectivityReceiver.connectivityReceiverListener = listener;
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        Log.d("Config changed","bllllllllllllaaaaaaaaaaaaaaaa");
     }
 }
 

@@ -1,15 +1,14 @@
 package com.example.rathaanelectronics.Fragment
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.rathaanelectronics.R
-import android.provider.Settings
 import android.util.Log
 import android.view.*
 
@@ -20,15 +19,11 @@ import androidx.fragment.app.FragmentTransaction
 import com.example.rathaanelectronics.Common.EqualSpacingItemDecoration
 
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.viewpager.widget.ViewPager
 import com.asksira.loopingviewpager.LoopingViewPager
 
 import com.example.rathaanelectronics.Adapter.*
-import com.example.rathaanelectronics.Common.WrapViewPager
 import com.example.rathaanelectronics.Fragment.DealsCategory.BestDealsFragment
 import com.example.rathaanelectronics.Fragment.DealsCategory.HotDealsFragment
-import com.example.rathaanelectronics.Fragment.DealsCategory.NewArrivalsFragment
-import com.example.rathaanelectronics.Fragment.DealsCategory.TopTwentyFragment
 
 import com.example.rathaanelectronics.Rest.ApiConstants
 import com.example.rathaanelectronics.Rest.ApiInterface
@@ -38,7 +33,8 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import kotlin.collections.ArrayList
-import android.widget.RadioGroup
+import com.example.rathaanelectronics.Common.CustomPager
+import com.example.rathaanelectronics.Common.LoadingDialog
 import com.example.rathaanelectronics.Managers.MyPreferenceManager
 import com.example.rathaanelectronics.Model.*
 
@@ -57,11 +53,11 @@ private const val ARG_PARAM2 = "param2"
  */
 class HomeFragment : Fragment(), SliderClickListener, BestItemClick, HotdealsItemClick,
         NewArrivalItemClick, CategoriesTitleItemClick,
-        HomeOfferBannerAdapter.HomeOfferBannerClickListener {
+        HomeOfferBannerAdapter.HomeOfferBannerClickListener,TimerItemClick {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-    var Hotdeals_data: List<DealsModel.Datum> = ArrayList<DealsModel.Datum>()
+    var Hotdeals_data: List<Product> = ArrayList<Product>()
     var alTimeOffers: List<Data> = ArrayList<Data>()
     var alDealsCategories: List<BestDealCategory.Datum> = ArrayList<BestDealCategory.Datum>()
     lateinit var recycler_deals_offer: RecyclerView
@@ -70,27 +66,22 @@ class HomeFragment : Fragment(), SliderClickListener, BestItemClick, HotdealsIte
     lateinit var recy_offer_deals: RecyclerView
     lateinit var recycler_top_level: RecyclerView
     lateinit var recyclerOfferBanner: RecyclerView
-    lateinit var viewPager2: WrapViewPager
+    lateinit var viewPager2: CustomPager
     lateinit var tabLayoutCategories: TabLayout
+    lateinit var progressBar : ProgressBar
     private var SliderimagArrayList = ArrayList<String>()
     var slider_data: List<SliderModel.Datum> = ArrayList<SliderModel.Datum>()
     var offerSliderData: MutableList<HomeOfferBannerModel.Data> = mutableListOf()
     private lateinit var lvp_new_slider: LoopingViewPager
     private lateinit var ll_deal_offer_view_all: LinearLayout
-    private lateinit var viewPager: WrapViewPager
-    private lateinit var deals_radiogroup: RadioGroup
-    private lateinit var HotDeals: RadioButton
-    private lateinit var New_Arrival: RadioButton
-    private lateinit var Top20: RadioButton
-    var NewArrival_data: List<NewArrivalModel.Datum> = ArrayList<NewArrivalModel.Datum>()
+    private lateinit var viewPager: CustomPager
     private var manager: MyPreferenceManager? = null
     var allcategory_data: MutableList<AllCategoriesModel.Datum> = mutableListOf()
-
-
     private lateinit var tabLayout: TabLayout
-    var BestDeal_data: List<BestDealModel.Datum> = ArrayList<BestDealModel.Datum>()
+    var BestDeal_data: List<Product> = ArrayList<Product>()
     var cart_Fragment = Cart_Fragment()
 
+    var showToolBar : ShowToolBar?=null
     private var Menufilter: MenuItem? = null
 //    private var textView_TimeCountDown: TextView? = null
 
@@ -115,23 +106,17 @@ class HomeFragment : Fragment(), SliderClickListener, BestItemClick, HotdealsIte
 
         setHasOptionsMenu(true);
 
-        if (manager?.getGuestToken()!!.isEmpty()) {
-            getGuestToken()
-        }
+
         // countDown()
 //        textView_TimeCountDown = view.findViewById<View>(R.id.textView_TimeCountDown) as TextViewll
 
         tabLayout = view.findViewById<TabLayout>(R.id.tabs)
-        Top20 = view.findViewById<RadioButton>(R.id.Top20)
-        New_Arrival = view.findViewById<RadioButton>(R.id.New_Arrival)
-        HotDeals = view.findViewById<RadioButton>(R.id.HotDeals)
 
-        viewPager = view.findViewById<View>(R.id.viewpager) as WrapViewPager
-        deals_radiogroup = view.findViewById<View>(R.id.deals_radiogroup) as RadioGroup
+        viewPager = view.findViewById<View>(R.id.viewpager) as CustomPager
 
 
         tabLayoutCategories = view.findViewById<TabLayout>(R.id.tabs2)
-        viewPager2 = view.findViewById<View>(R.id.viewpager2) as WrapViewPager
+        viewPager2 = view.findViewById<View>(R.id.viewpager2) as CustomPager
 
         lvp_new_slider = view.findViewById<LoopingViewPager>(R.id.lvp_new_slider)
         val fragmenthome = view.findViewById<LinearLayout>(R.id.fragmenthome)
@@ -142,17 +127,7 @@ class HomeFragment : Fragment(), SliderClickListener, BestItemClick, HotdealsIte
         recy_deals_ = view.findViewById<RecyclerView>(R.id.recy_deals_)
         recy_time_deals = view.findViewById<RecyclerView>(R.id.recy_time_deals)
         recy_offer_deals = view.findViewById<RecyclerView>(R.id.recy_offer_deals)
-        HotDeals.isChecked = true
-
-        //val toplevel_cat_list_Adapter = toplevel_cat_list_Adapter(activity)
-
-
-//        val top_deals_list_Adapter = Top_deals_list_Adapter(
-//            activity,
-//            Hotdeals_data,
-//            this@HotDealsFragment
-//        )
-        //  val best_deals_list_Adapter = Best_deals_list_Adapter(activity)
+        progressBar = view.findViewById(R.id.progress_circular)
 
         val searchProductLayout = view.findViewById<FrameLayout>(R.id.search_layout)
         searchProductLayout.setOnClickListener {
@@ -190,70 +165,46 @@ class HomeFragment : Fragment(), SliderClickListener, BestItemClick, HotdealsIte
 
         recyclerOfferBanner.layoutManager = GridLayoutManager(activity, numberOfColumns)
 
-
+//
         setupViewPager(viewPager)
         tabLayout.setupWithViewPager(viewPager)
-
-
 
         Allcategories()
         slider()
         offerBanner()
         getBestDealCategories()
         Bestdeal()
-
-        HotDeals.setTextColor(Color.parseColor("#D62737"))
-        New_Arrival.setTextColor(Color.BLACK)
-        Top20.setTextColor(Color.BLACK)
-        Hotdeal()
         getTimeOffers()
         getNonTimeOffers()
 
-
-        ll_deal_offer_view_all.setOnClickListener {
-            changeFragemnt(Deals_offer_Fragment())
-        }
-
-
-
-        deals_radiogroup.setOnCheckedChangeListener { group, checkedId ->
-            when (checkedId) {
-                R.id.HotDeals -> {
-
-
-                    HotDeals.setTextColor(Color.parseColor("#D62737"))
-                    New_Arrival.setTextColor(Color.BLACK)
-                    Top20.setTextColor(Color.BLACK)
-                    Hotdeal()
-                }
-                R.id.New_Arrival -> {
-
-                    New_Arrival.setTextColor(Color.parseColor("#D62737"))
-                    HotDeals.setTextColor(Color.BLACK)
-                    Top20.setTextColor(Color.BLACK)
-                    NewArrivals()
-                }
-                R.id.Top20 -> {
-                    Top20.setTextColor(Color.parseColor("#D62737"))
-                    New_Arrival.setTextColor(Color.BLACK)
-                    HotDeals.setTextColor(Color.BLACK)
-                    TopTwenty()
-                }
-            }
-        }
         return view
     }
+
 
     override fun onResume() {
 
         super.onResume()
 
+        if (showToolBar!=null){
+            showToolBar?.showToolBar(true)
+        }
 
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        showToolBar = context as ShowToolBar
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        showToolBar = null
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.cart_menu, menu)
-        this.Menufilter = menu.findItem(R.id.cart).setVisible(true)
+        this.Menufilter = menu.findItem(R.id.cart).setVisible(false)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
@@ -268,6 +219,7 @@ class HomeFragment : Fragment(), SliderClickListener, BestItemClick, HotdealsIte
     }
 
     fun changeFragemnt(fragment: Fragment) {
+        showToolBar?.showToolBar(false)
         val transaction = activity?.supportFragmentManager?.beginTransaction()
         transaction?.replace(R.id.frame, fragment)
         transaction?.addToBackStack(null)
@@ -276,59 +228,41 @@ class HomeFragment : Fragment(), SliderClickListener, BestItemClick, HotdealsIte
     }
 
 
-    private fun setupViewPager(viewPager: ViewPager) {
+    private fun setupViewPager(viewPager: CustomPager) {
         val adapter = ViewpagerAdapter(childFragmentManager)
+        if (manager?.locale?.equals("ar")!!){
 
-        adapter.addFragment(HotDealsFragment(), "Hot deals")
-        adapter.addFragment(NewArrivalsFragment(), "New Arrival");
-        adapter.addFragment(TopTwentyFragment(), "Top 20");
-        viewPager.adapter = adapter
+            adapter.addFragment(HotDealsFragment.newInstance("3",""), getString(R.string.top20));
+            adapter.addFragment(HotDealsFragment.newInstance("2",""), getString(R.string.new_arrival));
+            adapter.addFragment(HotDealsFragment.newInstance("1",""), getString(R.string.hotdeals))
+            viewPager.adapter = adapter
+            viewPager.currentItem = 2
+        }else{
+            adapter.addFragment(HotDealsFragment.newInstance("1",""), getString(R.string.hotdeals))
+            adapter.addFragment(HotDealsFragment.newInstance("2",""), getString(R.string.new_arrival));
+            adapter.addFragment(HotDealsFragment.newInstance("3",""), getString(R.string.top20));
+            viewPager.adapter = adapter
+        }
+
+
     }
 
     private fun setupViewPager2(datum: List<BestDealCategory.Datum>) {
         val adapter = ViewpagerAdapter(childFragmentManager)
         datum?.forEach {
-            adapter.addFragment(BestDealsFragment.newInstance(it.categoryId!!), it.categoryLabel)
+            if (manager?.locale.equals("ar"))
+                adapter.addFragment(BestDealsFragment.newInstance(it.categoryId!!,0,-1f,-1f), it.categoryLabelAr)
+            else
+                adapter.addFragment(BestDealsFragment.newInstance(it.categoryId!!,0,-1f,-1f), it.categoryLabel)
         }
         viewPager2.adapter = adapter
+        if (manager?.locale.equals("ar"))
+            viewPager2.currentItem = datum.size
     }
-
-
-//    private fun countDown() {
-//        val countDownTimer = object : CountDownTimer(1584700200, 1000) {
-//            override fun onTick(p0: Long) {
-//                val millis: Long = p0
-//                val hms = String.format(
-//                    "%02d:%02d:%02d:%02d",
-//                    TimeUnit.HOURS.toDays(TimeUnit.MILLISECONDS.toDays(millis)),
-//                    (TimeUnit.MILLISECONDS.toHours(millis) - TimeUnit.DAYS.toHours(
-//                        TimeUnit.MILLISECONDS.toDays(
-//                            millis
-//                        )
-//                    )),
-//                    (TimeUnit.MILLISECONDS.toMinutes(millis) -
-//                            TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis))),
-//                    (TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(
-//                        TimeUnit.MILLISECONDS.toMinutes(millis)
-//                    ))
-//                )
-//
-//                System.out.println("Time : " + hms)
-//                textView_TimeCountDown?.setText(hms);//set text
-//            }
-//
-//            override fun onFinish() {
-//                /*clearing all fields and displaying countdown finished message          */
-//                textView_TimeCountDown?.setText("Count down completed");
-//                System.out.println("Time up")
-//            }
-//        }
-//        countDownTimer.start()
-//    }
-
 
     fun slider() {
 
+        progressBar.visibility = View.GONE
         val apiService = ServiceGenerator.createService(ApiInterface::class.java)
         val call: Call<SliderModel> =
                 apiService.Slider(ApiConstants.LG_APP_KEY)
@@ -338,6 +272,7 @@ class HomeFragment : Fragment(), SliderClickListener, BestItemClick, HotdealsIte
 
             override fun onResponse(call: Call<SliderModel?>?, response: Response<SliderModel?>) {
                 Log.e("Signin Response", response.toString() + "")
+                progressBar.visibility = View.GONE
                 if (response.isSuccessful()) {
 
                     val status: String = response.body()!!.status.toString()
@@ -385,6 +320,7 @@ class HomeFragment : Fragment(), SliderClickListener, BestItemClick, HotdealsIte
             override fun onFailure(call: Call<SliderModel?>?, t: Throwable?) {
                 // something went completely south (like no internet connection)
                 Log.e("onFailure", t.toString())
+                progressBar.visibility = View.GONE
             }
         })
     }
@@ -420,7 +356,8 @@ class HomeFragment : Fragment(), SliderClickListener, BestItemClick, HotdealsIte
                         recyclerOfferBanner.adapter = HomeOfferBannerAdapter(
                                 requireActivity(),
                                 offerSliderData,
-                                this@HomeFragment
+                                this@HomeFragment,
+                            manager?.locale.equals("ar",ignoreCase = true)
                         )
 //
 
@@ -448,9 +385,13 @@ class HomeFragment : Fragment(), SliderClickListener, BestItemClick, HotdealsIte
     }
 
     fun Bestdeal() {
-
+        var token = ""
+        if (manager?.getUserToken().isNullOrEmpty())
+            token = manager?.guestToken!!
+        else
+            token = manager?.userToken!!
         val apiService = ServiceGenerator.createService(ApiInterface::class.java)
-        val call: Call<BestDealModel> = apiService.dealsAndOffers(ApiConstants.LG_APP_KEY,manager?.guestToken)
+        val call: Call<BestDealModel> = apiService.BestDeals(ApiConstants.LG_APP_KEY,token)
 
         call.enqueue(object : Callback<BestDealModel?> {
 
@@ -476,7 +417,7 @@ class HomeFragment : Fragment(), SliderClickListener, BestItemClick, HotdealsIte
 
 
                     recycler_deals_offer.adapter =
-                            BestDeal_list_Adapter(requireActivity(), BestDeal_data, this@HomeFragment)
+                            Top_deals_list_Adapter(requireActivity(), BestDeal_data, this@HomeFragment,manager?.locale.equals("ar",ignoreCase = true))
 
 
                 } else {
@@ -491,135 +432,15 @@ class HomeFragment : Fragment(), SliderClickListener, BestItemClick, HotdealsIte
         })
     }
 
-    private fun Hotdeal() {
-
-        val apiService = ServiceGenerator.createService(ApiInterface::class.java)
-        val call: Call<DealsModel> = apiService.HotDeals(ApiConstants.LG_APP_KEY,
-                manager?.getGuestToken())
-        Log.e("Token", manager?.getGuestToken() + "")
-        call.enqueue(object : Callback<DealsModel?> {
-
-
-            override fun onResponse(call: Call<DealsModel?>?, response: Response<DealsModel?>) {
-                Log.e("Signin Response", response.toString() + "")
-                if (response.isSuccessful()) {
-
-                    val status: String = response.body()!!.status.toString()
-                    val messege: String? = response.body()!!.message
-
-                    Log.e("status", status.toString() + "")
-                    Log.e("messege", messege.toString() + "")
-
-                    if (status == "true") {
-                        Hotdeals_data = response.body()!!.data!!
-
-                        Log.e("Hotdeals_data", Hotdeals_data.size.toString())
-                    }
-
-
-                    recy_deals_.adapter = Top_deals_list_Adapter(
-                            requireActivity(),
-                            Hotdeals_data,
-                            this@HomeFragment
-                    )
-
-
-                } else {
-                }
-            }
-
-
-            override fun onFailure(call: Call<DealsModel?>?, t: Throwable?) {
-                // something went completely south (like no internet connection)
-                Log.e("onFailure", t.toString())
-            }
-        })
-    }
-
-
-    fun TopTwenty() {
-
-        val apiService = ServiceGenerator.createService(ApiInterface::class.java)
-        val call: Call<DealsModel> = apiService.TopTwenty(ApiConstants.LG_APP_KEY,
-                manager?.getGuestToken())
-
-        call.enqueue(object : Callback<DealsModel?> {
-
-
-            override fun onResponse(call: Call<DealsModel?>?, response: Response<DealsModel?>) {
-                Log.e("Signin Response", response.toString() + "")
-                if (response.isSuccessful()) {
-
-                    val status: String = response.body()!!.status.toString()
-                    val messege: String? = response.body()!!.message
-
-                    Log.e("status", status.toString() + "")
-                    Log.e("messege", messege.toString() + "")
-
-                    if (status == "true") {
-                        Hotdeals_data = response.body()!!.data!!
-
-                        Log.e("Toptwenty_data", Hotdeals_data.size.toString())
-                    }
-
-                    recy_deals_.adapter = Top_deals_list_Adapter(requireActivity(), Hotdeals_data, this@HomeFragment)
-
-                } else {
-                }
-            }
-
-
-            override fun onFailure(call: Call<DealsModel?>?, t: Throwable?) {
-                // something went completely south (like no internet connection)
-                Log.e("onFailure", t.toString())
-            }
-        })
-    }
-
-
-    fun NewArrivals() {
-
-        val apiService = ServiceGenerator.createService(ApiInterface::class.java)
-        val call: Call<NewArrivalModel> = apiService.NewArrivals(ApiConstants.LG_APP_KEY,
-                manager?.getGuestToken())
-
-        call.enqueue(object : Callback<NewArrivalModel?> {
-
-
-            override fun onResponse(call: Call<NewArrivalModel?>?, response: Response<NewArrivalModel?>) {
-                Log.e("Signin Response", response.toString() + "")
-                if (response.isSuccessful()) {
-
-                    val status: String = response.body()!!.status.toString()
-                    val messege: String? = response.body()!!.message
-
-                    Log.e("status", status.toString() + "")
-                    Log.e("messege", messege.toString() + "")
-
-                    if (status == "true") {
-                        NewArrival_data = response.body()!!.data!!
-
-                        Log.e("NewArrival_data", NewArrival_data.size.toString())
-                    }
-
-                    recy_deals_.adapter = New_arrival_list_Adapter(requireActivity(), NewArrival_data, this@HomeFragment)
-
-                } else {
-                }
-            }
-
-            override fun onFailure(call: Call<NewArrivalModel?>?, t: Throwable?) {
-                // something went completely south (like no internet connection)
-                Log.e("onFailure", t.toString())
-            }
-        })
-    }
-
     private fun getTimeOffers() {
-
+        var token = ""
+        if (manager?.getUserToken().isNullOrEmpty())
+            token = manager?.guestToken!!
+        else
+            token = manager?.userToken!!
         val apiService = ServiceGenerator.createService(ApiInterface::class.java)
         val call: Call<TimerOfferModel> = apiService.timerOffers(ApiConstants.LG_APP_KEY,
-                manager?.getGuestToken())
+                token)
         Log.e("Token", manager?.getGuestToken() + "")
         call.enqueue(object : Callback<TimerOfferModel?> {
 
@@ -633,7 +454,7 @@ class HomeFragment : Fragment(), SliderClickListener, BestItemClick, HotdealsIte
                     }
                     recy_time_deals.adapter = Time_deal_Adapter(
                             requireActivity(),
-                            alTimeOffers, 0
+                            alTimeOffers, 0,this@HomeFragment,manager?.locale.equals("ar")
                     )
 
                 } else {
@@ -649,10 +470,14 @@ class HomeFragment : Fragment(), SliderClickListener, BestItemClick, HotdealsIte
     }
 
     private fun getNonTimeOffers() {
-
+        var token = ""
+        if (manager?.getUserToken().isNullOrEmpty())
+            token = manager?.guestToken!!
+        else
+            token = manager?.userToken!!
         val apiService = ServiceGenerator.createService(ApiInterface::class.java)
         val call: Call<TimerOfferModel> = apiService.nonTimerOffers(ApiConstants.LG_APP_KEY,
-                manager?.getGuestToken())
+                token)
         Log.e("Token", manager?.getGuestToken() + "")
         call.enqueue(object : Callback<TimerOfferModel?> {
 
@@ -666,7 +491,7 @@ class HomeFragment : Fragment(), SliderClickListener, BestItemClick, HotdealsIte
                     }
                     recy_offer_deals.adapter = Time_deal_Adapter(
                             requireActivity(),
-                            alTimeOffers,1
+                            alTimeOffers,1,this@HomeFragment,manager?.locale.equals("ar")
                     )
 
                 } else {
@@ -682,10 +507,14 @@ class HomeFragment : Fragment(), SliderClickListener, BestItemClick, HotdealsIte
     }
 
     private fun getBestDealCategories() {
-
+        var token = ""
+        if (manager?.getUserToken().isNullOrEmpty())
+            token = manager?.guestToken!!
+        else
+            token = manager?.userToken!!
         val apiService = ServiceGenerator.createService(ApiInterface::class.java)
         val call: Call<BestDealCategory> = apiService.getBestDealCategories(ApiConstants.LG_APP_KEY,
-            manager?.getGuestToken())
+            token)
         Log.e("Token", manager?.getGuestToken() + "")
         call.enqueue(object : Callback<BestDealCategory?> {
 
@@ -696,6 +525,10 @@ class HomeFragment : Fragment(), SliderClickListener, BestItemClick, HotdealsIte
                     val status: String = response.body()!!.status.toString()
                     if (status == "true") {
                         alDealsCategories = response.body()!!.data!!
+                        if (manager?.locale.equals("ar"))
+                            alDealsCategories = alDealsCategories.reversed()
+                        manager?.min = -1f
+                        manager?.max = -1f
                         setupViewPager2(alDealsCategories)
                         tabLayoutCategories.setupWithViewPager(viewPager2)
 
@@ -744,8 +577,17 @@ class HomeFragment : Fragment(), SliderClickListener, BestItemClick, HotdealsIte
         }
     }
 
-    override fun onBestItemClicked(position: Int, item: BestDealModel.Datum?) {
-
+    override fun onBestItemClicked(position: Int, item: Product?) {
+        showToolBar?.showToolBar(false)
+        val bundle = Bundle()
+        bundle.putString("productId", item?.productId)
+        val subcategory = Product_Detail_view_Fragment()
+        subcategory.arguments = bundle
+        val transaction = activity?.supportFragmentManager?.beginTransaction()
+        transaction?.replace(R.id.frame, subcategory)
+        transaction?.addToBackStack(null)
+        transaction?.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+        transaction?.commit()
     }
 
     override fun onAddToWishListButtonClicked(productId: String) {
@@ -753,8 +595,22 @@ class HomeFragment : Fragment(), SliderClickListener, BestItemClick, HotdealsIte
 
     }
 
-    override fun onHotdealsClicked(position: Int, item: DealsModel.Datum?) {
+    override fun onHotdealsClicked(position: Int, item: Product?) {
+        showToolBar?.showToolBar(false)
         //val subcategory = MainCategoryFragment()
+        val bundle = Bundle()
+        bundle.putString("productId", item?.productId)
+        val subcategory = Product_Detail_view_Fragment()
+        subcategory.arguments = bundle
+        val transaction = activity?.supportFragmentManager?.beginTransaction()
+        transaction?.replace(R.id.frame, subcategory)
+        transaction?.addToBackStack(null)
+        transaction?.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+        transaction?.commit()
+    }
+
+    override fun onHotdealsClicked(position: Int, item: Data?) {
+        showToolBar?.showToolBar(false)
         val bundle = Bundle()
         bundle.putString("productId", item?.productId)
         val subcategory = Product_Detail_view_Fragment()
@@ -778,107 +634,9 @@ class HomeFragment : Fragment(), SliderClickListener, BestItemClick, HotdealsIte
         addToWishlist(productId)
     }
 
-    fun addToWishlist(productId: String) {
-        val apiService = ServiceGenerator.createService(ApiInterface::class.java)
-        val call: Call<CommonResponseModel> = apiService.addToWishList(
-                ApiConstants.LG_APP_KEY,
-                manager?.getUserToken(), productId
-        )
+    override fun onDeleteFromWishListButtonClick(productId: String) {
 
-        call.enqueue(object : Callback<CommonResponseModel?> {
-
-
-            override fun onResponse(
-                    call: Call<CommonResponseModel?>?,
-                    response: Response<CommonResponseModel?>
-            ) {
-                Log.e("Add wishlist response", response.toString() + "")
-                if (response.isSuccessful()) {
-
-                    val status: String = response.body()!!.status.toString()
-                    val message: String? = response.body()!!.message
-
-                    Log.e("status", status.toString() + "")
-                    Log.e("message", message.toString() + "")
-
-                    if (status == "true") {
-                        Toast.makeText(
-                                activity,
-                                message,
-                                Toast.LENGTH_SHORT
-                        ).show()
-                    } else {
-                        Toast.makeText(
-                                activity,
-                                message,
-                                Toast.LENGTH_SHORT
-                        ).show()
-                    }
-
-                } else {
-                    Toast.makeText(
-                            activity,
-                            "Add to wishlist failed",
-                            Toast.LENGTH_SHORT
-                    ).show()
-                }
-            }
-
-
-            override fun onFailure(call: Call<CommonResponseModel?>?, t: Throwable?) {
-                // something went completely south (like no internet connection)
-                Log.e("onFailure", t.toString())
-            }
-        })
-    }
-
-    fun getGuestToken() {
-
-
-        // val deviceid: String = Settings.Secure.ANDROID_ID
-        val deviceid = Settings.Secure.getString(context?.contentResolver, Settings.Secure.ANDROID_ID)
-
-        val apiService = ServiceGenerator.createService(ApiInterface::class.java)
-        val call: Call<GuestTokenModel> = apiService.getGuestToken(ApiConstants.LG_APP_KEY, deviceid)
-
-        call.enqueue(object : Callback<GuestTokenModel?> {
-
-
-            override fun onResponse(
-                    call: Call<GuestTokenModel?>?,
-                    response: Response<GuestTokenModel?>
-            ) {
-                Log.e("Guest token response", response.toString() + "")
-                if (response.isSuccessful()) {
-
-                    val status: String = response.body()!!.status.toString()
-                    val message: String? = response.body()!!.message
-
-                    Log.e("status", status.toString() + "")
-                    Log.e("message", message.toString() + "")
-
-                    if (status == "true") {
-                        manager?.saveGuestToken(response.body()!!.data?.guesttokenAccessToken)
-                    } else {
-                        Toast.makeText(
-                                activity,
-                                message,
-                                Toast.LENGTH_SHORT
-                        ).show()
-                    }
-
-                } else {
-
-                }
-            }
-
-
-            override fun onFailure(call: Call<GuestTokenModel?>?, t: Throwable?) {
-                // something went completely south (like no internet connection)
-                Log.e("onFailure", t.toString())
-            }
-        })
-
+        removeFromWishlist(productId)
     }
 
     fun Allcategories() {
@@ -918,7 +676,8 @@ class HomeFragment : Fragment(), SliderClickListener, BestItemClick, HotdealsIte
                     recycler_top_level.adapter = toplevel_cat_list_Adapter(
                             requireActivity(),
                             allcategory_data,
-                            this@HomeFragment
+                            this@HomeFragment,
+                        manager?.locale.equals("ar")
                     )
 
 
@@ -935,9 +694,15 @@ class HomeFragment : Fragment(), SliderClickListener, BestItemClick, HotdealsIte
     }
 
     override fun onTitleClicked(position: Int, item: AllCategoriesModel.Datum) {
+        showToolBar?.showToolBar(false)
+        manager?.min = -1f
+        manager?.max = -1f
         val subcategory = SubCategory_Fragment()
         val args = Bundle()
-        args.putString("name", item.categoryLabel.toString())
+        if (manager?.locale.equals("ar"))
+            args.putString("name", item.categoryLabelAr.toString())
+        else
+            args.putString("name", item.categoryLabel.toString())
         args.putString("id", item.categoryId.toString())
         subcategory.setArguments(args)
         val transaction = activity?.supportFragmentManager?.beginTransaction()
@@ -957,5 +722,208 @@ class HomeFragment : Fragment(), SliderClickListener, BestItemClick, HotdealsIte
         }
     }
 
+    fun addToWishlist(productId: String) {
+//        progressBar.visibility = View.VISIBLE
+        LoadingDialog.showLoadingDialog(requireContext(),"")
+        var token = ""
+        if (manager?.getUserToken().isNullOrEmpty())
+            token = manager?.guestToken!!
+        else
+            token = manager?.userToken!!
+        val apiService = ServiceGenerator.createService(ApiInterface::class.java)
+        val call: Call<CommonResponseModel> = apiService.addToWishList(
+            ApiConstants.LG_APP_KEY,
+            token, productId
+        )
+
+        call.enqueue(object : Callback<CommonResponseModel?> {
+
+
+            override fun onResponse(
+                call: Call<CommonResponseModel?>?,
+                response: Response<CommonResponseModel?>
+            ) {
+//                progressBar.visibility = View.GONE
+                Log.e("Add wishlist response", response.toString() + "")
+                if (response.isSuccessful()) {
+
+                    LoadingDialog.cancelLoading()
+                    val status: String = response.body()!!.status.toString()
+                    val message: String? = response.body()!!.message
+
+                    Log.e("status", status.toString() + "")
+                    Log.e("message", message.toString() + "")
+
+                    if (status == "true") {
+                        val toast = Toast.makeText(context, "Wish list added successfully", Toast.LENGTH_LONG)
+                        toast.setGravity(Gravity.CENTER, 0, 0)
+                        toast.show()
+                        getCartCount()
+                        var position = 0
+                        BestDeal_data?.forEachIndexed { index, product ->
+                            if (productId == product.productId){
+                                position = index
+                                BestDeal_data[index].wishlistExist = 1
+                                return@forEachIndexed
+                            }
+                            recycler_deals_offer.adapter?.notifyItemChanged(position)
+                        }
+//                        Toast.makeText(
+//                            activity,
+//                            "Wish list added successfully",
+//                            Toast.LENGTH_SHORT
+//                        ).show()
+                    } else {
+                        Toast.makeText(
+                            activity,
+                            message,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
+                } else {
+                    Toast.makeText(
+                        activity,
+                        "Add to wishlist failed",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+
+
+            override fun onFailure(call: Call<CommonResponseModel?>?, t: Throwable?) {
+                // something went completely south (like no internet connection)
+                LoadingDialog.cancelLoading()
+                Log.e("onFailure", t.toString())
+            }
+        })
+    }
+
+    fun removeFromWishlist(productId: String) {
+        LoadingDialog.showLoadingDialog(requireContext(),"")
+        var token = ""
+        if (manager?.getUserToken().isNullOrEmpty())
+            token = manager?.guestToken!!
+        else
+            token = manager?.userToken!!
+        val apiService = ServiceGenerator.createService(ApiInterface::class.java)
+        val call: Call<CommonResponseModel> = apiService.deleteWishList(
+            ApiConstants.LG_APP_KEY,
+            token, productId
+        )
+
+        call.enqueue(object : Callback<CommonResponseModel?> {
+
+
+            override fun onResponse(
+                call: Call<CommonResponseModel?>?,
+                response: Response<CommonResponseModel?>
+            ) {
+                Log.e("Add wishlist response", response.toString() + "")
+                LoadingDialog.cancelLoading()
+                if (response.isSuccessful()) {
+
+                    val status: String = response.body()!!.status.toString()
+                    val message: String? = response.body()!!.message
+
+                    Log.e("status", status.toString() + "")
+                    Log.e("message", message.toString() + "")
+
+                    if (status == "true") {
+                        val toast = Toast.makeText(context, "Wish list removed successfully", Toast.LENGTH_LONG)
+                        toast.setGravity(Gravity.CENTER, 0, 0)
+                        toast.show()
+                        getCartCount()
+                        var position = 0
+                        BestDeal_data?.forEachIndexed { index, product ->
+                            if (productId == product.productId){
+                                position = index
+                                BestDeal_data[index].wishlistExist = 0
+                                return@forEachIndexed
+                            }
+                            recycler_deals_offer.adapter?.notifyItemChanged(position)
+                        }
+//                        Toast.makeText(
+//                            activity,
+//                            "Wish list added successfully",
+//                            Toast.LENGTH_SHORT
+//                        ).show()
+                    } else {
+                        Toast.makeText(
+                            activity,
+                            message,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
+                } else {
+                    Toast.makeText(
+                        activity,
+                        "Add to wishlist failed",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+
+
+            override fun onFailure(call: Call<CommonResponseModel?>?, t: Throwable?) {
+                // something went completely south (like no internet connection)
+                LoadingDialog.cancelLoading()
+                Log.e("onFailure", t.toString())
+            }
+        })
+    }
+
+    fun getCartCount() {
+
+
+        var token = ""
+        if (manager?.getUserToken().isNullOrEmpty())
+            token = manager?.guestToken!!
+        else
+            token = manager?.userToken!!
+        val apiService = ServiceGenerator.createService(ApiInterface::class.java)
+        val call: Call<CartCountModel> = apiService.getCartCount(
+            ApiConstants.LG_APP_KEY,
+            token
+        )
+
+        call.enqueue(object : Callback<CartCountModel?> {
+
+
+            override fun onResponse(
+                call: Call<CartCountModel?>?,
+                response: Response<CartCountModel?>
+            ) {
+                Log.e("Guest token response", response.toString() + "")
+                if (response.isSuccessful()) {
+
+                    val status: String = response.body()!!.status.toString()
+                    val message: String? = response.body()!!.message
+
+                    Log.e("status", status.toString() + "")
+                    Log.e("message", message.toString() + "")
+
+                    if (status == "true") {
+                        var cartCount = response.body()!!.data?.count
+                        showToolBar?.updateCartCount(cartCount!!)
+                        showToolBar?.updateWalletCount(response.body()!!.data?.wishlistCount!!)
+
+                    } else {
+                    }
+
+                } else {
+
+                }
+            }
+
+
+            override fun onFailure(call: Call<CartCountModel?>?, t: Throwable?) {
+                // something went completely south (like no internet connection)
+                Log.e("onFailure", t.toString())
+            }
+        })
+
+    }
 
 }

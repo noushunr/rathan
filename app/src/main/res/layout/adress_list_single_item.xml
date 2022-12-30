@@ -2,9 +2,8 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="150dp"
+    android:layout_height="wrap_content"
     android:layout_marginTop="10dp"
-
     android:gravity="center">
 
     <LinearLayout
@@ -13,6 +12,8 @@
         android:layout_margin="5dp"
         android:background="@drawable/bg_location_list"
         android:gravity="center"
+        android:padding="5dp"
+        android:id="@+id/ll_main"
         android:orientation="horizontal"
         android:weightSum="1">
 
@@ -20,16 +21,17 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
             android:layout_weight=".7"
             android:gravity="center|top"
+            android:padding="5dp"
             android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="10dp"
                 android:layout_marginTop="5dp"
                 android:orientation="vertical">
 
@@ -39,7 +41,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_medium"
                     android:text="username"
-                    android:gravity="center|left"
+                    android:gravity="center|start"
                     android:layout_marginBottom="5dp"
                     android:textColor="#686565"
                     android:textSize="18sp" />
@@ -67,7 +69,7 @@
                     android:id="@+id/mobileTxt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginEnd="10dp"
                     android:fontFamily="@font/roboto"
                     android:text="Mob: +965 123 4569"
                     android:textColor="#686565"
@@ -100,21 +102,23 @@
                 android:layout_weight=".3"
                 android:id="@+id/ll_selected"
                 android:visibility="gone"
+
                 android:layout_marginBottom="5dp"
-                android:gravity="top|right"
+                android:gravity="top|end"
                 android:orientation="horizontal">
 
                 <LinearLayout
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:layout_marginRight="5dp"
+                    android:layout_marginEnd="5dp"
 
                     android:gravity="center">
 
                     <ImageView
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:src="@drawable/green_tick" />
+                        android:id="@+id/tick"
+                        android:src="@drawable/radio_icon" />
 
 
                 </LinearLayout>
@@ -124,7 +128,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight=".3"
                 android:layout_marginBottom="5dp"
-                android:gravity="bottom|right"
+                android:gravity="bottom|end"
                 android:layout_marginEnd="10dp"
                 android:orientation="horizontal">
 
@@ -132,7 +136,7 @@
                 <LinearLayout
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:layout_marginRight="5dp"
+                    android:layout_marginEnd="5dp"
                     android:background="@drawable/bg_circle_hash"
                     android:gravity="center">
 
@@ -146,7 +150,7 @@
                 <LinearLayout
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:layout_marginRight="5dp"
+                    android:layout_marginEnd="5dp"
                     android:background="@drawable/bg_circle_hash"
                     android:gravity="center">
 

@@ -68,4 +68,20 @@ class Data : Serializable {
     @SerializedName("product_single_quantity")
     @Expose
     var productSingleQuantity: String? = null
+
+    @SerializedName("wishlist_exist")
+    @Expose
+    var wishlistExist: Int? = 0
+
+    @SerializedName("sameday_delivery")
+    @Expose
+    var samedayDelivery: String? = null
+
+    @SerializedName("product_hastimer")
+    @Expose
+    var productHastimer: String? = null
+
+    @SerializedName("product_spoffer_oldprice_show")
+    @Expose
+    var product_spoffer_oldprice_show: String? = null
 }

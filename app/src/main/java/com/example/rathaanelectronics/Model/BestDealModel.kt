@@ -10,7 +10,7 @@ class BestDealModel {
 
     @SerializedName("data")
     @Expose
-    var data: List<Datum>? = null
+    var data: List<Product>? = null
 
     @SerializedName("message")
     @Expose
@@ -313,5 +313,19 @@ class BestDealModel {
         @Expose
         var hotPrice: String? = null
 
+        @SerializedName("wishlist_exist")
+        @Expose
+        var wishlistExist: Int? = 0
+
+        @SerializedName("brand_name")
+        @Expose
+        var brandName: String? = null
+
+        @SerializedName("sameday_delivery")
+        @Expose
+        var samedayDelivery: String? = null
+
     }
+
+
 }

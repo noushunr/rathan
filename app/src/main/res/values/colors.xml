@@ -16,8 +16,8 @@
     <color name="white">#FFFFFFFF</color>
     <color name="red">#FF0000</color>
     <color name="grey">#605D5D</color>
-
-
+    <color name="green">#00C569</color>
+    <color name="colorPrimary_transp">#ccAA5C64</color>
 
 
 </resources>

@@ -2,31 +2,35 @@ package com.example.rathaanelectronics.Fragment
 
 import Filter_Fragment
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import android.widget.LinearLayout
+import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.rathaanelectronics.Activity.MainActivity
-import com.example.rathaanelectronics.Adapter.MainCat_title_list_Adapter
-import com.example.rathaanelectronics.Adapter.MainCategoryProductsAdapter
-import com.example.rathaanelectronics.Adapter.Main_category_list_Adapter
-import com.example.rathaanelectronics.Adapter.Top_deals_list_Adapter
+import com.example.rathaanelectronics.Adapter.*
+import com.example.rathaanelectronics.Common.CustomPager
 import com.example.rathaanelectronics.Common.EqualSpacingItemDecoration
+import com.example.rathaanelectronics.Common.LoadingDialog
+import com.example.rathaanelectronics.Fragment.DealsCategory.BestDealsFragment
 import com.example.rathaanelectronics.Interface.CategoriesTitleItemClick
 import com.example.rathaanelectronics.Interface.HotdealsItemClick
+import com.example.rathaanelectronics.Interface.ShowToolBar
 import com.example.rathaanelectronics.Managers.MyPreferenceManager
-import com.example.rathaanelectronics.Model.AllCategoriesModel
-import com.example.rathaanelectronics.Model.CategoryProductModel
-import com.example.rathaanelectronics.Model.DealsModel
+import com.example.rathaanelectronics.Model.*
 import com.example.rathaanelectronics.R
 import com.example.rathaanelectronics.Rest.ApiConstants
 import com.example.rathaanelectronics.Rest.ApiInterface
 import com.example.rathaanelectronics.Rest.ServiceGenerator
+import com.google.android.material.tabs.TabLayout
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -36,7 +40,6 @@ private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
 
-
 class MainCategoryFragment : Fragment(), CategoriesTitleItemClick,
     MainCategoryProductsAdapter.MainCategoryProductsItemClick {
 
@@ -44,12 +47,29 @@ class MainCategoryFragment : Fragment(), CategoriesTitleItemClick,
     private var param2: String? = null
     private var Menufilter: MenuItem? = null
     var filterFragment = Filter_Fragment()
-    lateinit var recy_cat_title:RecyclerView
-    lateinit var recycle_main_Cat:RecyclerView
-    var Hotdeals_data: MutableList<CategoryProductModel.CategoryProduct> = mutableListOf()
-    var allcategory_data: List<AllCategoriesModel.Datum> = ArrayList<AllCategoriesModel.Datum>()
+    var Hotdeals_data: MutableList<Product> = mutableListOf()
+    var allcategory_data: MutableList<AllCategoriesModel.Datum> = mutableListOf()
     private var manager: MyPreferenceManager? = null
 
+    lateinit var viewPager2: CustomPager
+    lateinit var tabLayoutCategories: TabLayout
+    lateinit var ivFilter: ImageView
+    lateinit var ivCart: ImageView
+    private lateinit var llBadge: LinearLayout
+    private lateinit var tvCount: TextView
+    var min = -1f
+    var max = -1f
+    var showToolBar : ShowToolBar?=null
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        showToolBar = context as ShowToolBar
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        showToolBar = null
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -66,29 +86,34 @@ class MainCategoryFragment : Fragment(), CategoriesTitleItemClick,
     ): View? {
 
         val view = inflater.inflate(R.layout.fragment_main_category, container, false)
+        val ivBack = view.findViewById<ImageView>(R.id.iv_back)
+        ivBack.setOnClickListener { activity?.onBackPressed() }
+        setHasOptionsMenu(true)
 
-        setHasOptionsMenu(true);
         (activity as MainActivity?)?.settoolbar()
-       recy_cat_title = view.findViewById<RecyclerView>(R.id.recycle_titles)
-        recycle_main_Cat = view.findViewById<RecyclerView>(R.id.recycle_main_Cat)
+        tabLayoutCategories = view.findViewById<TabLayout>(R.id.tabs2)
+        viewPager2 = view.findViewById<View>(R.id.viewpager2) as CustomPager
+        ivFilter = view.findViewById(R.id.iv_filter)
+        ivCart = view.findViewById(R.id.iv_cart)
+        llBadge = view.findViewById(R.id.ll_badge)
+        tvCount = view.findViewById(R.id.tv_count)
+        ivFilter.setOnClickListener {
+            changeFragemnt(filterFragment)
+        }
+        ivCart.setOnClickListener {
+            changeFragemnt(Cart_Fragment())
+        }
 
-        recy_cat_title.layoutManager =
-            LinearLayoutManager(activity, LinearLayout.HORIZONTAL, false)
+        getCartCount()
+        requireActivity().supportFragmentManager.setFragmentResultListener(
+            "124",
+            viewLifecycleOwner
+        ) { id, data ->
+            min = data.getFloat("min")
+            max = data.getFloat("max")
 
-
+        }
         Allcategories()
-
-
-        val numberOfColumns = 2
-        recycle_main_Cat.layoutManager = GridLayoutManager(activity, numberOfColumns)
-        recycle_main_Cat.addItemDecoration(
-            EqualSpacingItemDecoration(
-                15,
-                EqualSpacingItemDecoration.GRID
-            )
-        )
-        //TopTwenty()
-
         return view
     }
 
@@ -96,8 +121,8 @@ class MainCategoryFragment : Fragment(), CategoriesTitleItemClick,
 
 
         inflater.inflate(R.menu.cart_menu, menu)
-        this.Menufilter = menu.findItem(R.id.cart).setVisible(true)
-        this.Menufilter = menu.findItem(R.id.filter).setVisible(true)
+        this.Menufilter = menu.findItem(R.id.cart).setVisible(false)
+        this.Menufilter = menu.findItem(R.id.filter).setVisible(false)
         super.onCreateOptionsMenu(menu, inflater)
 
 
@@ -113,17 +138,23 @@ class MainCategoryFragment : Fragment(), CategoriesTitleItemClick,
             else -> super.onOptionsItemSelected(item)
         }
     }
+
     fun Allcategories() {
 
+        LoadingDialog.showLoadingDialog(requireContext(),"")
         val apiService = ServiceGenerator.createService(ApiInterface::class.java)
         val call: Call<AllCategoriesModel> = apiService.AllCategories(ApiConstants.LG_APP_KEY)
         call.enqueue(object : Callback<AllCategoriesModel?> {
 
 
-            override fun onResponse(call: Call<AllCategoriesModel?>?, response: Response<AllCategoriesModel?>) {
+            override fun onResponse(
+                call: Call<AllCategoriesModel?>?,
+                response: Response<AllCategoriesModel?>
+            ) {
                 Log.e("Signin Response", response.toString() + "")
                 if (response.isSuccessful()) {
 
+                    LoadingDialog.cancelLoading()
                     val status: String = response.body()!!.status.toString()
                     val messege: String? = response.body()!!.message
 
@@ -135,15 +166,17 @@ class MainCategoryFragment : Fragment(), CategoriesTitleItemClick,
 
                         Log.e("Hotdeals_data", allcategory_data.size.toString())
 
-                        catProducts(allcategory_data[0].categoryId.toString())
+//                        catProducts(allcategory_data[0].categoryId.toString())
                     }
 
-
-                    recy_cat_title.adapter = MainCat_title_list_Adapter(
-                        requireActivity(),
-                        allcategory_data,
-                        this@MainCategoryFragment
-                    )
+                    if (allcategory_data?.size > 0) {
+                        if (manager?.locale?.equals("ar")!!) {
+                            allcategory_data = allcategory_data?.reversed() as MutableList<AllCategoriesModel.Datum>
+                        }
+                        setupViewPager2(allcategory_data)
+                        tabLayoutCategories.setupWithViewPager(viewPager2)
+//                        allcategory_data.get(0).isCategorySelected = true
+                    }
 
 
                 } else {
@@ -153,72 +186,55 @@ class MainCategoryFragment : Fragment(), CategoriesTitleItemClick,
 
             override fun onFailure(call: Call<AllCategoriesModel?>?, t: Throwable?) {
                 // something went completely south (like no internet connection)
+                LoadingDialog.cancelLoading()
                 Log.e("onFailure", t.toString())
             }
         })
     }
 
+    private fun setupViewPager2(datum: List<AllCategoriesModel.Datum>) {
+        val adapter = ViewpagerAdapter(childFragmentManager)
+        if (manager?.locale?.equals("ar")!!){
 
-
-    /*fun TopTwenty() {
-
-        val apiService = ServiceGenerator.createService(ApiInterface::class.java)
-        val call: Call<DealsModel> = apiService.TopTwenty(ApiConstants.LG_APP_KEY,
-            manager?.getUserToken())
-
-        call.enqueue(object : Callback<DealsModel?> {
-
-
-            override fun onResponse(call: Call<DealsModel?>?, response: Response<DealsModel?>) {
-                Log.e("Signin Response", response.toString() + "")
-                if (response.isSuccessful()) {
-
-                    val status: String = response.body()!!.status.toString()
-                    val messege: String? = response.body()!!.message
-
-                    Log.e("status", status.toString() + "")
-                    Log.e("messege", messege.toString() + "")
-
-                    if (status == "true") {
-                        Hotdeals_data = response.body()!!.data!!
-
-                        Log.e("Toptwenty_data", Hotdeals_data.size.toString())
-                    }
-
-
-                    recycle_main_Cat.adapter= Main_category_list_Adapter(requireActivity(),Hotdeals_data,this@MainCategoryFragment)
-
-
-
-
-                } else {
-                }
+            datum?.forEach {
+                adapter.addFragment(
+                    BestDealsFragment.newInstance(it.categoryId!!, 0, min, max),
+                    it.categoryLabelAr
+                )
             }
-
-
-            override fun onFailure(call: Call<DealsModel?>?, t: Throwable?) {
-                // something went completely south (like no internet connection)
-                Log.e("onFailure", t.toString())
+            viewPager2.adapter = adapter
+            viewPager2.currentItem = datum?.size
+        }else{
+            datum?.forEach {
+                adapter.addFragment(
+                    BestDealsFragment.newInstance(it.categoryId!!, 0, min, max),
+                    it.categoryLabel
+                )
             }
-        })
-    }*/
+            viewPager2.adapter = adapter
+        }
 
+
+    }
 
 
     fun catProducts(id: String) {
 
         Hotdeals_data = mutableListOf()
 
-        recycle_main_Cat.adapter= MainCategoryProductsAdapter(requireActivity(),Hotdeals_data,this@MainCategoryFragment)
-
         val apiService = ServiceGenerator.createService(ApiInterface::class.java)
-        val call: Call<CategoryProductModel> = apiService.categoryProducts(ApiConstants.LG_APP_KEY,
-            manager?.getUserToken(), id)
+        val call: Call<CategoryProductModel> = apiService.categoryProducts(
+            ApiConstants.LG_APP_KEY,
+            manager?.getUserToken(), id
+        )
 
         call.enqueue(object : Callback<CategoryProductModel?> {
 
 
-            override fun onResponse(call: Call<CategoryProductModel?>?, response: Response<CategoryProductModel?>) {
+            override fun onResponse(
+                call: Call<CategoryProductModel?>?,
+                response: Response<CategoryProductModel?>
+            ) {
                 Log.e("Signin Response", response.toString() + "")
                 if (response.isSuccessful()) {
 
@@ -233,11 +249,6 @@ class MainCategoryFragment : Fragment(), CategoriesTitleItemClick,
 
                         Log.e("Toptwenty_data", Hotdeals_data.size.toString())
                     }
-
-
-                    recycle_main_Cat.adapter= MainCategoryProductsAdapter(requireActivity(),Hotdeals_data,this@MainCategoryFragment)
-
-
 
 
                 } else {
@@ -264,8 +275,14 @@ class MainCategoryFragment : Fragment(), CategoriesTitleItemClick,
     }
 
     override fun onTitleClicked(position: Int, item: AllCategoriesModel.Datum) {
+        allcategory_data.forEachIndexed { index, datum ->
+            item.isCategorySelected = position == index
+            allcategory_data[index] = item
+        }
+
         catProducts(item.categoryId.toString())
     }
+
     fun changeFragemnt(fragment: Fragment) {
         val transaction = activity?.supportFragmentManager?.beginTransaction()
         transaction?.replace(R.id.frame, fragment)
@@ -274,7 +291,7 @@ class MainCategoryFragment : Fragment(), CategoriesTitleItemClick,
         transaction?.commit()
     }
 
-    override fun onProductClicked(position: Int, item: CategoryProductModel.CategoryProduct) {
+    override fun onProductClicked(position: Int, item: Product) {
         val bundle = Bundle()
         bundle.putString("productId", item.productId)
         val subcategory = Product_Detail_view_Fragment()
@@ -284,5 +301,127 @@ class MainCategoryFragment : Fragment(), CategoriesTitleItemClick,
         transaction?.addToBackStack(null)
         transaction?.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
         transaction?.commit()
+    }
+
+    override fun onAddToWishlistButtonClick(productId: String) {
+        addToWishlist(productId)
+    }
+
+    fun addToWishlist(productId: String) {
+        LoadingDialog.showLoadingDialog(requireContext(),"")
+        val apiService = ServiceGenerator.createService(ApiInterface::class.java)
+        val call: Call<CommonResponseModel> = apiService.addToWishList(
+            ApiConstants.LG_APP_KEY,
+            manager?.getUserToken(), productId
+        )
+
+        call.enqueue(object : Callback<CommonResponseModel?> {
+
+
+            override fun onResponse(
+                call: Call<CommonResponseModel?>?,
+                response: Response<CommonResponseModel?>
+            ) {
+                Log.e("Add wishlist response", response.toString() + "")
+                if (response.isSuccessful()) {
+
+                    LoadingDialog.cancelLoading()
+                    val status: String = response.body()!!.status.toString()
+                    val message: String? = response.body()!!.message
+
+                    Log.e("status", status.toString() + "")
+                    Log.e("message", message.toString() + "")
+
+                    if (status == "true") {
+                        getCartCount()
+                        Toast.makeText(
+                            activity,
+                            message,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
+                        Toast.makeText(
+                            activity,
+                            message,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
+                } else {
+                    Toast.makeText(
+                        activity,
+                        "Add to wishlist failed",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+
+
+            override fun onFailure(call: Call<CommonResponseModel?>?, t: Throwable?) {
+                // something went completely south (like no internet connection)
+                LoadingDialog.cancelLoading()
+                Log.e("onFailure", t.toString())
+            }
+        })
+    }
+
+    fun getCartCount() {
+
+
+        var token = ""
+        if (manager?.getUserToken().isNullOrEmpty())
+            token = manager?.guestToken!!
+        else
+            token = manager?.userToken!!
+        val apiService = ServiceGenerator.createService(ApiInterface::class.java)
+        val call: Call<CartCountModel> = apiService.getCartCount(
+            ApiConstants.LG_APP_KEY,
+            token
+        )
+
+        call.enqueue(object : Callback<CartCountModel?> {
+
+
+            override fun onResponse(
+                call: Call<CartCountModel?>?,
+                response: Response<CartCountModel?>
+            ) {
+                Log.e("Guest token response", response.toString() + "")
+                if (response.isSuccessful()) {
+
+                    val status: String = response.body()!!.status.toString()
+                    val message: String? = response.body()!!.message
+
+                    Log.e("status", status.toString() + "")
+                    Log.e("message", message.toString() + "")
+
+                    if (status == "true") {
+                        var cartCount = response.body()!!.data?.count
+                        var wishListCount = response.body()!!.data?.wishlistCount
+                        showToolBar?.updateCartCount(cartCount!!)
+                        showToolBar?.updateWalletCount(response.body()!!.data?.wishlistCount!!)
+                        if (cartCount!! > 0) {
+                            llBadge.visibility = View.VISIBLE
+                            tvCount.text = "$cartCount"
+
+                        } else {
+                            llBadge.visibility = View.GONE
+                        }
+
+                    } else {
+                    }
+
+                } else {
+
+                }
+            }
+
+
+            override fun onFailure(call: Call<CartCountModel?>?, t: Throwable?) {
+                // something went completely south (like no internet connection)
+                Log.e("onFailure", t.toString())
+            }
+        })
+
     }
 }

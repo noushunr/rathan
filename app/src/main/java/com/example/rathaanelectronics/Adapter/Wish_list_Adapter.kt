@@ -16,16 +16,16 @@ import com.example.rathaanelectronics.R
 import com.example.rathaanelectronics.Rest.ApiConstants
 
 
-class Wish_list_Adapter(activity: FragmentActivity?,
-                        wishListData: List<WishListResponseModel.Data.Details>,
-                        listener: ManageWishlistItemClick
+class Wish_list_Adapter(
+    activity: FragmentActivity?,
+    wishListData: List<WishListResponseModel.Data.Details>,
+    listener: ManageWishlistItemClick,
+    isArabic: Boolean
 ) : RecyclerView.Adapter<Wish_list_Adapter.ViewHolder>() {
     var context = activity
     var wishListData = wishListData
     var listener = listener
-
-
-
+    var isArabic = isArabic
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Wish_list_Adapter.ViewHolder {
         val v = LayoutInflater.from(parent.context).inflate(R.layout.wish_list_sing_item, parent, false)
         return ViewHolder(v)
@@ -33,13 +33,35 @@ class Wish_list_Adapter(activity: FragmentActivity?,
 
     override fun onBindViewHolder(holder: Wish_list_Adapter.ViewHolder, position: Int) {
        // holder.bindItems(userList[position])
-        Glide.with(context!!).load(ApiConstants.IMAGE_BASE_URL + wishListData.get(position).productImage)
+        var image = wishListData.get(position).productImage ?: wishListData.get(position).offersImage
+        var name = ""
+        if (isArabic)
+            name = (wishListData.get(position).productNameArab ?: wishListData.get(position).offersBundleTitleArab)!!
+        else
+            name = (wishListData.get(position).productName ?: wishListData.get(position).offersBundleTitle)!!
+        var price = wishListData.get(position).productSellPrice ?: wishListData.get(position).offersBundlePrice
+        if (image!=null){
+            if (image.contains(",")){
+                image = image.split(",").toTypedArray()[0]
+            }
+        }
+        Glide.with(context!!).load(ApiConstants.IMAGE_BASE_URL + image)
             .into(holder.imageView)
-        holder.nameTxt.setText(wishListData.get(position).productName)
-        holder.priceTxt.setText("KD "+wishListData.get(position).productSellPrice)
+        holder.nameTxt.setText(name)
+        holder.priceTxt.setText("KD "+price)
         holder.addToCartBtn.setOnClickListener{
             // handle add to cart click event
-            listener.addToCart(wishListData.get(position).productId, wishListData.get(position).productQuantity)
+            var quanity = 1
+            if(wishListData.get(position).productQuantity!=null && wishListData.get(position).productQuantity.equals("0")){
+                if(wishListData.get(position).productQuantity.equals("0"))
+                    quanity = 1
+                else
+                    quanity = wishListData.get(position).productQuantity?.toInt()!!
+            }
+            if (wishListData.get(position).productName!=null)
+                listener.addToCart(wishListData.get(position).productId, quanity.toString())
+            else
+                listener.addToBundleCart(wishListData[position].wishlistBundleOfferid, quanity.toString())
         }
         holder.deleteBtn.setOnClickListener{
             // handle delete events

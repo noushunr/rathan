@@ -6,13 +6,20 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.rathaanelectronics.Adapter.New_arrival_list_Adapter
+import com.example.rathaanelectronics.Adapter.Top_deals_list_Adapter
 import com.example.rathaanelectronics.Common.EqualSpacingItemDecoration
+import com.example.rathaanelectronics.Fragment.MainCategoryFragment
+import com.example.rathaanelectronics.Fragment.Product_Detail_view_Fragment
+import com.example.rathaanelectronics.Interface.HotdealsItemClick
 import com.example.rathaanelectronics.Interface.NewArrivalItemClick
 import com.example.rathaanelectronics.Managers.MyPreferenceManager
+import com.example.rathaanelectronics.Model.DealsModel
 import com.example.rathaanelectronics.Model.NewArrivalModel
+import com.example.rathaanelectronics.Model.Product
 import com.example.rathaanelectronics.R
 import com.example.rathaanelectronics.Rest.ApiConstants
 import com.example.rathaanelectronics.Rest.ApiInterface
@@ -31,14 +38,14 @@ private const val ARG_PARAM2 = "param2"
  * Use the [HotDealsFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class NewArrivalsFragment : Fragment(), NewArrivalItemClick {
+class NewArrivalsFragment : Fragment(), HotdealsItemClick {
 
     // TODO: Rename and change types of parameters
 
     private var param1: String? = null
     private var param2: String? = null
     lateinit var Rcy_newArrival: RecyclerView
-    var NewArrival_data: List<NewArrivalModel.Datum> = ArrayList<NewArrivalModel.Datum>()
+    var NewArrival_data: List<Product> = ArrayList<Product>()
     private var manager: MyPreferenceManager? = null
 
 
@@ -89,13 +96,13 @@ class NewArrivalsFragment : Fragment(), NewArrivalItemClick {
     fun NewArrivals() {
 
         val apiService = ServiceGenerator.createService(ApiInterface::class.java)
-        val call: Call<NewArrivalModel> = apiService.NewArrivals(ApiConstants.LG_APP_KEY,
+        val call: Call<DealsModel> = apiService.NewArrivals(ApiConstants.LG_APP_KEY,
             manager?.getGuestToken())
 
-        call.enqueue(object : Callback<NewArrivalModel?> {
+        call.enqueue(object : Callback<DealsModel?> {
 
 
-            override fun onResponse(call: Call<NewArrivalModel?>?, response: Response<NewArrivalModel?>) {
+            override fun onResponse(call: Call<DealsModel?>?, response: Response<DealsModel?>) {
                 Log.e("Signin Response", response.toString() + "")
                 if (response.isSuccessful()) {
 
@@ -112,7 +119,7 @@ class NewArrivalsFragment : Fragment(), NewArrivalItemClick {
                     }
 
 
-                    Rcy_newArrival.adapter= New_arrival_list_Adapter(requireActivity(),NewArrival_data,this@NewArrivalsFragment)
+                    Rcy_newArrival.adapter= Top_deals_list_Adapter(requireActivity(),NewArrival_data,this@NewArrivalsFragment,true)
 
 
 
@@ -122,7 +129,7 @@ class NewArrivalsFragment : Fragment(), NewArrivalItemClick {
             }
 
 
-            override fun onFailure(call: Call<NewArrivalModel?>?, t: Throwable?) {
+            override fun onFailure(call: Call<DealsModel?>?, t: Throwable?) {
                 // something went completely south (like no internet connection)
                 Log.e("onFailure", t.toString())
             }
@@ -149,12 +156,27 @@ class NewArrivalsFragment : Fragment(), NewArrivalItemClick {
             }
     }
 
-    override fun onNewArrivalClicked(position: Int, item: NewArrivalModel.Datum?) {
-        TODO("Not yet implemented")
+
+
+
+    override fun onHotdealsClicked(position: Int, item: Product?) {
+        val bundle = Bundle()
+        bundle.putString("productId", item?.productId)
+        val subcategory = Product_Detail_view_Fragment()
+        subcategory.arguments = bundle
+        val transaction = activity?.supportFragmentManager?.beginTransaction()
+        transaction?.replace(R.id.frame, subcategory)
+        transaction?.addToBackStack(null)
+        transaction?.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+        transaction?.commit()
     }
 
-    override fun onAddToWishListButtonClick(productId: String) {
-        TODO("Not yet implemented")
+    override fun onAddToWishlistButtonClick(productId: String) {
+
+    }
+
+    override fun onDeleteFromWishListButtonClick(productId: String) {
+
     }
 
 

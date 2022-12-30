@@ -6,35 +6,30 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import android.widget.TextView
-import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.FragmentTransaction
 
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.rathaanelectronics.Fragment.Product_Detail_view_Fragment
 import com.example.rathaanelectronics.Interface.BestItemClick
-import com.example.rathaanelectronics.Interface.HotdealsItemClick
-import com.example.rathaanelectronics.Interface.NewArrivalItemClick
-import com.example.rathaanelectronics.Model.BestDealModel
-import com.example.rathaanelectronics.Model.DealsModel
-import com.example.rathaanelectronics.Model.NewArrivalModel
+import com.example.rathaanelectronics.Model.Product
 import com.example.rathaanelectronics.R
 import com.example.rathaanelectronics.Rest.ApiConstants
 
 
 class BestDeal_list_Adapter(
     activity: FragmentActivity?,
-    BestDeal_data: List<BestDealModel.Datum>,
+    BestDeal_data: List<Product>,
     listener: BestItemClick,
+    isArabic: Boolean
 
-    ) :
+) :
     RecyclerView.Adapter<BestDeal_list_Adapter.ViewHolder>() {
     var context = activity
     var BestDeal_data = BestDeal_data
     var listener = listener
-
+    var isArabic = isArabic
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -51,14 +46,14 @@ class BestDeal_list_Adapter(
     override fun onBindViewHolder(holder: BestDeal_list_Adapter.ViewHolder, position: Int) {
 
 
-        holder.bindItems(BestDeal_data.get(position))
+        holder.bindItems(BestDeal_data.get(position), isArabic)
         holder.ll_offer_float.visibility = View.GONE
 
         holder.coordinatorLayout_home.setOnClickListener { view ->
             listener.onBestItemClicked(position, BestDeal_data[position])
         }
 
-        holder.addToWishListBtn.setOnClickListener{
+        holder.addToWishListBtn.setOnClickListener {
             BestDeal_data.get(position).productId?.let { it1 ->
                 listener.onAddToWishListButtonClicked(
                     it1
@@ -78,7 +73,7 @@ class BestDeal_list_Adapter(
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         val coordinatorLayout_home =
-            itemView.findViewById<CoordinatorLayout>(R.id.coordinatorLayout_home)
+            itemView.findViewById<RelativeLayout>(R.id.coordinatorLayout_home)
         val img_top_deal = itemView.findViewById<ImageView>(R.id.img_top_deal)
         val txt_top_deal_product_name =
             itemView.findViewById<TextView>(R.id.txt_top_deal_product_name)
@@ -88,27 +83,69 @@ class BestDeal_list_Adapter(
 
         val txt_offer_float = itemView.findViewById<TextView>(R.id.txt_offer_float)
         val ll_offer_float = itemView.findViewById<LinearLayout>(R.id.ll_offer_float)
-        fun bindItems(get: BestDealModel.Datum) {
+        val llSameDayDelivery = itemView.findViewById<LinearLayout>(R.id.ll_same_day_delivery)
+        val llSoldOut = itemView.findViewById<LinearLayout>(R.id.ll_sold_out)
+        fun bindItems(get: Product, isArabic: Boolean) {
 
 
-            if (get.productImage!=null && get.productImage?.contains(",")!!){
+            if (get.productImage != null && get.productImage?.contains(",")!!) {
                 var result: List<String>? = get.productImage?.split(",")?.map { it.trim() }
-                if (result?.size!! >0){
+                if (result?.size!! > 0) {
                     Glide.with(context!!).load(ApiConstants.IMAGE_BASE_URL + result[0])
                         .into(img_top_deal)
                 }
 
-            }else{
+            } else {
                 Glide.with(context!!).load(ApiConstants.IMAGE_BASE_URL + get.productImage)
                     .into(img_top_deal)
             }
 
 
-            txt_top_deal_product_name.text = get.productName
+            if (isArabic)
+                txt_top_deal_product_name.text = get.productNameArab
+            else
+                txt_top_deal_product_name.text = get.productName
 //            txt_brandname.visibility = View.GONE
             txt_selling_price.text = "KD " + get.productSellPrice
             txt_selling_price.setTextColor(Color.parseColor("#128400"))
+            if (get?.prodSingleQuantity?.toInt() == 0) {
+                llSoldOut.visibility = View.VISIBLE
+            } else {
+                llSoldOut.visibility = View.GONE
+                if (get?.samedayDelivery != null && get?.samedayDelivery?.equals(
+                        "yes",
+                        ignoreCase = true
+                    )!!
+                ) {
+                    llSameDayDelivery.visibility = View.VISIBLE
+                } else {
+                    llSameDayDelivery.visibility = View.GONE
+                }
+            }
+            if (get?.topSelling?.toInt() == 1) {
+                ll_offer_float.visibility = View.VISIBLE
+                txt_offer_float.text = "Best Seller"
+                ll_offer_float.setBackgroundResource(R.drawable.bg_offer_float_best_seller)
+            } else if (get?.productOfferStat?.toInt() == 2) {
+                if (get?.productSpofferPrice?.toDouble()?.toInt() != 0) {
+                    var offerPercentage =
+                        ((get?.productSellPrice?.toDouble())?.minus((get?.productSpofferPrice?.toDouble()!!)))?.div(
+                            (get?.productSellPrice?.toDouble()!!)
+                        )
+                    var offerPrice = offerPercentage?.times(100)
+                    var roundOff = offerPrice?.times(100.0)?.let { Math.round(it) }?.div(100.0)
+                    ll_offer_float.visibility = View.VISIBLE
+                    if (offerPercentage != null) {
+                        txt_offer_float.text = "${roundOff.toString() }  % ${context?.getString(R.string.offer)}"
+                    }
+                    ll_offer_float.setBackgroundResource(R.drawable.bg_offer_float_offer)
+                } else {
+                    ll_offer_float.visibility = View.GONE
+                }
 
+            } else {
+                ll_offer_float.visibility = View.GONE
+            }
 
         }
     }

@@ -1,6 +1,8 @@
 package com.example.rathaanelectronics.Fragment
 
+import android.content.Context
 import android.content.Intent
+import android.graphics.Paint
 import android.os.Build
 import android.os.Bundle
 import android.text.Html
@@ -16,9 +18,12 @@ import com.bumptech.glide.Glide
 import com.example.rathaanelectronics.Activity.MainActivity
 import com.example.rathaanelectronics.Activity.Sign_in_Activity
 import com.example.rathaanelectronics.Adapter.RelatedItemsAdapter
+import com.example.rathaanelectronics.Adapter.Top_deals_list_Adapter
 import com.example.rathaanelectronics.Common.EqualSpacingItemDecoration
+import com.example.rathaanelectronics.Common.LoadingDialog
 import com.example.rathaanelectronics.Interface.HotdealsItemClick
 import com.example.rathaanelectronics.Interface.RelatedItemClick
+import com.example.rathaanelectronics.Interface.ShowToolBar
 import com.example.rathaanelectronics.Managers.MyPreferenceManager
 import com.example.rathaanelectronics.Model.*
 import com.example.rathaanelectronics.R
@@ -44,29 +49,59 @@ class Product_Detail_view_Fragment : Fragment(), HotdealsItemClick, RelatedItemC
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+
     //var Hotdeals_data: List<DealsModel.Datum> = ArrayList<DealsModel.Datum>()
     private var Menufilter: MenuItem? = null
-    lateinit var recy_realated_product:RecyclerView
-   private lateinit var ll_addto_compare:LinearLayout
-   lateinit var incrementButton: TextView
-   lateinit var decrementButton: TextView
-   lateinit var quantityTxtView: TextView
-   lateinit var addToCartButton: Button
-   lateinit var productImgview: ImageView
-   lateinit var productName: TextView
-   lateinit var productSKUtxt: TextView
-   lateinit var productAvailabilitytxt: TextView
-   lateinit var brandImgView: ImageView
-   lateinit var deliveryTxt: TextView
-   lateinit var storeDetailsTxt: TextView
-   lateinit var installationChargeTxt: TextView
-   lateinit var productDescriptionTxt: TextView
-   lateinit var productPricetxt:TextView
-   lateinit var addToWishListTxt: TextView
+    lateinit var recy_realated_product: RecyclerView
+    private lateinit var ll_addto_compare: LinearLayout
+    lateinit var incrementButton: TextView
+    lateinit var decrementButton: TextView
+    lateinit var quantityTxtView: TextView
+    lateinit var addToCartButton: Button
+    lateinit var productImgview: ImageView
+    lateinit var productName: TextView
+    lateinit var productSKUtxt: TextView
+    lateinit var productAvailabilitytxt: TextView
+    lateinit var brandImgView: ImageView
+    lateinit var deliveryTxt: TextView
+    lateinit var storeDetailsTxt: TextView
+    lateinit var installationChargeTxt: TextView
+    lateinit var productDescriptionTxt: TextView
+    lateinit var productPricetxt: TextView
+    lateinit var productPriceOffertxt: TextView
+    lateinit var addToWishListTxt: TextView
     lateinit var removeWishListTxt: TextView
-   lateinit var addToCompareTxt: TextView
-   val MINIMUM_CART_QUANTITY = 1
+    lateinit var addToCompareTxt: TextView
+    lateinit var llAtribute: LinearLayout
+    lateinit var tvAttrName: TextView
+    lateinit var tvAttrValue: TextView
+    lateinit var tvNotAvailable: TextView
+    lateinit var llQuantity: LinearLayout
+    lateinit var llAddCart: LinearLayout
+    private lateinit var llBadge: LinearLayout
+    private lateinit var tvCount: TextView
+    lateinit var ivCart: ImageView
+    private lateinit var tvLoyaltyCoins: TextView
+    lateinit var progressBar: ProgressBar
+
+    val MINIMUM_CART_QUANTITY = 1
+
+    var prodAttrs: List<ProductDetailsModel.ProdAttrs>? = null
+
     private var manager: MyPreferenceManager? = null
+    var showToolBar: ShowToolBar? = null
+    var relatedProductList: MutableList<Product> = mutableListOf()
+    var adapter: Top_deals_list_Adapter? = null
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        showToolBar = context as ShowToolBar
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        showToolBar = null
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,7 +117,7 @@ class Product_Detail_view_Fragment : Fragment(), HotdealsItemClick, RelatedItemC
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view =inflater.inflate(R.layout.fragment_product__single_view, container, false)
+        val view = inflater.inflate(R.layout.fragment_product__single_view, container, false)
 
         setHasOptionsMenu(true);
         (activity as MainActivity?)?.settoolbar()
@@ -92,10 +127,14 @@ class Product_Detail_view_Fragment : Fragment(), HotdealsItemClick, RelatedItemC
 
         initViews(view, productId)
 
-
-         recy_realated_product = view.findViewById<RecyclerView>(R.id.recy_realated_product)
-     ll_addto_compare = view.findViewById<LinearLayout>(R.id.ll_addto_compare)
-
+        val ivBack = view.findViewById<ImageView>(R.id.iv_back)
+        ivBack.setOnClickListener { activity?.onBackPressed() }
+        recy_realated_product = view.findViewById<RecyclerView>(R.id.recy_realated_product)
+        ll_addto_compare = view.findViewById<LinearLayout>(R.id.ll_addto_compare)
+        ivCart = view.findViewById(R.id.iv_cart)
+        ivCart.setOnClickListener {
+            changeFragemnt(Cart_Fragment())
+        }
         /*ll_addto_compare.setOnClickListener {
             changeFragemnt(CompareFragment())
         }*/
@@ -107,7 +146,8 @@ class Product_Detail_view_Fragment : Fragment(), HotdealsItemClick, RelatedItemC
 //        )
 
         val numberOfColumns = 2
-        recy_realated_product.layoutManager = GridLayoutManager(activity, numberOfColumns)
+        recy_realated_product.layoutManager =
+            GridLayoutManager(activity, 1, GridLayoutManager.HORIZONTAL, false)
         recy_realated_product.addItemDecoration(
             EqualSpacingItemDecoration(
                 15,
@@ -117,13 +157,15 @@ class Product_Detail_view_Fragment : Fragment(), HotdealsItemClick, RelatedItemC
         //TopTwenty()
 
 
+        Log.d("ProductId", productId!!)
         getProductDetails(productId)
+        getCartCount()
 
 
         return view
     }
 
-    private fun initViews(view: View, productId: String?){
+    private fun initViews(view: View, productId: String?) {
         incrementButton = view.findViewById(R.id.cart_increment)
         decrementButton = view.findViewById(R.id.cart_decrement)
         quantityTxtView = view.findViewById(R.id.cart_qty)
@@ -131,7 +173,7 @@ class Product_Detail_view_Fragment : Fragment(), HotdealsItemClick, RelatedItemC
         quantityTxtView.setText("1")
         productImgview = view.findViewById(R.id.imageView)
         productName = view.findViewById(R.id.productName)
-        productSKUtxt  = view.findViewById(R.id.productSKUtxt)
+        productSKUtxt = view.findViewById(R.id.productSKUtxt)
         productAvailabilitytxt = view.findViewById(R.id.productAvailabilitytxt)
         brandImgView = view.findViewById(R.id.brandImgView)
         deliveryTxt = view.findViewById(R.id.deliveryTxt)
@@ -139,103 +181,186 @@ class Product_Detail_view_Fragment : Fragment(), HotdealsItemClick, RelatedItemC
         installationChargeTxt = view.findViewById(R.id.installationChargeTxt)
         productDescriptionTxt = view.findViewById(R.id.productDescriptionTxt)
         productPricetxt = view.findViewById(R.id.productPricetxt)
+        productPriceOffertxt = view.findViewById(R.id.tv_amount)
         addToWishListTxt = view.findViewById(R.id.addToWishListTxt)
         removeWishListTxt = view.findViewById(R.id.removeWishListTxt)
         addToCompareTxt = view.findViewById(R.id.addToCompareTxt)
-
-
+        llAtribute = view.findViewById(R.id.ll_attribute)
+        tvAttrName = view.findViewById(R.id.attrName)
+        tvAttrValue = view.findViewById(R.id.attrValue)
+        tvNotAvailable = view.findViewById(R.id.tv_not_available)
+        llAddCart = view.findViewById(R.id.ll_add_cart)
+        llQuantity = view.findViewById(R.id.ll_qty)
+        progressBar = view.findViewById(R.id.progress_circular)
+        llBadge = view.findViewById(R.id.ll_badge)
+        tvCount = view.findViewById(R.id.tv_count)
+        tvLoyaltyCoins = view.findViewById(R.id.loyalty_points)
         handleCartQuantity()
 
-        addToCartButton.setOnClickListener{
+        addToCartButton.setOnClickListener {
             val quantity = quantityTxtView.text.toString()
-            if(manager?.getUserToken()!!.isNotEmpty()){
-                addToCartRequest(productId, quantity)
-            }else{
-                startActivity(Intent(activity, Sign_in_Activity::class.java))
-            }
+            addToCartRequest(productId, quantity)
+//            if (manager?.getUserToken()!!.isNotEmpty()) {
+//                addToCartRequest(productId, quantity)
+//            } else {
+//                startActivity(Intent(activity, Sign_in_Activity::class.java))
+//            }
 
         }
 
-        incrementButton.setOnClickListener{
+        incrementButton.setOnClickListener {
             var quantity = Integer.parseInt(quantityTxtView.text.toString()) + 1
             quantityTxtView.setText(quantity.toString())
             handleCartQuantity()
         }
 
-        decrementButton.setOnClickListener{
+        decrementButton.setOnClickListener {
             var quantity = Integer.parseInt(quantityTxtView.text.toString()) - 1
             quantityTxtView.setText(quantity.toString())
             handleCartQuantity()
         }
 
-        addToWishListTxt.setOnClickListener{
+        addToWishListTxt.setOnClickListener {
             if (productId != null) {
-                addToWishlist(productId)
+                addToWishlist(productId, false)
+
             }
         }
 
-        removeWishListTxt.setOnClickListener{
+        removeWishListTxt.setOnClickListener {
             if (productId != null) {
-                deleteWishListItem(productId)
+                deleteWishListItem(productId, false)
             }
         }
 
-        addToCompareTxt.setOnClickListener{
+        addToCompareTxt.setOnClickListener {
             // Handle compare functionalities
             if (productId != null) {
                 //addToCompare(productId)
-                listCompare(productId, true)
+                if (manager?.getUserToken()!!.isNotEmpty()) {
+                    listCompare(productId, true)
+                } else {
+                    startActivity(Intent(activity, Sign_in_Activity::class.java))
+                }
+
             }
         }
     }
 
     private fun setUIValues(productData: ProductDetailsModel.ProductData) {
-        Glide.with(requireContext()).load(ApiConstants.IMAGE_BASE_URL + productData.productImage)
+        Glide.with(requireContext()).load(ApiConstants.IMAGE_BASE_URL + productData.prodFrondImg)
             .into(productImgview)
-        productName.text = productData.productName
+        if (manager?.locale.equals("ar")) {
+            productName.text = productData.productNameArab
+            deliveryTxt.text = productData.productDeliveryOrPickupTitleArab
+            productAvailabilitytxt.text = productData.productAvailableArabic
+        }
+        else {
+            productName.text = productData.productName
+            deliveryTxt.text = productData.productDeliveryOrPickupTitle
+            productAvailabilitytxt.text = productData.productAvailable
+        }
         productSKUtxt.text = productData.productSKU
-        productAvailabilitytxt.text = productData.productAvailable
+        if (productData.productAvailable.equals("out of stock", ignoreCase = true))
+            productAvailabilitytxt.setTextColor(resources.getColor(R.color.red))
+        else
+            productAvailabilitytxt.setTextColor(resources.getColor(R.color.green))
+
+        if (productData.loyaltyPoints!! > 0) {
+            tvLoyaltyCoins.visibility = View.VISIBLE
+            tvLoyaltyCoins.text =
+                getString(R.string.loyalty_coins, productData.loyaltyPoints)
+        } else {
+            tvLoyaltyCoins.visibility = View.GONE
+        }
         Glide.with(requireContext()).load(ApiConstants.IMAGE_BASE_URL + productData.brandPic)
             .into(brandImgView)
-        deliveryTxt.text = productData.productDeliveryOrPickupTitle
+
         storeDetailsTxt.text = productData.productPickupStore
         installationChargeTxt.text = productData.productInstallation
-        productDescriptionTxt.text = productData.productShortDesc
-        productPricetxt.text = productData.productSellPrice
+        manager?.saveSameDay(productData.productSamedayDelivery)
+//        productDescriptionTxt.text = productData.productDesc
+        if (!productData.productSpofferPrice?.isNullOrEmpty()!! && productData.productSpofferPrice!!.toDouble() > 0) {
+            if (productData.productOldPriceShow != null && (productData.productOldPriceShow.equals("1") or productData.productOldPriceShow.equals(
+                    "yes",
+                    ignoreCase = true
+                ))
+            ) {
+                productPriceOffertxt.visibility = View.VISIBLE
+                productPricetxt.text = "KD ${productData.productSpofferPrice}"
+                productPriceOffertxt.text = "KD ${productData.productSellPrice}"
+                productPriceOffertxt.setPaintFlags(productPriceOffertxt.getPaintFlags() or Paint.STRIKE_THRU_TEXT_FLAG)
+            } else {
+                productPriceOffertxt.visibility = View.GONE
+                productPricetxt.text = "KD ${productData.productSpofferPrice}"
+            }
+
+        } else {
+            productPriceOffertxt.visibility = View.GONE
+            productPricetxt.text = "KD ${productData.productSellPrice}"
+        }
+        if (manager?.userToken.isNullOrEmpty()) {
+            if (productData.productAvailableFor != null && productData.productAvailableFor == "1") {
+                llAddCart.visibility = View.GONE
+                llQuantity.visibility = View.GONE
+                tvNotAvailable.visibility = View.VISIBLE
+            } else {
+                llAddCart.visibility = View.VISIBLE
+                llQuantity.visibility = View.VISIBLE
+                tvNotAvailable.visibility = View.GONE
+            }
+        } else {
+            llAddCart.visibility = View.VISIBLE
+            llQuantity.visibility = View.VISIBLE
+            tvNotAvailable.visibility = View.GONE
+        }
+
         when (productData.wishlist_exist) {
             "1" -> {
                 removeWishListTxt.visibility = View.VISIBLE
                 addToWishListTxt.visibility = View.GONE
             }
             else -> {
-            removeWishListTxt.visibility = View.GONE
-            addToWishListTxt.visibility = View.VISIBLE
+                removeWishListTxt.visibility = View.GONE
+                addToWishListTxt.visibility = View.VISIBLE
             }
         }
-        lateinit var text:String
+        var description = if(manager?.locale.equals("ar")) productData.productDescArab else productData.productDesc
+
         if (Build.VERSION.SDK_INT >= 24) {
-            productDescriptionTxt.text = Html.fromHtml(productData.productShortDesc, Html.FROM_HTML_MODE_LEGACY).toString() // for 24 api and more
+            productDescriptionTxt.text =
+                Html.fromHtml(description, Html.FROM_HTML_MODE_LEGACY)
+                    .toString() // for 24 api and more
         } else {
-            productDescriptionTxt.text = Html.fromHtml(productData.productShortDesc).toString() // or for older api
+            productDescriptionTxt.text =
+                Html.fromHtml(description).toString() // or for older api
         }
 
-       //productDescriptionTxt.text = Html.fromHtml(productData.productShortDesc,Html.FROM_HTML_MODE_LEGACY)
+        if (prodAttrs != null && prodAttrs?.isNotEmpty()!!) {
+            llAtribute.visibility = View.VISIBLE
+            tvAttrName.text = prodAttrs!![0].attributeName
+            tvAttrValue.text = prodAttrs!![0].attributeValue
+        }
+        //productDescriptionTxt.text = Html.fromHtml(productData.productShortDesc,Html.FROM_HTML_MODE_LEGACY)
 
     }
 
-    private fun setRelatedItemValues(productList: List<ProductDetailsModel.RelatedProducts>){
-        recy_realated_product.adapter= RelatedItemsAdapter(requireActivity(),productList, this@Product_Detail_view_Fragment)
+    private fun setRelatedItemValues() {
+        adapter =
+            Top_deals_list_Adapter(
+                requireActivity(),
+                relatedProductList,
+                this@Product_Detail_view_Fragment,
+                manager?.locale.equals("ar", ignoreCase = true)
+            )
+        recy_realated_product.adapter = adapter
 
 
     }
 
-    private fun handleCartQuantity(){
+    private fun handleCartQuantity() {
         val quantity = Integer.parseInt(quantityTxtView.text.toString())
-        if(quantity <= MINIMUM_CART_QUANTITY){
-            decrementButton.isEnabled  = false
-        } else{
-            decrementButton.isEnabled = true
-        }
+        decrementButton.isEnabled = quantity > MINIMUM_CART_QUANTITY
     }
 
 
@@ -243,8 +368,8 @@ class Product_Detail_view_Fragment : Fragment(), HotdealsItemClick, RelatedItemC
 
 
         inflater.inflate(R.menu.cart_menu, menu)
-       // this.Menufilter = menu.findItem(R.id.filter).setVisible(true)
-        this.Menufilter = menu.findItem(R.id.cart).setVisible(true)
+        // this.Menufilter = menu.findItem(R.id.filter).setVisible(true)
+        this.Menufilter = menu.findItem(R.id.cart).setVisible(false)
         super.onCreateOptionsMenu(menu, inflater)
 
 
@@ -254,12 +379,13 @@ class Product_Detail_view_Fragment : Fragment(), HotdealsItemClick, RelatedItemC
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.cart -> {
-               // changeFragemnt(filterFragment)
+                // changeFragemnt(filterFragment)
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
     }
+
     fun changeFragemnt(fragment: Fragment) {
         val transaction = activity?.supportFragmentManager?.beginTransaction()
         transaction?.replace(R.id.frame, fragment)
@@ -267,48 +393,7 @@ class Product_Detail_view_Fragment : Fragment(), HotdealsItemClick, RelatedItemC
         transaction?.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
         transaction?.commit()
     }
-    fun TopTwenty() {
 
-        val apiService = ServiceGenerator.createService(ApiInterface::class.java)
-        val call: Call<DealsModel> = apiService.TopTwenty(ApiConstants.LG_APP_KEY,
-            manager?.getUserToken())
-
-        call.enqueue(object : Callback<DealsModel?> {
-
-
-            override fun onResponse(call: Call<DealsModel?>?, response: Response<DealsModel?>) {
-                Log.e("Signin Response", response.toString() + "")
-                if (response.isSuccessful()) {
-
-                    val status: String = response.body()!!.status.toString()
-                    val messege: String? = response.body()!!.message
-
-                    Log.e("status", status.toString() + "")
-                    Log.e("messege", messege.toString() + "")
-
-                    if (status == "true") {
-//                        Hotdeals_data = response.body()!!.data!!
-//
-//                        Log.e("Toptwenty_data", Hotdeals_data.size.toString())
-                    }
-
-
-                   // recy_realated_product.adapter= Top_deals_list_Adapter(requireActivity(),Hotdeals_data,this@Product_Detail_view_Fragment)
-
-
-
-
-                } else {
-                }
-            }
-
-
-            override fun onFailure(call: Call<DealsModel?>?, t: Throwable?) {
-                // something went completely south (like no internet connection)
-                Log.e("onFailure", t.toString())
-            }
-        })
-    }
     companion object {
         /**
          * Use this factory method to create a new instance of
@@ -329,27 +414,51 @@ class Product_Detail_view_Fragment : Fragment(), HotdealsItemClick, RelatedItemC
             }
     }
 
-    override fun onHotdealsClicked(position: Int, item: DealsModel.Datum?) {
+    override fun onHotdealsClicked(position: Int, item: Product?) {
 
-
+        val bundle = Bundle()
+        bundle.putString("productId", item?.productId)
+        val subcategory = Product_Detail_view_Fragment()
+        subcategory.arguments = bundle
+        val transaction = activity?.supportFragmentManager?.beginTransaction()
+        transaction?.replace(R.id.frame, subcategory)
+        transaction?.addToBackStack(null)
+        transaction?.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+        transaction?.commit()
     }
 
     override fun onAddToWishlistButtonClick(productId: String) {
-        TODO("Not yet implemented")
+        addToWishlist(productId, true)
     }
 
-    private fun addToCartRequest(productId: String?, quantity: String){
+    override fun onDeleteFromWishListButtonClick(productId: String) {
+        deleteWishListItem(productId, true)
+    }
+
+    private fun addToCartRequest(productId: String?, quantity: String) {
+        LoadingDialog.showLoadingDialog(requireContext(), "")
+        var token = ""
+        if (manager?.getUserToken().isNullOrEmpty())
+            token = manager?.guestToken!!
+        else
+            token = manager?.userToken!!
         val apiService = ServiceGenerator.createService(ApiInterface::class.java)
         val call: Call<CartResponseModel> =
-            apiService.addToCart(ApiConstants.LG_APP_KEY,
-                manager?.getUserToken(),
+            apiService.addToCart(
+                ApiConstants.LG_APP_KEY,
+                token,
                 productId,
-                quantity)
+                quantity
+            )
 
         call.enqueue(object : Callback<CartResponseModel?> {
 
 
-            override fun onResponse(call: Call<CartResponseModel?>?, response: Response<CartResponseModel?>) {
+            override fun onResponse(
+                call: Call<CartResponseModel?>?,
+                response: Response<CartResponseModel?>
+            ) {
+                LoadingDialog.cancelLoading()
                 Log.e("Add to cart Response", response.toString() + "")
                 if (response.isSuccessful()) {
 
@@ -365,6 +474,7 @@ class Product_Detail_view_Fragment : Fragment(), HotdealsItemClick, RelatedItemC
                             message,
                             Toast.LENGTH_SHORT
                         ).show()
+                        getCartCount()
                     } else {
                         Toast.makeText(
                             activity,
@@ -383,24 +493,39 @@ class Product_Detail_view_Fragment : Fragment(), HotdealsItemClick, RelatedItemC
             }
 
             override fun onFailure(call: Call<CartResponseModel?>?, t: Throwable?) {
+                LoadingDialog.cancelLoading()
                 // something went completely south (like no internet connection)
                 Log.e("onFailure", t.toString())
             }
         })
     }
 
-    private fun getProductDetails(productId: String?){
+    private fun getProductDetails(productId: String?) {
+        progressBar.visibility = View.VISIBLE
+        var token = ""
+        if (manager?.userToken?.isNullOrEmpty()!!) {
+            token = manager?.guestToken!!
+        } else {
+            token = manager?.userToken!!
+        }
+        Log.d("Token", manager?.getUserToken()!!)
         val apiService = ServiceGenerator.createService(ApiInterface::class.java)
         val call: Call<ProductDetailsModel> =
-            apiService.getProductDetails(ApiConstants.LG_APP_KEY,
-                manager?.getUserToken(),
-                productId)
+            apiService.getProductDetails(
+                ApiConstants.LG_APP_KEY,
+                token,
+                productId
+            )
 
         call.enqueue(object : Callback<ProductDetailsModel?> {
 
 
-            override fun onResponse(call: Call<ProductDetailsModel?>?, response: Response<ProductDetailsModel?>) {
+            override fun onResponse(
+                call: Call<ProductDetailsModel?>?,
+                response: Response<ProductDetailsModel?>
+            ) {
                 Log.e("Add to cart Response", response.toString() + "")
+                progressBar.visibility = View.GONE
                 if (response.isSuccessful()) {
 
                     try {
@@ -411,42 +536,53 @@ class Product_Detail_view_Fragment : Fragment(), HotdealsItemClick, RelatedItemC
                         Log.e("messege", message.toString() + "")
 
                         if (status) {
+                            relatedProductList.clear()
+                            prodAttrs = response.body()?.prodAttrs
                             setUIValues(response.body()!!.data!!)
-                            setRelatedItemValues(response.body()?.relatedProducts!!)
+                            relatedProductList.addAll(response.body()?.relatedProducts!!)
+                            setRelatedItemValues()
+
                         } else {
                             Toast.makeText(
-                                    activity,
-                                    message,
-                                    Toast.LENGTH_SHORT
+                                activity,
+                                message,
+                                Toast.LENGTH_SHORT
                             ).show()
                         }
-                    }catch (e:Exception){
+                    } catch (e: Exception) {
 
                     }
 
                 } else {
-                    Toast.makeText(
-                        activity,
-                        "Adding to Cart failed",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    Log.e("Add to cart", "Adding to cart failed")
+//                    Toast.makeText(
+//                        activity,
+//                        "Adding to Cart failed",
+//                        Toast.LENGTH_SHORT
+//                    ).show()
+//                    Log.e("Add to cart", "Adding to cart failed")
                 }
             }
 
             override fun onFailure(call: Call<ProductDetailsModel?>?, t: Throwable?) {
                 // something went completely south (like no internet connection)
+                progressBar.visibility = View.GONE
                 Log.e("onFailure", t.toString())
             }
         })
     }
 
 
-    fun addToWishlist(productId: String) {
+    fun addToWishlist(productId: String, isRelated: Boolean) {
+        progressBar.visibility = View.VISIBLE
+        var token = ""
+        if (manager?.getUserToken().isNullOrEmpty())
+            token = manager?.guestToken!!
+        else
+            token = manager?.userToken!!
         val apiService = ServiceGenerator.createService(ApiInterface::class.java)
         val call: Call<CommonResponseModel> = apiService.addToWishList(
             ApiConstants.LG_APP_KEY,
-            manager?.getUserToken(), productId
+            token, productId
         )
 
         call.enqueue(object : Callback<CommonResponseModel?> {
@@ -456,6 +592,7 @@ class Product_Detail_view_Fragment : Fragment(), HotdealsItemClick, RelatedItemC
                 call: Call<CommonResponseModel?>?,
                 response: Response<CommonResponseModel?>
             ) {
+                progressBar.visibility = View.GONE
                 Log.e("Add wishlist response", response.toString() + "")
                 if (response.isSuccessful()) {
 
@@ -471,6 +608,23 @@ class Product_Detail_view_Fragment : Fragment(), HotdealsItemClick, RelatedItemC
                             message,
                             Toast.LENGTH_SHORT
                         ).show()
+                        getCartCount()
+                        if (isRelated) {
+
+                            var position = 0
+                            relatedProductList?.forEachIndexed { index, product ->
+                                if (product.productId == productId) {
+                                    position = index
+                                    relatedProductList[index].wishlistExist = 1
+                                    return@forEachIndexed
+                                }
+                            }
+                            adapter?.notifyItemChanged(position)
+
+                        } else {
+                            removeWishListTxt.visibility = View.VISIBLE
+                            addToWishListTxt.visibility = View.GONE
+                        }
                     } else {
                         Toast.makeText(
                             activity,
@@ -478,9 +632,10 @@ class Product_Detail_view_Fragment : Fragment(), HotdealsItemClick, RelatedItemC
                             Toast.LENGTH_SHORT
                         ).show()
                     }
-                    getProductDetails(productId)
+
 
                 } else {
+                    progressBar.visibility = View.GONE
                     Toast.makeText(
                         activity,
                         "Add to wishlist failed",
@@ -497,10 +652,18 @@ class Product_Detail_view_Fragment : Fragment(), HotdealsItemClick, RelatedItemC
         })
     }
 
-    fun deleteWishListItem(productId: String?) {
+    fun deleteWishListItem(productId: String?, isRelated: Boolean) {
+        progressBar.visibility = View.VISIBLE
+        var token = ""
+        if (manager?.getUserToken().isNullOrEmpty())
+            token = manager?.guestToken!!
+        else
+            token = manager?.userToken!!
         val apiService = ServiceGenerator.createService(ApiInterface::class.java)
-        val call: Call<CommonResponseModel> = apiService.deleteWishList(ApiConstants.LG_APP_KEY,
-            manager?.getUserToken(), productId)
+        val call: Call<CommonResponseModel> = apiService.deleteWishList(
+            ApiConstants.LG_APP_KEY,
+            token, productId
+        )
 
         call.enqueue(object : Callback<CommonResponseModel?> {
 
@@ -509,6 +672,7 @@ class Product_Detail_view_Fragment : Fragment(), HotdealsItemClick, RelatedItemC
                 call: Call<CommonResponseModel?>?,
                 response: Response<CommonResponseModel?>
             ) {
+                progressBar.visibility = View.GONE
                 Log.e("Delete Response", response.toString() + "")
                 if (response.isSuccessful()) {
 
@@ -524,8 +688,24 @@ class Product_Detail_view_Fragment : Fragment(), HotdealsItemClick, RelatedItemC
                             message,
                             Toast.LENGTH_SHORT
                         ).show()
-                        getProductDetails(productId)
-                    }else{
+                        getCartCount()
+                        if (isRelated) {
+
+                            var position = 0
+                            relatedProductList?.forEachIndexed { index, product ->
+                                if (product.productId == productId) {
+                                    position = index
+                                    relatedProductList[index].wishlistExist = 0
+                                    return@forEachIndexed
+                                }
+                            }
+                            adapter?.notifyItemChanged(position)
+
+                        } else {
+                            removeWishListTxt.visibility = View.GONE
+                            addToWishListTxt.visibility = View.VISIBLE
+                        }
+                    } else {
                         Toast.makeText(
                             activity,
                             message,
@@ -535,6 +715,7 @@ class Product_Detail_view_Fragment : Fragment(), HotdealsItemClick, RelatedItemC
                     }
 
                 } else {
+                    progressBar.visibility = View.GONE
                     Toast.makeText(
                         activity,
                         "Deleting failed",
@@ -552,14 +733,23 @@ class Product_Detail_view_Fragment : Fragment(), HotdealsItemClick, RelatedItemC
     }
 
     override fun onAddToWishListButtonClicked(productId: String) {
-        addToWishlist(productId)
+        addToWishlist(productId, true)
     }
 
-    fun listCompare(productId: String, add: Boolean){
+    override fun onDeleteWishListButtonClicked(productId: String) {
+
+    }
+
+    override fun onItemClicked(productId: String) {
+
+    }
+
+    fun listCompare(productId: String, add: Boolean) {
         val apiService = ServiceGenerator.createService(ApiInterface::class.java)
         val call: Call<CompareListModel> = apiService.listCompare(
             ApiConstants.LG_APP_KEY,
-            manager?.getUserToken())
+            manager?.getUserToken()
+        )
 
         call.enqueue(object : Callback<CompareListModel?> {
 
@@ -634,11 +824,13 @@ class Product_Detail_view_Fragment : Fragment(), HotdealsItemClick, RelatedItemC
 
     }
 
-    fun addToCompare(productId: String){
+    fun addToCompare(productId: String) {
+        LoadingDialog.showLoadingDialog(requireContext(), "")
         val apiService = ServiceGenerator.createService(ApiInterface::class.java)
         val call: Call<AddToCompareResponseModel> = apiService.addToCompare(
             ApiConstants.LG_APP_KEY,
-            manager?.getUserToken(), productId)
+            manager?.getUserToken(), productId
+        )
 
         call.enqueue(object : Callback<AddToCompareResponseModel?> {
 
@@ -648,6 +840,7 @@ class Product_Detail_view_Fragment : Fragment(), HotdealsItemClick, RelatedItemC
                 response: Response<AddToCompareResponseModel?>
             ) {
                 Log.e("Add to compare response", response.toString() + "")
+                LoadingDialog.cancelLoading()
                 if (response.isSuccessful()) {
 
                     val status: String = response.body()!!.status.toString()
@@ -704,17 +897,20 @@ class Product_Detail_view_Fragment : Fragment(), HotdealsItemClick, RelatedItemC
 
             override fun onFailure(call: Call<AddToCompareResponseModel?>?, t: Throwable?) {
                 // something went completely south (like no internet connection)
+                LoadingDialog.cancelLoading()
                 Log.e("onFailure", t.toString())
             }
         })
 
     }
 
-    fun removeCompare(compareId: String){
+    fun removeCompare(compareId: String) {
+        LoadingDialog.showLoadingDialog(requireContext(), "")
         val apiService = ServiceGenerator.createService(ApiInterface::class.java)
         val call: Call<AddToCompareResponseModel> = apiService.removeCompare(
             ApiConstants.LG_APP_KEY,
-            manager?.getUserToken(), compareId)
+            manager?.getUserToken(), compareId
+        )
 
         call.enqueue(object : Callback<AddToCompareResponseModel?> {
 
@@ -723,6 +919,7 @@ class Product_Detail_view_Fragment : Fragment(), HotdealsItemClick, RelatedItemC
                 call: Call<AddToCompareResponseModel?>?,
                 response: Response<AddToCompareResponseModel?>
             ) {
+                LoadingDialog.cancelLoading()
                 Log.e("Add to compare response", response.toString() + "")
                 if (response.isSuccessful()) {
 
@@ -758,6 +955,69 @@ class Product_Detail_view_Fragment : Fragment(), HotdealsItemClick, RelatedItemC
 
 
             override fun onFailure(call: Call<AddToCompareResponseModel?>?, t: Throwable?) {
+                // something went completely south (like no internet connection)
+                LoadingDialog.cancelLoading()
+                Log.e("onFailure", t.toString())
+            }
+        })
+
+    }
+
+    fun getCartCount() {
+
+
+        var token = ""
+        if (manager?.getUserToken().isNullOrEmpty())
+            token = manager?.guestToken!!
+        else
+            token = manager?.userToken!!
+        val apiService = ServiceGenerator.createService(ApiInterface::class.java)
+        val call: Call<CartCountModel> = apiService.getCartCount(
+            ApiConstants.LG_APP_KEY,
+            token
+        )
+
+        call.enqueue(object : Callback<CartCountModel?> {
+
+
+            override fun onResponse(
+                call: Call<CartCountModel?>?,
+                response: Response<CartCountModel?>
+            ) {
+                Log.e("Guest token response", response.toString() + "")
+                if (response.isSuccessful()) {
+
+                    val status: String = response.body()!!.status.toString()
+                    val message: String? = response.body()!!.message
+
+                    Log.e("status", status.toString() + "")
+                    Log.e("message", message.toString() + "")
+
+                    if (status == "true") {
+                        var cartCount = response.body()!!.data?.count
+                        var wishListCount = response.body()!!.data?.wishlistCount
+                        showToolBar?.updateCartCount(cartCount!!)
+                        showToolBar?.updateWalletCount(response.body()!!.data?.wishlistCount!!)
+                        if (cartCount!! > 0) {
+                            llBadge.visibility = View.VISIBLE
+                            tvCount.text = "$cartCount"
+
+
+                        } else {
+
+                            llBadge.visibility = View.GONE
+                        }
+
+                    } else {
+                    }
+
+                } else {
+
+                }
+            }
+
+
+            override fun onFailure(call: Call<CartCountModel?>?, t: Throwable?) {
                 // something went completely south (like no internet connection)
                 Log.e("onFailure", t.toString())
             }

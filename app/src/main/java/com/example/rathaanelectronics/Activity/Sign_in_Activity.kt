@@ -1,6 +1,8 @@
 package com.example.rathaanelectronics.Activity
 
+import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -9,6 +11,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Toast
+import com.example.rathaanelectronics.Common.LoadingDialog
 import com.example.rathaanelectronics.Managers.ConnectivityReceiver
 import com.example.rathaanelectronics.Managers.MyPreferenceManager
 import com.example.rathaanelectronics.Model.SignInModel
@@ -20,6 +23,7 @@ import com.example.rathaanelectronics.Rest.ServiceGenerator
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.*
 
 class Sign_in_Activity : AppCompatActivity() {
 
@@ -31,6 +35,16 @@ class Sign_in_Activity : AppCompatActivity() {
     private var manager: MyPreferenceManager? = null
 
 
+    override fun attachBaseContext(newBase: Context?) {
+        super.attachBaseContext(getLanguageAwareContext(newBase!!))
+    }
+    private fun getLanguageAwareContext(context: Context): Context? {
+        if (manager == null)
+            manager = MyPreferenceManager(context)
+        val configuration: Configuration = context.resources.configuration
+        configuration.setLocale(Locale(manager?.locale))
+        return context.createConfigurationContext(configuration)
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_in)
@@ -39,7 +53,7 @@ class Sign_in_Activity : AppCompatActivity() {
 
         UIWidgets()
         btn_sign_in.setOnClickListener {
-            doRegister(edt_login_username.text.toString(), edt_login_password.text.toString())
+            doRegister(edt_login_username.text.toString().trim(), edt_login_password.text.toString().trim())
         }
 
         ll_signup.setOnClickListener {
@@ -62,8 +76,8 @@ class Sign_in_Activity : AppCompatActivity() {
         edt_login_username = findViewById(R.id.edt_login_username)
         edt_login_password = findViewById(R.id.edt_login_password)
 
-        edt_login_username.setText("ansebkali@gmail.com")
-        edt_login_password.setText("anseb328")
+//        edt_login_username.setText("ansebkali@gmail.com")
+//        edt_login_password.setText("anseb328")
 
     }
 
@@ -79,12 +93,12 @@ class Sign_in_Activity : AppCompatActivity() {
 
         if (!isDataValid(email)) {
             isError = true
-            edt_login_username!!.setError("Field can't be empty")
+            edt_login_username!!.setError(getString(R.string.empty_field_error))
             mFocusView = edt_login_username
         }
         if (!isDataValid(pass)) {
             isError = true
-            edt_login_password!!.setError("Field can't be empty")
+            edt_login_password!!.setError(getString(R.string.empty_field_error))
             mFocusView = edt_login_password
         }
 
@@ -101,7 +115,7 @@ class Sign_in_Activity : AppCompatActivity() {
 
             } else {
 
-                Toast.makeText(this@Sign_in_Activity, "No internet connection", Toast.LENGTH_LONG)
+                Toast.makeText(this@Sign_in_Activity, getString(R.string.no_internet_connection), Toast.LENGTH_LONG)
                     .show()
 
             }
@@ -117,6 +131,7 @@ class Sign_in_Activity : AppCompatActivity() {
 
     fun user_Signin(username: String, pass: String) {
 
+        LoadingDialog.showLoadingDialog(this,"")
         val apiService = ServiceGenerator.createService(ApiInterface::class.java)
         val call: Call<SignInModel> =
             apiService.signin(LG_APP_KEY, username, pass)
@@ -125,36 +140,41 @@ class Sign_in_Activity : AppCompatActivity() {
 
 
             override fun onResponse(call: Call<SignInModel?>?, response: Response<SignInModel?>) {
-                Log.e("Signin Response", response.toString() + "")
+                LoadingDialog.cancelLoading()
                 if (response.isSuccessful()) {
 
                     val status: Boolean = response.body()!!.status
                     val messege: String = response.body()!!.message
+                    if (status) {
 
-                    Log.e("status", status.toString() + "")
-                    Log.e("messege", messege.toString() + "")
-
-                    if (status && messege == "Success") {
-
-
-                        val usermail: String = response.body()!!.data.usermail
-                        val Token: String = response.body()!!.data.token
-                        val usermobile: String = response.body()!!.data.usermobile
-                        val USERNAME: String = response.body()!!.data.username
+                        if (response?.body()?.data!=null){
+                            val usermail: String = response.body()!!.data.usermail
+                            val Token: String = response.body()!!.data.token
+                            val usermobile: String = response.body()!!.data.usermobile
+                            val USERNAME: String = response.body()!!.data.username
 
 
-                        manager!!.saveUsereDetails(USERNAME, usermail, usermobile, Token)
-                        manager!!.saveUserToken(Token)
-                        manager!!.setLogIn(true)
+                            manager!!.saveUsereDetails(USERNAME, usermail, usermobile, Token)
+                            manager!!.saveUserToken(Token)
+                            manager!!.setLogIn(true)
 
-                        Toast.makeText(
-                            this@Sign_in_Activity,
-                            messege,
-                            Toast.LENGTH_SHORT
-                        ).show()
+                            Toast.makeText(
+                                this@Sign_in_Activity,
+                                messege,
+                                Toast.LENGTH_SHORT
+                            ).show()
 
-                        startActivity(Intent(this@Sign_in_Activity, MainActivity::class.java))
-                        finish()
+                            startActivity(Intent(this@Sign_in_Activity, MainActivity::class.java))
+                            finish()
+                        } else{
+                            Toast.makeText(
+                                this@Sign_in_Activity,
+                                messege,
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+
+
 
 
                     } else {
@@ -168,13 +188,14 @@ class Sign_in_Activity : AppCompatActivity() {
 
                     }
                 } else {
-                    Log.e("Login","Login failed")
+
 
                 }
             }
 
             override fun onFailure(call: Call<SignInModel?>?, t: Throwable?) {
                 // something went completely south (like no internet connection)
+                LoadingDialog.cancelLoading()
                 Log.e("onFailure", t.toString())
             }
         })

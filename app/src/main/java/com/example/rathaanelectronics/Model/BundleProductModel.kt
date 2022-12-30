@@ -85,9 +85,13 @@ class BundleProductModel {
         @Expose
         var offers_date: String? = null
 
+        @SerializedName("offers_products_names")
+        @Expose
+        var offers_products_names: String? = null
+
         @SerializedName("wishlist_exist")
         @Expose
-        var wishlist_exist: String? = null
+        var wishlist_exist: Int? = 0
 
     }
 }

@@ -18,13 +18,14 @@ import com.example.rathaanelectronics.Rest.ApiConstants
 class toplevel_cat_list_Adapter(
     activity: FragmentActivity?,
     allcategory_data: List<AllCategoriesModel.Datum>,
-    listener: CategoriesTitleItemClick
+    listener: CategoriesTitleItemClick,
+    isArabic: Boolean
 ) : RecyclerView.Adapter<toplevel_cat_list_Adapter.ViewHolder>() {
 
     var context = activity
     var allcategory_data = allcategory_data
     var listener = listener
-
+    var isArabic = isArabic
 
     val image: IntArray = intArrayOf(
 
@@ -64,8 +65,8 @@ class toplevel_cat_list_Adapter(
     }
 
     override fun onBindViewHolder(holder: toplevel_cat_list_Adapter.ViewHolder, position: Int) {
-         //holder.bindItems(image[position],name[position])
-        holder.bindItems(allcategory_data.get(position), listener)
+        //holder.bindItems(image[position],name[position])
+        holder.bindItems(allcategory_data.get(position), listener, isArabic)
 
     }
 
@@ -81,9 +82,16 @@ class toplevel_cat_list_Adapter(
         val flevelcat_icon = itemView.findViewById<ImageView>(R.id.flevelcat_icon)
         val flevelcat_name = itemView.findViewById<TextView>(R.id.flevelcat_name)
 
-        fun bindItems(item: AllCategoriesModel.Datum, listener: CategoriesTitleItemClick) {
-           //flevelcat_icon.setImageResource(i)
-           flevelcat_name.text = item.categoryLabel
+        fun bindItems(
+            item: AllCategoriesModel.Datum,
+            listener: CategoriesTitleItemClick,
+            isArabic: Boolean
+        ) {
+            //flevelcat_icon.setImageResource(i)
+            if (isArabic)
+                flevelcat_name.text = item.categoryLabelAr
+            else
+                flevelcat_name.text = item.categoryLabel
             Glide.with(flevelcat_icon).load(ApiConstants.IMAGE_BASE_URL + item.categoryIcon)
                 .into(flevelcat_icon)
             itemView.rootView.setOnClickListener {

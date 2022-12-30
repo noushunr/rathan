@@ -5,11 +5,69 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".Fragment.Wish_list_Fragment">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:orientation="horizontal"
+        android:id="@+id/ll_header"
+        android:weightSum="2">
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:layout_weight=".2">
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:id="@+id/iv_back"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"
+                android:layout_weight=".1"
+                android:gravity="center"
+                android:src="@drawable/icon_arrow_left" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1.6"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:fontFamily="@font/roboto_medium"
+                android:gravity="center"
+
+                android:text="@string/wishlist"
+                android:textColor="@color/colorPrimary"
+                android:textSize="18sp" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight=".2">
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
         android:orientation="horizontal"
+        android:visibility="gone"
         android:weightSum="2">
 
 
@@ -21,7 +79,7 @@
             <ImageView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginBottom="15dp"
                 android:layout_weight=".1"
@@ -43,7 +101,7 @@
 
                 android:fontFamily="@font/roboto_medium"
                 android:gravity="center"
-                android:text="Wish List"
+                android:text="@string/wishlist"
                 android:textColor="@color/black"
                 android:textSize="18sp" />
 
@@ -72,7 +130,7 @@
 
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Wishlist is empty"
+            android:text="@string/wishlist_empty"
             android:textColor="@color/grey"
             android:gravity="center"
             android:layout_gravity="center" />

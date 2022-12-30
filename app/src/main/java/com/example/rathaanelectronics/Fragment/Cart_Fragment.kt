@@ -3,9 +3,6 @@ package com.example.rathaanelectronics.Fragment
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
-import android.content.Intent
-import android.graphics.Color
-import android.graphics.PorterDuff
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -19,24 +16,25 @@ import com.example.rathaanelectronics.Adapter.Cart_list_Adapter
 import com.example.rathaanelectronics.R
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import android.view.Gravity
+import android.view.View.GONE
 
 import android.view.WindowManager
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
-import com.example.rathaanelectronics.Activity.Sign_in_Activity
 import com.example.rathaanelectronics.Adapter.PickUpShop_list_Adapter
+import com.example.rathaanelectronics.Common.LoadingDialog
 import com.example.rathaanelectronics.Interface.ManageCartItem
 import com.example.rathaanelectronics.Interface.PickUpStoreClickListener
+import com.example.rathaanelectronics.Interface.ShowToolBar
 import com.example.rathaanelectronics.Managers.MyPreferenceManager
 import com.example.rathaanelectronics.Model.*
 import com.example.rathaanelectronics.Rest.ApiConstants
 import com.example.rathaanelectronics.Rest.ApiInterface
 import com.example.rathaanelectronics.Rest.ServiceGenerator
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.regex.Matcher
-import java.util.regex.Pattern
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -53,7 +51,7 @@ class Cart_Fragment : Fragment(), PickUpStoreClickListener, ManageCartItem {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-    private var deliver_type: String = "pickup"
+    private var deliver_type: String = ""
     private var Menufilter: MenuItem? = null
     var dialog: Dialog? = null
     lateinit var ll_coupon_code_fld:LinearLayout
@@ -66,10 +64,33 @@ class Cart_Fragment : Fragment(), PickUpStoreClickListener, ManageCartItem {
     lateinit var cartInstallationTxt: TextView
     lateinit var cartDelivaryChargeTxt: TextView
     lateinit var cartAllTotaltxt: TextView
+    lateinit var tvTotal: TextView
+    lateinit var rlTotal: RelativeLayout
+    lateinit var installationChargeRow: TableRow
+    lateinit var discountRow: TableRow
+    lateinit var tvDiscount: TextView
+    lateinit var etCoupon: EditText
+    lateinit var tvApply: TextView
     var btn_checkout: Button? = null
-    private lateinit var sheetBehavior: BottomSheetBehavior<LinearLayout>
+    private lateinit var sheetBehavior: BottomSheetBehavior<RelativeLayout>
     lateinit var recycler_cart: RecyclerView
+    lateinit var progressBar : ProgressBar
+    lateinit var data: ShowCartResponseModel.Data
+    var discount = 0.0
+    var preCheckoutModel = PreCheckoutModel()
+    lateinit var rbPickUp : RadioButton
+    lateinit var rbDelivery : RadioButton
+    var showToolBar : ShowToolBar?=null
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
 
+        showToolBar = context as ShowToolBar
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        showToolBar = null
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -90,48 +111,103 @@ class Cart_Fragment : Fragment(), PickUpStoreClickListener, ManageCartItem {
         val view = inflater.inflate(R.layout.fragment_cart_, container, false)
         setHasOptionsMenu(true);
         (activity as MainActivity?)?.settoolbar()
+        val bottomSheet : BottomSheetDialog = BottomSheetDialog(requireActivity())
         sheetBehavior = BottomSheetBehavior.from(view.findViewById(R.id.bottom_sheet))
+        progressBar = view.findViewById(R.id.progress_circular)
+        rbDelivery = view.findViewById(R.id.radioButtonhomedelivery)
+        rbPickUp = view.findViewById(R.id.radioButtonpickup)
 
-
+        sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         val ll_coupon_code_fld = view.findViewById<LinearLayout>(R.id.ll_coupon_code_fld)
         val btn_checkout = view.findViewById<Button>(R.id.btn_checkout)
+        val btnContinue = view.findViewById<Button>(R.id.btn_continue)
+        etCoupon = view.findViewById<EditText>(R.id.et_coupon)
+        tvApply = view.findViewById(R.id.tv_apply)
         recycler_cart = view.findViewById<RecyclerView>(R.id.recycler_cart)
         emptyText = view.findViewById(R.id.emptyText)
         cartTotalTxt = view.findViewById(R.id.cartTotalTxt)
         cartInstallationTxt = view.findViewById(R.id.cartInstallationTxt)
         cartDelivaryChargeTxt = view.findViewById(R.id.cartDelivaryChargeTxt)
         cartAllTotaltxt = view.findViewById(R.id.cartAllTotaltxt)
+        tvTotal = view.findViewById(R.id.cartAllTotaltxt1)
+        installationChargeRow = view.findViewById(R.id.installation)
+        rlTotal = view.findViewById(R.id.ll_total)
+        tvDiscount = view.findViewById(R.id.discount)
+        discountRow = view.findViewById(R.id.discountRow)
         //val cart_list_Adapter = Cart_list_Adapter(activity)
 
         recycler_cart.layoutManager = LinearLayoutManager(activity, LinearLayout.VERTICAL, false)
         //recycler_cart.adapter = cart_list_Adapter
-        if(manager?.getUserToken()!!.isNotEmpty()){
-            fetchCartDetails()
-        }else{
-            startActivity(Intent(activity, Sign_in_Activity::class.java))
+//        if(manager?.getUserToken()!!.isNotEmpty()){
+//            fetchCartDetails()
+//        }else{
+//            startActivity(Intent(activity, Sign_in_Activity::class.java))
+//        }
+
+        discount = 0.0
+        etCoupon.setText("")
+        tvTotal.setText("")
+        tvApply.text = getString(R.string.apply)
+        etCoupon.isFocusable = true
+        etCoupon.isClickable = true
+        etCoupon.isFocusableInTouchMode = true
+
+        rbPickUp.isChecked = false
+        rbDelivery.isChecked = false
+        fetchCartDetails()
+        val radioGroup = view.findViewById(R.id.radioGroup) as RadioGroup
+//        radioGroup.clearCheck()
+
+        rbPickUp?.setOnCheckedChangeListener { compoundButton, b ->
+            if (b){
+                selectlocationAlert()
+                installationChargeRow.visibility = GONE
+                deliver_type = "pickup"
+                if (data != null) {
+                    cartTotalTxt.text = "KD " + data.cartTotal
+
+                    cartAllTotaltxt.text = "KD " + (data.cartTotal?.toDouble()
+                        ?.minus(discount))
+                    tvTotal.text = "KD " + (data.cartTotal?.toDouble()
+                        ?.minus(discount))
+                }
+            }
+        }
+        rbDelivery.setOnCheckedChangeListener { compoundButton, b ->
+            if (b){
+                rbDelivery.isChecked = true
+                installationChargeRow.visibility = View.VISIBLE
+                deliver_type = "del"
+                if (data != null) {
+                    cartTotalTxt.text = "KD " + data.cartTotal
+
+                    cartAllTotaltxt.text =
+                        "KD " + (data.cartTotalWithInstallation?.toDouble()
+                            ?.minus(discount))
+                    tvTotal.text = "KD " + (data.cartTotalWithInstallation?.toDouble()
+                        ?.minus(discount))
+                }
+            }
         }
 
-        val radioGroup = view.findViewById(R.id.radioGroup) as RadioGroup
-
-        radioGroup.setOnCheckedChangeListener(object : RadioGroup.OnCheckedChangeListener {
-            override fun onCheckedChanged(group: RadioGroup?, checkedId: Int) {
-                when (checkedId) {
-
-                    R.id.radioButtonpickup -> {
-
-                        deliver_type = "pickup"
-
-                    }
-
-                    R.id.radioButtonhomedelivery -> {
-
-                        deliver_type = "Home_delivery"
-
-                    }
-                }
-                // checkedId is the RadioButton selected
-            }
-        })
+//        radioGroup.setOnCheckedChangeListener { group, checkedId ->
+//            when (checkedId) {
+//
+//                R.id.radioButtonpickup -> {
+//                    if (rbPickUp.isChecked){
+//
+//                    }
+//
+//                }
+//
+//                R.id.radioButtonhomedelivery -> {
+//                    if (rbDelivery.isChecked) {
+//
+//                    }
+//                }
+//            }
+//            // checkedId is the RadioButton selected
+//        }
 
         /*sheetBehavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
 
@@ -161,28 +237,58 @@ class Cart_Fragment : Fragment(), PickUpStoreClickListener, ManageCartItem {
 //        })
 
 
-        btn_checkout?.setOnClickListener { view ->
+        btn_checkout?.setOnClickListener {
+            expandCloseSheet()
+//            deliver_type = ""
+            installationChargeRow.visibility = GONE
+            if (data != null) {
+                cartTotalTxt.text = "KD "+data.cartTotal
 
-
-            if (deliver_type.equals("pickup")) {
-
-                selectlocationAlert()
-            } else {
-
-                changeFragemnt(Delivery_state_select_adress_Fragment())
-
+                cartAllTotaltxt.text = "KD "+(data.cartTotal?.toDouble()
+                    ?.minus(discount))
+                tvTotal.text = "KD "+(data.cartTotal?.toDouble()
+                    ?.minus(discount))
             }
+        }
+        btnContinue?.setOnClickListener {
 
-
+            if (deliver_type.isEmpty()){
+                Toast.makeText(activity, getString(R.string.choose_del_type), Toast.LENGTH_LONG).show()
+            }else {
+                if (deliver_type.equals("pickup")) {
+//                    selectlocationAlert()
+                } else {
+                    expandCloseSheet()
+                    rbDelivery.isChecked = false
+                    rbPickUp.isChecked = false
+                    preCheckoutModel.pickStore = "0"
+                    preCheckoutModel.total = tvTotal.text.toString()
+                    preCheckoutModel.grandTotal = tvTotal.text.toString()
+                    changeFragemnt(
+                        Delivery_state_select_adress_Fragment.newInstance(
+                            tvTotal.text.toString(),
+                            preCheckoutModel
+                        )
+                    )
+                }
+            }
         }
         ll_coupon_code_fld.setOnClickListener { view ->
 
-            apllycouponAlert()
+            if (etCoupon.text.toString().length>0){
+
+                applyCoupon(etCoupon.text.toString(),tvTotal.text.toString())
+            }else{
+                etCoupon.setError(getString(R.string.empty_field_error))
+                etCoupon.requestFocus()
+            }
+//            apllycouponAlert()
 
 
         }
         return view
     }
+
 
     @SuppressLint("WrongConstant")
     fun selectlocationAlert() {
@@ -194,12 +300,18 @@ class Cart_Fragment : Fragment(), PickUpStoreClickListener, ManageCartItem {
         dialog = Dialog(requireActivity())
         dialog!!.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog!!.setContentView(alertLayout)
+        dialog?.setCanceledOnTouchOutside(false)
+
+        dialog?.setOnCancelListener {
+            rbDelivery.isChecked = false
+            rbPickUp.isChecked = false
+            deliver_type = ""
+        }
 
         val lp = WindowManager.LayoutParams()
         lp.width = WindowManager.LayoutParams.MATCH_PARENT
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT
         lp.gravity = Gravity.CENTER
-        dialog!!.show()
         dialog!!.window!!.setBackgroundDrawableResource(android.R.color.transparent)
         dialog!!.show()
 
@@ -223,7 +335,6 @@ class Cart_Fragment : Fragment(), PickUpStoreClickListener, ManageCartItem {
         lp.width = WindowManager.LayoutParams.MATCH_PARENT
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT
         lp.gravity = Gravity.CENTER
-        dialog!!.show()
         dialog!!.window!!.setBackgroundDrawableResource(android.R.color.transparent)
         dialog!!.show()
 
@@ -265,6 +376,7 @@ class Cart_Fragment : Fragment(), PickUpStoreClickListener, ManageCartItem {
 
     fun pickUpStoreList() {
 
+        LoadingDialog.showLoadingDialog(requireContext(),"")
         val apiService = ServiceGenerator.createService(ApiInterface::class.java)
         val call: Call<PickUpStoreModel> = apiService.PickUpStore(ApiConstants.LG_APP_KEY)
 
@@ -277,6 +389,7 @@ class Cart_Fragment : Fragment(), PickUpStoreClickListener, ManageCartItem {
             ) {
                 if (response.isSuccessful()) {
 
+                    LoadingDialog.cancelLoading()
                     val status: String = response.body()!!.status.toString()
                     val messege: String? = response.body()!!.message
 
@@ -294,7 +407,7 @@ class Cart_Fragment : Fragment(), PickUpStoreClickListener, ManageCartItem {
                     }
 
 
-                    recy_pickup_storelist!!.adapter= PickUpShop_list_Adapter(requireActivity(),PickUpStoreList,this@Cart_Fragment)
+                    recy_pickup_storelist!!.adapter= PickUpShop_list_Adapter(requireActivity(),PickUpStoreList,this@Cart_Fragment,manager?.locale.equals("ar"))
 
 
                 } else {
@@ -304,6 +417,7 @@ class Cart_Fragment : Fragment(), PickUpStoreClickListener, ManageCartItem {
 
             override fun onFailure(call: Call<PickUpStoreModel?>?, t: Throwable?) {
                 // something went completely south (like no internet connection)
+                LoadingDialog.cancelLoading()
                 Log.e("onFailure", t.toString())
             }
         })
@@ -330,15 +444,29 @@ class Cart_Fragment : Fragment(), PickUpStoreClickListener, ManageCartItem {
     }
 
     override fun onPickStoreClicked(position: Int, item: PickUpStoreModel.Detail?) {
-        changeFragemnt(MapsFragment())
+        rbPickUp.isChecked = false
+        rbDelivery.isChecked = false
         dialog!!.dismiss()
+        preCheckoutModel.pickStore = item?.storeId!!
+        preCheckoutModel.pickStoreDetails = item
+        preCheckoutModel.total = tvTotal.text.toString()
+        preCheckoutModel.grandTotal = tvTotal.text.toString()
+        changeFragemnt(Delivery_state_select_adress_Fragment.newInstance(tvTotal.text.toString(),preCheckoutModel))
+//        val intent = Intent(activity, Thank_You_Activity::class.java)
+//        startActivity(intent)
     }
 
-    private fun fetchCartDetails(){
 
+    private fun fetchCartDetails(){
+        LoadingDialog.showLoadingDialog(requireContext(),"")
+        var token = ""
+        if (manager?.getUserToken().isNullOrEmpty())
+            token = manager?.guestToken!!
+        else
+            token = manager?.userToken!!
         val apiService = ServiceGenerator.createService(ApiInterface::class.java)
         val call: Call<ShowCartResponseModel> = apiService.viewCart(ApiConstants.LG_APP_KEY,
-            manager?.getUserToken())
+            token)
 
         call.enqueue(object : Callback<ShowCartResponseModel?> {
 
@@ -349,6 +477,7 @@ class Cart_Fragment : Fragment(), PickUpStoreClickListener, ManageCartItem {
             ) {
                 Log.e("show cart Response", response.toString() + "")
                 if (response.isSuccessful()) {
+                    LoadingDialog.cancelLoading()
 
                     val status: String = response.body()!!.status.toString()
                     val message: String? = response.body()!!.message
@@ -358,22 +487,48 @@ class Cart_Fragment : Fragment(), PickUpStoreClickListener, ManageCartItem {
 
                     if (status == "true") {
                          showCartData = response.body()?.data?.cartItems
-                        val data = response.body()?.data
+                        data = response.body()?.data!!
 
                         Log.e("Show cart data", showCartData.toString())
+                        showToolBar?.updateCartCount(showCartData?.size!!)
                         if (showCartData!!.size >0){
-                            recycler_cart.adapter = Cart_list_Adapter(activity,showCartData!!, this@Cart_Fragment)
+                            rlTotal.visibility = View.VISIBLE
+                            recycler_cart.visibility = View.VISIBLE
+                            recycler_cart.adapter = Cart_list_Adapter(activity,showCartData!!, this@Cart_Fragment,manager?.locale.equals("ar",ignoreCase = true))
                             if (data != null) {
                                 cartTotalTxt.text = "KD "+data.cartTotal
                                 cartInstallationTxt.text = "KD "+data.installationTotal
+                                cartAllTotaltxt.text = "KD "+data.cartTotal
+                                tvTotal.text = "KD "+data.cartTotal
+                                if (data?.deliveryAvailable?.equals("yes",ignoreCase = true)!!){
+                                    rbDelivery.visibility = View.VISIBLE
+                                }else{
+                                    rbDelivery.visibility = View.GONE
+                                }
+                                if (data?.pickupAailable?.equals("yes",ignoreCase = true)!!){
+                                    rbPickUp.visibility = View.VISIBLE
+                                }else{
+                                    rbPickUp.visibility = View.GONE
+                                }
                                 //cartDelivaryChargeTxt.text = "KD "+data.
-                                cartAllTotaltxt.text = "KD "+data.cartTotalWithInstallation
+//                                if (deliver_type.equals("pickup")) {
+//                                    cartAllTotaltxt.text = "KD "+data.cartTotal
+//                                    tvTotal.text = "KD "+data.cartTotal
+//                                } else {
+//                                    cartAllTotaltxt.text = "KD "+data.cartTotalWithInstallation
+//                                    tvTotal.text = "KD "+data.cartTotalWithInstallation
+//                                }
+
                             }
                         }else {
 
+                            recycler_cart.isGone = true
+                            emptyText.isVisible = true
+                            rlTotal.visibility = View.GONE
                         }
 
                     }else{
+                        rlTotal.visibility = View.GONE
                         recycler_cart.isGone = true
                         emptyText.isVisible = true
                         Toast.makeText(
@@ -384,11 +539,7 @@ class Cart_Fragment : Fragment(), PickUpStoreClickListener, ManageCartItem {
                     }
 
                 } else {
-                    Toast.makeText(
-                        activity,
-                        "Cart fetching failed",
-                        Toast.LENGTH_SHORT
-                    ).show()
+
                 }
             }
 
@@ -397,15 +548,22 @@ class Cart_Fragment : Fragment(), PickUpStoreClickListener, ManageCartItem {
                 // something went completely south (like no internet connection)
                 recycler_cart.isGone = true
                 emptyText.isVisible = true
+                LoadingDialog.cancelLoading()
                 Log.e("onFailure", t.toString())
             }
         })
     }
 
     override fun onDeleteCartItem(cartId: String?) {
+        LoadingDialog.showLoadingDialog(requireContext(),"")
+        var token = ""
+        if (manager?.getUserToken().isNullOrEmpty())
+            token = manager?.guestToken!!
+        else
+            token = manager?.userToken!!
         val apiService = ServiceGenerator.createService(ApiInterface::class.java)
         val call: Call<CommonResponseModel> = apiService.deleteCartItem(ApiConstants.LG_APP_KEY,
-            manager?.getUserToken(), cartId)
+            token, cartId)
 
         call.enqueue(object : Callback<CommonResponseModel?> {
 
@@ -414,6 +572,7 @@ class Cart_Fragment : Fragment(), PickUpStoreClickListener, ManageCartItem {
                 call: Call<CommonResponseModel?>?,
                 response: Response<CommonResponseModel?>
             ) {
+                LoadingDialog.cancelLoading()
                 Log.e("show cart Response", response.toString() + "")
                 if (response.isSuccessful()) {
 
@@ -441,7 +600,7 @@ class Cart_Fragment : Fragment(), PickUpStoreClickListener, ManageCartItem {
                 } else {
                     Toast.makeText(
                         activity,
-                        "Cart deleting failed",
+                        getString(R.string.delete_cart_failed),
                         Toast.LENGTH_SHORT
                     ).show()
                 }
@@ -450,15 +609,22 @@ class Cart_Fragment : Fragment(), PickUpStoreClickListener, ManageCartItem {
 
             override fun onFailure(call: Call<CommonResponseModel?>?, t: Throwable?) {
                 // something went completely south (like no internet connection)
+                LoadingDialog.cancelLoading()
                 Log.e("onFailure", t.toString())
             }
         })
     }
 
     override fun onUpdateCartQuantity(cartId: String?, quantity: String) {
+        LoadingDialog.showLoadingDialog(requireContext(),"")
+        var token = ""
+        if (manager?.getUserToken().isNullOrEmpty())
+            token = manager?.guestToken!!
+        else
+            token = manager?.userToken!!
         val apiService = ServiceGenerator.createService(ApiInterface::class.java)
         val call: Call<CommonResponseModel> = apiService.changeCartQuantity(ApiConstants.LG_APP_KEY,
-            manager?.getUserToken(), cartId, quantity)
+            token, cartId, quantity)
 
         call.enqueue(object : Callback<CommonResponseModel?> {
 
@@ -470,6 +636,7 @@ class Cart_Fragment : Fragment(), PickUpStoreClickListener, ManageCartItem {
                 Log.e("show cart Response", response.toString() + "")
                 if (response.isSuccessful()) {
 
+                    LoadingDialog.cancelLoading()
                     val status: String = response.body()!!.status.toString()
                     val message: String? = response.body()!!.message
 
@@ -494,7 +661,7 @@ class Cart_Fragment : Fragment(), PickUpStoreClickListener, ManageCartItem {
                 } else {
                     Toast.makeText(
                         activity,
-                        "Cart Updating failed",
+                        getString(R.string.update_cart_failed),
                         Toast.LENGTH_SHORT
                     ).show()
                 }
@@ -503,8 +670,97 @@ class Cart_Fragment : Fragment(), PickUpStoreClickListener, ManageCartItem {
 
             override fun onFailure(call: Call<CommonResponseModel?>?, t: Throwable?) {
                 // something went completely south (like no internet connection)
+                LoadingDialog.cancelLoading()
                 Log.e("onFailure", t.toString())
             }
         })
+    }
+
+    fun applyCoupon(couponCode: String, cartTotal:String) {
+
+        LoadingDialog.showLoadingDialog(requireContext(),"")
+
+        var token = ""
+        if (manager?.getUserToken().isNullOrEmpty())
+            token = manager?.guestToken!!
+        else
+            token = manager?.userToken!!
+        val apiService = ServiceGenerator.createService(ApiInterface::class.java)
+        val call: Call<CouponApplyModel> = apiService.applyCoupon(
+            ApiConstants.LG_APP_KEY,
+            token,
+            couponCode,
+            cartTotal?.replace("KD ","")
+        )
+
+        call.enqueue(object : Callback<CouponApplyModel?> {
+
+
+            override fun onResponse(
+                call: Call<CouponApplyModel?>?,
+                response: Response<CouponApplyModel?>
+            ) {
+                LoadingDialog.cancelLoading()
+                Log.e("Guest token response", response.toString() + "")
+                if (response.isSuccessful()) {
+
+                    val status: String = response.body()!!.status.toString()
+                    val message: String? = response.body()!!.message
+
+                    Log.e("status", status.toString() + "")
+                    Log.e("message", message.toString() + "")
+
+                    if (status == "true") {
+
+                        if (response?.body()?.data!=null){
+                            discountRow.visibility = View.VISIBLE
+                            discount = response?.body()?.data?.discountAmount?.toDouble()!!
+//                            etCoupon.setText("")
+                            tvApply.setText(getString(R.string.applied))
+                            etCoupon.isFocusable = false
+                            etCoupon.isClickable = false
+                            etCoupon.isFocusableInTouchMode = false
+                            try {
+                                tvTotal.setText("${tvTotal.text.toString().replace("KD ","").toDouble() - response?.body()?.data?.discountAmount?.toDouble()!!}")
+                            }catch (e:Exception){
+
+                            }
+
+                            preCheckoutModel.coupon = couponCode
+                            tvDiscount.setText(response?.body()?.data?.discountAmount)
+                            Toast.makeText(
+                                activity,
+                                response?.body()?.data?.comments,
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }else{
+                            Toast.makeText(
+                                activity,
+                                response?.body()!!.message!!,
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+
+                    } else {
+                        Toast.makeText(
+                            activity,
+                            response?.body()!!.message!!,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
+                } else {
+
+                }
+            }
+
+
+            override fun onFailure(call: Call<CouponApplyModel?>?, t: Throwable?) {
+                LoadingDialog.cancelLoading()
+                // something went completely south (like no internet connection)
+                Log.e("onFailure", t.toString())
+            }
+        })
+
     }
 }

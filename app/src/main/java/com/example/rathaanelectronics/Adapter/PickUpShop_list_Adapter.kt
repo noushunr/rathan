@@ -4,8 +4,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import android.widget.TextView
-import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.FragmentActivity
 
 import androidx.recyclerview.widget.RecyclerView
@@ -18,6 +18,7 @@ class PickUpShop_list_Adapter(
     activity: FragmentActivity?,
     PickUpStore_data: List<PickUpStoreModel.Detail>,
     listener: PickUpStoreClickListener,
+    isArabic: Boolean,
 
     ) :
     RecyclerView.Adapter<PickUpShop_list_Adapter.ViewHolder>() {
@@ -25,7 +26,7 @@ class PickUpShop_list_Adapter(
     var PickUpStore_data = PickUpStore_data
     var listener = listener
     var lastCheckedLayout: LinearLayout? = null
-
+    var isArabic = isArabic
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -42,7 +43,7 @@ class PickUpShop_list_Adapter(
     override fun onBindViewHolder(holder: PickUpShop_list_Adapter.ViewHolder, position: Int) {
 
 
-        holder.bindItems(PickUpStore_data.get(position))
+        holder.bindItems(PickUpStore_data.get(position),isArabic)
         holder.imageLayout.setOnClickListener{
             lastCheckedLayout?.setBackgroundResource(R.drawable.radio_icon)
             lastCheckedLayout = holder.imageLayout
@@ -66,7 +67,7 @@ class PickUpShop_list_Adapter(
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         val ll_pickupstore =
-            itemView.findViewById<LinearLayout>(R.id.ll_pickupstore)
+            itemView.findViewById<RelativeLayout>(R.id.ll_pickupstore)
 
         val txt_store_name =
             itemView.findViewById<TextView>(R.id.txt_store_name)
@@ -74,11 +75,17 @@ class PickUpShop_list_Adapter(
         val imageLayout = itemView.findViewById<LinearLayout>(R.id.imageLayout)
 
 
-        fun bindItems(get: PickUpStoreModel.Detail) {
+        fun bindItems(get: PickUpStoreModel.Detail, isArabic: Boolean) {
+
+            if (isArabic){
+                txt_store_name.text = get.storeNameAr
+                txt_store_add.text = get.storeAddressAr
+            }else{
+                txt_store_name.text = get.storeName
+                txt_store_add.text = get.storeAddress
+            }
 
 
-            txt_store_name.text = get.storeName
-            txt_store_add.text = get.storeAddress
 
         }
     }

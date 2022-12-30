@@ -2,13 +2,14 @@
 
 
 <LinearLayout android:layout_width="match_parent"
-    android:layout_height="80dp"
+    android:layout_height="wrap_content"
     android:id="@+id/ll_notification"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:gravity="center"
     android:background="@color/white"
-    android:layout_margin="5dp"
+
     app:cardCornerRadius="5dp"
+    android:padding="15dp"
     android:orientation="horizontal"
     android:weightSum="1"
     xmlns:android="http://schemas.android.com/apk/res/android">
@@ -38,9 +39,9 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight=".9"
-            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
             android:layout_marginTop="5dp"
-            android:gravity="left"
+            android:gravity="start"
             android:orientation="vertical">
 
 

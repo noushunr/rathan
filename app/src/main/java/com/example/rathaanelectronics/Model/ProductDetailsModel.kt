@@ -18,7 +18,11 @@ class ProductDetailsModel {
 
     @SerializedName("related_products")
     @Expose
-    var relatedProducts: List<RelatedProducts>? = null
+    var relatedProducts: List<Product>? = null
+
+    @SerializedName("prodattrs")
+    @Expose
+    var prodAttrs: List<ProdAttrs>? = null
 
 
 
@@ -43,6 +47,14 @@ class ProductDetailsModel {
         @Expose
         var productShortDescArab: String? = null
 
+        @SerializedName("product_desc")
+        @Expose
+        var productDesc: String? = null
+
+        @SerializedName("product_desc_arab")
+        @Expose
+        var productDescArab: String? = null
+
         @SerializedName("product_instruction")
         @Expose
         var productInstruction: String? = null
@@ -62,6 +74,10 @@ class ProductDetailsModel {
         @SerializedName("product_available")
         @Expose
         var productAvailable: String? = null
+
+        @SerializedName("product_available_ar")
+        @Expose
+        var productAvailableArabic: String? = null
 
         @SerializedName("product_sku")
         @Expose
@@ -83,6 +99,10 @@ class ProductDetailsModel {
         @Expose
         var productDeliveryOrPickupTitle: String? = null
 
+        @SerializedName("product_delivery_or_pickup_title_ar")
+        @Expose
+        var productDeliveryOrPickupTitleArab: String? = null
+
         @SerializedName("product_rate")
         @Expose
         var productRate: String? = null
@@ -94,6 +114,10 @@ class ProductDetailsModel {
         @SerializedName("product_sell_price")
         @Expose
         var productSellPrice: String? = null
+
+        @SerializedName("product_spoffer_price")
+        @Expose
+        var productSpofferPrice: String? = null
 
         @SerializedName("product_pickupstore")
         @Expose
@@ -114,6 +138,18 @@ class ProductDetailsModel {
         @SerializedName("wishlist_exist")
         @Expose
         var wishlist_exist: String? = null
+
+        @SerializedName("product_available_for")
+        @Expose
+        var productAvailableFor: String? = null
+
+        @SerializedName("loyalty_points")
+        @Expose
+        var loyaltyPoints: Int? = 0
+
+        @SerializedName("product_spoffer_oldprice_show")
+        @Expose
+        var productOldPriceShow: String? = "0"
 
     }
 
@@ -154,6 +190,26 @@ class ProductDetailsModel {
         @Expose
         var wishlistExist: Int? = 0
 
+
+
+    }
+
+    inner class ProdAttrs{
+        @SerializedName("attribute_id")
+        @Expose
+        var attributeId: String? = null
+
+        @SerializedName("categories")
+        @Expose
+        var categories: String? = null
+
+        @SerializedName("attribute_name")
+        @Expose
+        var attributeName: String? = null
+
+        @SerializedName("attribute_value")
+        @Expose
+        var attributeValue: String? = null
     }
 
 }

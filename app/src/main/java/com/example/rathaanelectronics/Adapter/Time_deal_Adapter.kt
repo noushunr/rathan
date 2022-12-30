@@ -2,32 +2,35 @@ package com.example.rathaanelectronics.Adapter
 
 import android.content.Context
 import android.os.CountDownTimer
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.rathaanelectronics.Interface.TimerItemClick
 import com.example.rathaanelectronics.Model.Data
 import com.example.rathaanelectronics.R
 import com.example.rathaanelectronics.Rest.ApiConstants
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
-import kotlin.reflect.typeOf
 
 
-class Time_deal_Adapter(activity: FragmentActivity?,
-                        alTimeOffer: List<Data>,type : Int) :
+class Time_deal_Adapter(
+    activity: FragmentActivity?,
+    alTimeOffer: List<Data>, type: Int, listener: TimerItemClick, isArabic: Boolean,) :
     RecyclerView.Adapter<Time_deal_Adapter.ViewHolder>() {
 
     var context = activity
     var alTimeOffer = alTimeOffer
     var type = type
+    var listener = listener
+    var isArabic = isArabic
     override fun onCreateViewHolder(
             parent: ViewGroup,
             viewType: Int
@@ -41,7 +44,7 @@ class Time_deal_Adapter(activity: FragmentActivity?,
     override fun onBindViewHolder(holder: Time_deal_Adapter.ViewHolder, position: Int) {
 
 
-        context?.let { holder?.bindItems(alTimeOffer.get(position), it,type) }
+        context?.let { holder?.bindItems(alTimeOffer.get(position), it,type,isArabic) }
 
         if (type == 0){
             holder.llTimer.visibility = View.VISIBLE
@@ -94,7 +97,10 @@ class Time_deal_Adapter(activity: FragmentActivity?,
             holder.tvLabel.visibility = View.GONE
         }
 
+        holder.coordinatorLayout_home.setOnClickListener { view ->
 
+            listener.onHotdealsClicked(position, alTimeOffer[position])
+        }
 
 //         holder.bindItems(image[position],name[position])
 
@@ -119,6 +125,7 @@ class Time_deal_Adapter(activity: FragmentActivity?,
         var llTimer = itemView?.findViewById<LinearLayout>(R.id.ll_timer)
         val tvLabel = itemView?.findViewById<TextView>(R.id.tv_label)
         val tvAmount = itemView?.findViewById<TextView>(R.id.tv_amount)
+        val coordinatorLayout_home = itemView.findViewById<CoordinatorLayout>(R.id.coordinatorLayout_home)
 
         val tvProductName =
                 itemView.findViewById<TextView>(R.id.top_deal_name)
@@ -130,10 +137,13 @@ class Time_deal_Adapter(activity: FragmentActivity?,
 //        val flevelcat_icon = itemView.findViewById<ImageView>(R.id.flevelcat_icon)
 //        val flevelcat_name = itemView.findViewById<TextView>(R.id.flevelcat_name)
 
-        fun bindItems(data: Data, context: Context,type: Int) {
+        fun bindItems(data: Data, context: Context, type: Int, isArabic: Boolean) {
             Glide.with(context).load(ApiConstants.IMAGE_BASE_URL + data.prodFrondImg)
                     .into(ivProduct)
-            tvProductName?.text = data?.productName
+            if (isArabic)
+                tvProductName?.text = data?.productNameArab
+            else
+                tvProductName?.text = data?.productName
             if (data?.productSpofferPrice?.toDouble()?.toInt() !=0) {
                 var amount = data?.productSpofferPrice?.toDouble()?.times(100.0)?.let { Math.round(it) }?.div(100.0)
                 tvAmount.text ="KD $amount"
@@ -144,7 +154,7 @@ class Time_deal_Adapter(activity: FragmentActivity?,
             if (data?.productSingleQuantity?.toInt() == 0){
                 llOfferStat.visibility = View.VISIBLE
                 llOfferAmount.visibility = View.GONE
-                tvOfferPercentage.text="Sold Out"
+                tvOfferPercentage.text=context.getString(R.string.sold_out)
                 llOfferStat.setBackgroundResource(R.drawable.bg_offer_float_soldout)
             }else{
 
@@ -154,7 +164,7 @@ class Time_deal_Adapter(activity: FragmentActivity?,
                     var  roundOff = offerPrice?.times(100.0)?.let { Math.round(it) }?.div(100.0)
                     llOfferStat.visibility = View.VISIBLE
                     if (offerPercentage != null) {
-                        tvOfferPercentage.text= roundOff.toString() + " % Offer"
+                        tvOfferPercentage.text= "${roundOff.toString() }% ${context.getString(R.string.offer)}"
                     }
                     llOfferStat.setBackgroundResource(R.drawable.bg_offer_float_offer)
                     if(type == 0){
@@ -176,6 +186,7 @@ class Time_deal_Adapter(activity: FragmentActivity?,
 //           flevelcat_name.text = s
 
 
+
         }
     }
 
@@ -183,6 +194,6 @@ class Time_deal_Adapter(activity: FragmentActivity?,
         this.context = activity
         this.alTimeOffer = alTimeOffer
         this.type = type
-
+        this.listener = listener
     }
 }

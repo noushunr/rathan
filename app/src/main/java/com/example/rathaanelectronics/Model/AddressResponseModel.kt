@@ -2,8 +2,9 @@ package com.example.rathaanelectronics.Model
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
-class AddressResponseModel {
+class AddressResponseModel : Serializable {
     @SerializedName("status")
     @Expose
     var status: Boolean = false
@@ -22,7 +23,7 @@ class AddressResponseModel {
         var details: List<Details>? = null
     }
 
-    inner class Details{
+    inner class Details : Serializable {
         @SerializedName("address_id")
         @Expose
         var addressId: String? = null
@@ -86,6 +87,11 @@ class AddressResponseModel {
         @SerializedName("city_name")
         @Expose
         var cityName: String? = null
+
+        @SerializedName("city_id")
+        @Expose
+        var cityId: String? = null
+
 
         @SerializedName("city_governarate")
         @Expose

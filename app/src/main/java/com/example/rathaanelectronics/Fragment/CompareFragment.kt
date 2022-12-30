@@ -1,5 +1,6 @@
 package com.example.rathaanelectronics.Fragment
 
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.text.Html
@@ -11,7 +12,10 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.bumptech.glide.Glide
+import com.example.rathaanelectronics.Common.LoadingDialog
+import com.example.rathaanelectronics.Interface.ShowToolBar
 import com.example.rathaanelectronics.Managers.MyPreferenceManager
+import com.example.rathaanelectronics.Model.CartCountModel
 import com.example.rathaanelectronics.Model.CartResponseModel
 import com.example.rathaanelectronics.Model.CompareListModel
 import com.example.rathaanelectronics.R
@@ -33,7 +37,70 @@ class CompareFragment : Fragment() {
     private var param2: String? = null
     private var manager: MyPreferenceManager? = null
     private lateinit var binding: FragmentCompareBinding
+    var showToolBar : ShowToolBar?=null
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
 
+        showToolBar = context as ShowToolBar
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        showToolBar = null
+    }
+    fun getCartCount() {
+
+
+        var token = ""
+        if (manager?.getUserToken().isNullOrEmpty())
+            token = manager?.guestToken!!
+        else
+            token = manager?.userToken!!
+        val apiService = ServiceGenerator.createService(ApiInterface::class.java)
+        val call: Call<CartCountModel> = apiService.getCartCount(
+            ApiConstants.LG_APP_KEY,
+            token
+        )
+
+        call.enqueue(object : Callback<CartCountModel?> {
+
+
+            override fun onResponse(
+                call: Call<CartCountModel?>?,
+                response: Response<CartCountModel?>
+            ) {
+                Log.e("Guest token response", response.toString() + "")
+                if (response.isSuccessful()) {
+
+                    val status: String = response.body()!!.status.toString()
+                    val message: String? = response.body()!!.message
+
+                    Log.e("status", status.toString() + "")
+                    Log.e("message", message.toString() + "")
+
+                    if (status == "true") {
+                        var cartCount = response.body()!!.data?.count
+                        var wishListCount = response.body()!!.data?.wishlistCount
+                        showToolBar?.updateCartCount(cartCount!!)
+                        showToolBar?.updateWalletCount(response.body()!!.data?.wishlistCount!!)
+
+
+                    } else {
+                    }
+
+                } else {
+
+                }
+            }
+
+
+            override fun onFailure(call: Call<CartCountModel?>?, t: Throwable?) {
+                // something went completely south (like no internet connection)
+                Log.e("onFailure", t.toString())
+            }
+        })
+
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -48,6 +115,9 @@ class CompareFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentCompareBinding.inflate(inflater, container, false)
+        binding.ivBack.setOnClickListener {
+            activity?.onBackPressed()
+        }
         return binding.root
     }
 
@@ -70,10 +140,15 @@ class CompareFragment : Fragment() {
     }
 
     private fun listCompare(){
+        var token = ""
+        if (manager?.getUserToken().isNullOrEmpty())
+            token = manager?.guestToken!!
+        else
+            token = manager?.userToken!!
         val apiService = ServiceGenerator.createService(ApiInterface::class.java)
         val call: Call<CompareListModel> = apiService.listCompare(
             ApiConstants.LG_APP_KEY,
-            manager?.getUserToken())
+            token)
 
         call.enqueue(object : Callback<CompareListModel?> {
 
@@ -105,6 +180,8 @@ class CompareFragment : Fragment() {
                         } else {
                             binding.compareProd1Layout.visibility = View.GONE
                             binding.compareProd2Layout.visibility = View.GONE
+                            binding.compareProd3Layout.visibility = View.GONE
+                            binding.compareProd4Layout.visibility = View.GONE
                             Toast.makeText(
                                 activity,
                                 message,
@@ -122,7 +199,7 @@ class CompareFragment : Fragment() {
                 } else {
                     Toast.makeText(
                         activity,
-                        "Add to compare list failed",
+                        getString(R.string.something_went),
                         Toast.LENGTH_SHORT
                     ).show()
                 }
@@ -138,27 +215,40 @@ class CompareFragment : Fragment() {
     }
 
     private fun setUpProd1(productData: CompareListModel.Data) {
-        Glide.with(requireContext()).load(ApiConstants.IMAGE_BASE_URL + productData.productImage)
+        var productImage = ""
+        if (productData.prodFrondImg!=null){
+            productImage = productData.productImage?.split(",")?.toTypedArray()?.get(0)!!
+        }
+        Glide.with(requireContext()).load(ApiConstants.IMAGE_BASE_URL + productImage)
             .into(binding.compareProd1Img)
-        binding.compareProd1NameTxt.text = productData.productName
-        binding.compareProd1PriceTxt.text = productData.productSellPrice
-        binding.compareProd1StockTxt.text = when (productData.productAvailable) {
-            "1" -> "In Stock"
-            else -> "Out of Stock"
-        }
-        binding.compareProd1ChargeTxt.text = productData.productInstallation
-        binding.compareProd1DeliveryTxt.text = when (productData.productDeliveryOrPickup) {
-            "2" -> "Delivery & Store Pickup"
-            "0" -> "Delivery Available"
-            else -> "Store Pickup"
-        }
-        binding.compareProd1DescriptionTxt.text = if (Build.VERSION.SDK_INT >= 24) {
-            Html.fromHtml(productData.productShortDesc, Html.FROM_HTML_MODE_LEGACY).toString() // for 24 api and more
-        } else {
-            Html.fromHtml(productData.productShortDesc).toString() // or for older api
+        if (manager?.locale?.equals("ar")!!){
+            binding.compareProd1NameTxt.text = productData.productNameArab
+            binding.compareProd1StockTxt.text = productData.productAvailableArabic
+            binding.compareProd1DeliveryTxt.text = productData.productDeliveryOrPickupTitleArab
+            binding.compareProd1DescriptionTxt.text = if (Build.VERSION.SDK_INT >= 24) {
+                Html.fromHtml(productData.productDescArab, Html.FROM_HTML_MODE_LEGACY).toString() // for 24 api and more
+            } else {
+                Html.fromHtml(productData.productDescArab).toString() // or for older api
+            }
+        }else{
+            binding.compareProd1NameTxt.text = productData.productName
+            binding.compareProd1StockTxt.text = productData.productAvailable
+            binding.compareProd1DeliveryTxt.text = productData.productDeliveryOrPickupTitle
+            binding.compareProd1DescriptionTxt.text = if (Build.VERSION.SDK_INT >= 24) {
+                Html.fromHtml(productData.productDesc, Html.FROM_HTML_MODE_LEGACY).toString() // for 24 api and more
+            } else {
+                Html.fromHtml(productData.productDesc).toString() // or for older api
+            }
         }
 
+        binding.compareProd1PriceTxt.text = productData.productSellPrice
+
+        binding.compareProd1ChargeTxt.text = productData.productInstallation
+
+
+
         binding.compareProd1Layout.visibility = View.VISIBLE
+        binding.compareProd3Layout.visibility = View.VISIBLE
 
         binding.compareProd1AddCartBtn.setOnClickListener {
             addToCartRequest(productData.productId, "1")
@@ -166,27 +256,36 @@ class CompareFragment : Fragment() {
     }
 
     private fun setUpProd2(productData: CompareListModel.Data) {
-        Glide.with(requireContext()).load(ApiConstants.IMAGE_BASE_URL + productData.productImage)
+        var productImage = ""
+        if (productData.prodFrondImg!=null){
+            productImage = productData.productImage?.split(",")?.toTypedArray()?.get(0)!!
+        }
+        Glide.with(requireContext()).load(ApiConstants.IMAGE_BASE_URL + productImage)
             .into(binding.compareProd2Img)
-        binding.compareProd2NameTxt.text = productData.productName
         binding.compareProd2PriceTxt.text = productData.productSellPrice
-        binding.compareProd2StockTxt.text = when (productData.productAvailable) {
-            "1" -> "In Stock"
-            else -> "Out of Stock"
-        }
         binding.compareProd2ChargeTxt.text = productData.productInstallation
-        binding.compareProd2DeliveryTxt.text = when (productData.productDeliveryOrPickup) {
-            "2" -> "Delivery & Store Pickup"
-            "0" -> "Delivery Available"
-            else -> "Store Pickup"
-        }
-        binding.compareProd2DescriptionTxt.text = if (Build.VERSION.SDK_INT >= 24) {
-            Html.fromHtml(productData.productShortDesc, Html.FROM_HTML_MODE_LEGACY).toString() // for 24 api and more
-        } else {
-            Html.fromHtml(productData.productShortDesc).toString() // or for older api
-        }
 
+        if (manager?.locale?.equals("ar")!!){
+            binding.compareProd2NameTxt.text = productData.productNameArab
+            binding.compareProd2StockTxt.text = productData.productAvailableArabic
+            binding.compareProd2DeliveryTxt.text = productData.productDeliveryOrPickupTitleArab
+            binding.compareProd2DescriptionTxt.text = if (Build.VERSION.SDK_INT >= 24) {
+                Html.fromHtml(productData.productDescArab, Html.FROM_HTML_MODE_LEGACY).toString() // for 24 api and more
+            } else {
+                Html.fromHtml(productData.productDescArab).toString() // or for older api
+            }
+        }else{
+            binding.compareProd2NameTxt.text = productData.productName
+            binding.compareProd2StockTxt.text = productData.productAvailable
+            binding.compareProd2DeliveryTxt.text = productData.productDeliveryOrPickupTitle
+            binding.compareProd2DescriptionTxt.text = if (Build.VERSION.SDK_INT >= 24) {
+                Html.fromHtml(productData.productDesc, Html.FROM_HTML_MODE_LEGACY).toString() // for 24 api and more
+            } else {
+                Html.fromHtml(productData.productDesc).toString() // or for older api
+            }
+        }
         binding.compareProd2Layout.visibility = View.VISIBLE
+        binding.compareProd4Layout.visibility = View.VISIBLE
 
         binding.compareProd2AddCartBtn.setOnClickListener {
             addToCartRequest(productData.productId, "1")
@@ -194,10 +293,16 @@ class CompareFragment : Fragment() {
     }
 
     private fun addToCartRequest(productId: String?, quantity: String){
+        var token = ""
+        if (manager?.getUserToken().isNullOrEmpty())
+            token = manager?.guestToken!!
+        else
+            token = manager?.userToken!!
+        LoadingDialog.showLoadingDialog(requireContext(),"")
         val apiService = ServiceGenerator.createService(ApiInterface::class.java)
         val call: Call<CartResponseModel> =
             apiService.addToCart(ApiConstants.LG_APP_KEY,
-                manager?.getUserToken(),
+                token,
                 productId,
                 quantity)
 
@@ -208,6 +313,7 @@ class CompareFragment : Fragment() {
                 Log.e("Add to cart Response", response.toString() + "")
                 if (response.isSuccessful()) {
 
+                    LoadingDialog.cancelLoading()
                     val status: Boolean = response.body()!!.status
                     val message: String? = response.body()!!.message
 
@@ -220,6 +326,7 @@ class CompareFragment : Fragment() {
                             message,
                             Toast.LENGTH_SHORT
                         ).show()
+                        getCartCount()
                     } else {
                         Toast.makeText(
                             activity,
@@ -230,7 +337,7 @@ class CompareFragment : Fragment() {
                 } else {
                     Toast.makeText(
                         activity,
-                        "Adding to Cart failed",
+                        getString(R.string.add_cart_failed),
                         Toast.LENGTH_SHORT
                     ).show()
                     Log.e("Add to cart", "Adding to cart failed")
@@ -239,6 +346,7 @@ class CompareFragment : Fragment() {
 
             override fun onFailure(call: Call<CartResponseModel?>?, t: Throwable?) {
                 // something went completely south (like no internet connection)
+                LoadingDialog.cancelLoading()
                 Log.e("onFailure", t.toString())
             }
         })

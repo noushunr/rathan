@@ -1,6 +1,7 @@
 package com.example.rathaanelectronics.Adapter
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -67,6 +68,11 @@ class MainCat_title_list_Adapter(
         @SuppressLint("ResourceAsColor")
         fun bindItems(get: AllCategoriesModel.Datum) {
 
+            if (get.isCategorySelected){
+                txt_title.setTextColor(Color.BLACK)
+            }else{
+                txt_title.setTextColor(Color.RED)
+            }
 
             txt_title.text = get.categoryLabel
 

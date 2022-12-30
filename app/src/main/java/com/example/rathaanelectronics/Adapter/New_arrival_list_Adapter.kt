@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.FragmentActivity
@@ -84,7 +85,7 @@ class New_arrival_list_Adapter(
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         val coordinatorLayout_home =
-            itemView.findViewById<CoordinatorLayout>(R.id.coordinatorLayout_home)
+            itemView.findViewById<RelativeLayout>(R.id.coordinatorLayout_home)
         val img_top_deal = itemView.findViewById<ImageView>(R.id.img_top_deal)
         val txt_top_deal_product_name =
             itemView.findViewById<TextView>(R.id.txt_top_deal_product_name)
@@ -93,7 +94,8 @@ class New_arrival_list_Adapter(
         val addToWishlistbtn = itemView.findViewById<ImageView>(R.id.iv_wish_list)
         val txt_offer_float = itemView.findViewById<TextView>(R.id.txt_offer_float)
         val ll_offer_float = itemView.findViewById<LinearLayout>(R.id.ll_offer_float)
-
+        val llSameDayDelivery = itemView.findViewById<LinearLayout>(R.id.ll_same_day_delivery)
+        val llSoldOut = itemView.findViewById<LinearLayout>(R.id.ll_sold_out)
         fun bindItems(get: NewArrivalModel.Datum) {
 
 
@@ -110,31 +112,35 @@ class New_arrival_list_Adapter(
             }
 
             if (get?.productSingleQuantity?.toInt() == 0){
-                ll_offer_float.visibility = View.VISIBLE
-                txt_offer_float.text="Sold Out"
-                ll_offer_float.setBackgroundResource(R.drawable.bg_offer_float_soldout)
+                llSoldOut.visibility = View.VISIBLE
             }else{
-                if (get?.prodTopselling?.toInt() == 1){
+                llSoldOut.visibility = View.GONE
+                if (get?.samedayDelivery!=null && get?.samedayDelivery?.equals("yes",ignoreCase = true)!!){
+                    llSameDayDelivery.visibility = View.VISIBLE
+                }else{
+                    llSameDayDelivery.visibility = View.GONE
+                }
+            }
+            if (get?.prodTopselling?.toInt() == 1){
+                ll_offer_float.visibility = View.VISIBLE
+                txt_offer_float.text="Best Seller"
+                ll_offer_float.setBackgroundResource(R.drawable.bg_offer_float_best_seller)
+            }else if (get?.productOfferStat?.toInt() == 2){
+                if (get?.productSpofferPrice?.toDouble()?.toInt()!= 0){
+                    var offerPercentage = ((get?.productSellPrice?.toDouble())?.minus((get?.productSpofferPrice?.toDouble()!!)))?.div((get?.productSellPrice?.toDouble()!!))
+                    var offerPrice = offerPercentage?.times(100)
+                    var  roundOff = offerPrice?.times(100.0)?.let { Math.round(it) }?.div(100.0)
                     ll_offer_float.visibility = View.VISIBLE
-                    txt_offer_float.text="Best Seller"
-                    ll_offer_float.setBackgroundResource(R.drawable.bg_offer_float_best_seller)
-                }else if (get?.productOfferStat?.toInt() == 2){
-                    if (get?.productSpofferPrice?.toDouble()?.toInt()!= 0){
-                        var offerPercentage = ((get?.productSellPrice?.toDouble())?.minus((get?.productSpofferPrice?.toDouble()!!)))?.div((get?.productSellPrice?.toDouble()!!))
-                        var offerPrice = offerPercentage?.times(100)
-                        var  roundOff = offerPrice?.times(100.0)?.let { Math.round(it) }?.div(100.0)
-                        ll_offer_float.visibility = View.VISIBLE
-                        if (offerPercentage != null) {
-                            txt_offer_float.text= roundOff.toString() + " %"
-                        }
-                        ll_offer_float.setBackgroundResource(R.drawable.bg_offer_float_offer)
-                    }else{
-                        ll_offer_float.visibility = View.GONE
+                    if (offerPercentage != null) {
+                        txt_offer_float.text= roundOff.toString() + " % offer"
                     }
-
+                    ll_offer_float.setBackgroundResource(R.drawable.bg_offer_float_offer)
                 }else{
                     ll_offer_float.visibility = View.GONE
                 }
+
+            }else{
+                ll_offer_float.visibility = View.GONE
             }
 
 

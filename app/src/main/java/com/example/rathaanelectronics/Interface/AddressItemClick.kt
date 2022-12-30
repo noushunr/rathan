@@ -4,5 +4,6 @@ import com.example.rathaanelectronics.Model.AddressResponseModel
 
 interface AddressItemClick {
     fun editAddressItem(addressItem: AddressResponseModel.Details)
-    fun deleteAddressItem(addressId: String)
+    fun deleteAddressItem(addressId: String,position:Int)
+    fun onSelected(addressItem: AddressResponseModel.Details)
 }

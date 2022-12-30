@@ -20,7 +20,8 @@
         android:layout_width="wrap_content"
         android:layout_height="?actionBarSize"
         android:id="@+id/logos"
-        android:src="@drawable/logos" />
+        android:padding="10dp"
+        android:src="@drawable/logo_new" />
 
 
     </LinearLayout>

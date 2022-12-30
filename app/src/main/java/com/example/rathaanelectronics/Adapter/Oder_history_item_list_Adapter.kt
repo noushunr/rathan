@@ -1,7 +1,5 @@
 package com.example.rathaanelectronics.Adapter
 
-import android.app.Activity
-import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -9,35 +7,29 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentTransaction
 
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.rathaanelectronics.Fragment.OderCancelFragment
+import com.example.rathaanelectronics.Model.OrderDetails
 import com.example.rathaanelectronics.R
+import com.example.rathaanelectronics.Rest.ApiConstants
 
 
-class Oder_history_item_list_Adapter(activity: FragmentActivity?) :
+class Oder_history_item_list_Adapter(
+    activity: FragmentActivity?,
+    orderDetails: List<OrderDetails>,
+    isArabic: Boolean
+) :
     RecyclerView.Adapter<Oder_history_item_list_Adapter.ViewHolder>() {
 
 
-    val Context: FragmentActivity? =activity
+    val context: FragmentActivity? =activity
+    val orderDetails = orderDetails
 
-    val name = arrayOf<String>(
-        "Oder id BM106126",
-        "Oder id BM106127",
-        "Oder id BM106128"
-
-    )
-    val status: IntArray = intArrayOf(
-
-        1,
-        0,
-        1,
-    )
-
+    val isArabic = isArabic
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -51,14 +43,14 @@ class Oder_history_item_list_Adapter(activity: FragmentActivity?) :
     override fun onBindViewHolder(holder: Oder_history_item_list_Adapter.ViewHolder, position: Int) {
 
 
-        holder.bindItems(name[position], status[position])
+        holder.bindItems(orderDetails,context,isArabic)
 
         holder.btn_oder_cancellation.setOnClickListener { view->
 
        Log.e("lineitem","done")
 
-            val transaction = Context!!.supportFragmentManager?.beginTransaction()
-            transaction?.replace(R.id.frame, OderCancelFragment())
+            val transaction = context!!.supportFragmentManager?.beginTransaction()
+            transaction?.replace(R.id.frame, OderCancelFragment.newInstance(orderDetails[position],""))
             transaction?.addToBackStack(null)
             transaction?.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
             transaction?.commit()
@@ -72,7 +64,7 @@ class Oder_history_item_list_Adapter(activity: FragmentActivity?) :
 
 
     override fun getItemCount(): Int {
-        return status.size
+        return orderDetails.size
     }
 
 
@@ -82,22 +74,60 @@ class Oder_history_item_list_Adapter(activity: FragmentActivity?) :
 //        var oder_history_status = itemView.findViewById<ImageView>(R.id.oder_history_status)
 
         var oder_history_status = itemView.findViewById<View>(R.id.oder_history_status) as Button
-        val oder_title = itemView.findViewById<TextView>(R.id.oder_history_name)
+        val oder_title = itemView.findViewById<TextView>(R.id.tv_item_name)
+        val orderTotal = itemView.findViewById<TextView>(R.id.tv_total)
+        val orderDate = itemView.findViewById<TextView>(R.id.tv_date)
+        val refundLabel = itemView.findViewById<TextView>(R.id.tv_refund_label)
         val btn_oder_cancellation = itemView.findViewById<Button>(R.id.btn_oder_cancellation)
+        val ivProduct = itemView.findViewById<ImageView>(R.id.iv_item)
 
+        fun bindItems(
+            orderDetails: List<OrderDetails>,
+            context: FragmentActivity?,
+            isArabic: Boolean
+        ) {
 
-        fun bindItems(name: String, status: Int) {
+            Glide.with(context!!).load(ApiConstants.IMAGE_BASE_URL + orderDetails[adapterPosition].dcProdImage)
+                .into(ivProduct)
+            if (isArabic){
+                oder_title.text = orderDetails[adapterPosition].productNameArab
+            }else{
+                oder_title.text = orderDetails[adapterPosition].dcProdName
+            }
 
-            oder_history_status
-
-            oder_title.text = name
-            if (status == 1) {
-
+            orderTotal.text = "KD ${orderDetails[adapterPosition].dcProdMrp}"
+            orderDate.text = context.getString(R.string.date,orderDetails[adapterPosition].ordersDate)
+            refundLabel.text = "${orderDetails[adapterPosition].cancellingProduct}"
+            if (orderDetails[adapterPosition].ordersStatus == "1") {
                 oder_history_status.setBackgroundResource(R.drawable.bg_buttom_yellow);
-                oder_history_status.text="Pending"
+                oder_history_status.text=context.getString(R.string.pending)
+
+            }else if (orderDetails[adapterPosition].ordersStatus == "2") {
+                oder_history_status.setBackgroundResource(R.drawable.bg_buttom_request_withdraw);
+                oder_history_status.text=context.getString(R.string.shipped)
+
+            }else if (orderDetails[adapterPosition].ordersStatus == "3") {
+                oder_history_status.setBackgroundResource(R.drawable.bg_buttom_green);
+                oder_history_status.text=context.getString(R.string.deliverd)
 
             }
 
+            if (orderDetails[adapterPosition].ordersCancelStatus == "1") {
+                oder_history_status.setBackgroundResource(R.drawable.bg_buttom_primarycolour);
+                oder_history_status.text=context.getString(R.string.cancelled)
+                btn_oder_cancellation.visibility = View.GONE
+            }else{
+                if (orderDetails[adapterPosition].ordersStatus == "3")
+                    btn_oder_cancellation.visibility = View.GONE
+                else {
+                    if (orderDetails[adapterPosition].cancellingProduct.equals("Cancellation available")){
+                        btn_oder_cancellation.visibility = View.VISIBLE
+                    }else{
+                        btn_oder_cancellation.visibility = View.GONE
+                    }
+
+                }
+            }
 
 
         }

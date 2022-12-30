@@ -2,9 +2,12 @@ package com.example.rathaanelectronics.Fragment
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.*
+import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -12,7 +15,17 @@ import com.example.rathaanelectronics.Activity.MainActivity
 import com.example.rathaanelectronics.Adapter.Cart_list_Adapter
 import com.example.rathaanelectronics.Adapter.Notification_list_Adapter
 import com.example.rathaanelectronics.Adapter.Oder_history_list_Adapter
+import com.example.rathaanelectronics.Common.LoadingDialog
+import com.example.rathaanelectronics.Managers.MyPreferenceManager
+import com.example.rathaanelectronics.Model.NotificationModel
+import com.example.rathaanelectronics.Model.OrderListModel
 import com.example.rathaanelectronics.R
+import com.example.rathaanelectronics.Rest.ApiConstants
+import com.example.rathaanelectronics.Rest.ApiInterface
+import com.example.rathaanelectronics.Rest.ServiceGenerator
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -30,7 +43,8 @@ class Notification_Fragment : Fragment() {
     private var param2: String? = null
     private var Menufilter: MenuItem? = null
     var cart_Fragment = Cart_Fragment()
-
+    private var manager: MyPreferenceManager? = null
+    lateinit var rvNotification:RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +52,7 @@ class Notification_Fragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+        manager = MyPreferenceManager(activity)
     }
 
     @SuppressLint("WrongConstant")
@@ -47,22 +62,81 @@ class Notification_Fragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_notication, container, false)
+        val ivBack = view.findViewById<ImageView>(R.id.iv_back)
+        ivBack.setOnClickListener { activity?.onBackPressed() }
         setHasOptionsMenu(true);
         (activity as MainActivity?)?.settoolbar()
 
-        val recycler_notification = view.findViewById<RecyclerView>(R.id.recycler_notification)
-        val notification_list_Adapte = Notification_list_Adapter(activity)
+        rvNotification = view.findViewById<RecyclerView>(R.id.recycler_notification)
 
-        recycler_notification.layoutManager =
+        rvNotification.layoutManager =
             LinearLayoutManager(activity, LinearLayout.VERTICAL, false)
-        recycler_notification.adapter = notification_list_Adapte
 
+        getNotificationList()
         return view
+    }
+
+    private fun getNotificationList() {
+        var token = ""
+        if (manager?.getUserToken().isNullOrEmpty())
+            token = manager?.guestToken!!
+        else
+            token = manager?.userToken!!
+        LoadingDialog.showLoadingDialog(requireContext(),"")
+        val apiService = ServiceGenerator.createService(ApiInterface::class.java)
+        val call: Call<NotificationModel> = apiService.getNotificationList(
+            ApiConstants.LG_APP_KEY,
+            token
+        )
+        call.enqueue(object : Callback<NotificationModel?> {
+
+
+            override fun onResponse(
+                call: Call<NotificationModel?>?,
+                response: Response<NotificationModel?>
+            ) {
+                LoadingDialog.cancelLoading()
+                if (response.isSuccessful()) {
+
+                    val status: String = response.body()!!.status.toString()
+                    val message: String? = response.body()!!.message
+
+
+
+                    if (status == "true") {
+                        if (response.body()?.data != null) {
+                            if (!response.body()?.data?.isNullOrEmpty()!!){
+                                val notification_list_Adapte = Notification_list_Adapter(activity,response.body()?.data!!)
+
+                                rvNotification.adapter = notification_list_Adapte
+                            }
+                        }
+                    } else {
+                        Toast.makeText(
+                            activity,
+                            message,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
+                } else {
+
+                }
+            }
+
+
+            override fun onFailure(call: Call<NotificationModel?>?, t: Throwable?) {
+                // something went completely south (like no internet connection)
+                Log.e("onFailure", t.toString())
+                LoadingDialog.cancelLoading()
+            }
+        })
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.cart_menu, menu)
-        this.Menufilter = menu.findItem(R.id.cart).setVisible(true)
+        this.Menufilter = menu.findItem(R.id.cart).setVisible(false)
         super.onCreateOptionsMenu(menu, inflater)
     }
 

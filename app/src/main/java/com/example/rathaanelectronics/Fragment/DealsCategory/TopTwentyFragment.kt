@@ -14,6 +14,7 @@ import com.example.rathaanelectronics.Common.EqualSpacingItemDecoration
 import com.example.rathaanelectronics.Interface.HotdealsItemClick
 import com.example.rathaanelectronics.Managers.MyPreferenceManager
 import com.example.rathaanelectronics.Model.DealsModel
+import com.example.rathaanelectronics.Model.Product
 import com.example.rathaanelectronics.R
 import com.example.rathaanelectronics.Rest.ApiConstants
 import com.example.rathaanelectronics.Rest.ApiInterface
@@ -39,7 +40,7 @@ class TopTwentyFragment : Fragment(), HotdealsItemClick {
     private var param1: String? = null
     private var param2: String? = null
     lateinit var hot_deals: RecyclerView
-    var Hotdeals_data: List<DealsModel.Datum> = ArrayList<DealsModel.Datum>()
+    var Hotdeals_data: List<Product> = ArrayList<Product>()
     private var manager: MyPreferenceManager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -118,7 +119,7 @@ class TopTwentyFragment : Fragment(), HotdealsItemClick {
                     }
 
 
-                    hot_deals.adapter= Top_deals_list_Adapter(requireActivity(),Hotdeals_data,this@TopTwentyFragment)
+                    hot_deals.adapter= Top_deals_list_Adapter(requireActivity(),Hotdeals_data,this@TopTwentyFragment,true)
 
 
 
@@ -155,7 +156,7 @@ class TopTwentyFragment : Fragment(), HotdealsItemClick {
             }
     }
 
-    override fun onHotdealsClicked(position: Int, item: DealsModel.Datum?) {
+    override fun onHotdealsClicked(position: Int, item: Product?) {
 
 
 
@@ -163,6 +164,10 @@ class TopTwentyFragment : Fragment(), HotdealsItemClick {
 
     override fun onAddToWishlistButtonClick(productId: String) {
         TODO("Not yet implemented")
+    }
+
+    override fun onDeleteFromWishListButtonClick(productId: String) {
+
     }
 
 

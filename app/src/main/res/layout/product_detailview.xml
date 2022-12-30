@@ -38,9 +38,9 @@
                     <LinearLayout
                         android:layout_width="60dp"
                         android:layout_height="60dp"
-                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
                         android:layout_alignParentBottom="true"
-                        android:layout_marginRight="20dp"
+                        android:layout_marginEnd="20dp"
                         android:layout_marginBottom="20dp"
                         android:background="@drawable/bg_circle_primery_colour"
                         android:gravity="center">
@@ -59,10 +59,10 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
                 android:layout_weight="1"
-                android:gravity="center|left"
+                android:gravity="center|start"
                 android:orientation="vertical">
 
 
@@ -112,7 +112,7 @@
 
                     <TextView
                         style="@style/table_textview"
-                        android:text="Availability" />
+                        android:text="@string/availability" />
 
                     <TextView
 
@@ -136,7 +136,7 @@
 
                     <TextView
                         style="@style/table_textview"
-                        android:text="By Brand" />
+                        android:text="@string/by_brand" />
 
                     <ImageView
 
@@ -178,7 +178,7 @@
                     <TextView
                         style="@style/table_textview_value"
 
-                        android:text="Description" />
+                        android:text="@string/product_description" />
 
 
                     <TextView
@@ -193,7 +193,7 @@
                     <TextView
                         style="@style/table_textview_value"
                         android:layout_marginTop="20dp"
-                        android:text="Related products"
+                        android:text="@string/related_products"
                         android:textSize="16sp" />
 
                     <androidx.recyclerview.widget.RecyclerView
@@ -215,7 +215,7 @@
             android:id="@+id/linearLayout2"
             android:layout_width="match_parent"
             android:layout_height="80dp"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
             android:orientation="horizontal"
             android:weightSum="1">
@@ -230,7 +230,7 @@
 
                 <TextView
                     style="@style/table_textview"
-                    android:text="Quantity: " />
+                    android:text="@string/quantity" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -283,14 +283,14 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight=".5"
-                android:paddingRight="10dp"
+                android:paddingEnd="10dp"
                 android:orientation="vertical"
-                android:gravity="center|right">
+                android:gravity="center|end">
 
                 <TextView
 
                     style="@style/table_textview_value"
-                   android:layout_gravity="center|right"
+                   android:layout_gravity="center|end"
                     android:textSize="20dp"
                     android:layout_height="wrap_content"
                     android:textColor="@color/colorPrimary"
@@ -302,8 +302,8 @@
                     android:layout_height="40dp"
                     android:background="@drawable/bg_bottom_nav"
                     android:fontFamily="@font/roboto_medium"
-                    android:gravity="center|right"
-                    android:text="Continue"
+                    android:gravity="center|end"
+                    android:text="@string/continue_"
                     android:textAllCaps="false"
                     android:textColor="#fff"
                     android:textSize="16dp" />

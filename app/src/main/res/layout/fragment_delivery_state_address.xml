@@ -6,7 +6,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/coordinatorLayout_home"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    >
 
 
     <RelativeLayout
@@ -16,72 +17,124 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_above="@+id/linearLayout2"
             android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="50dp"
+                android:layout_marginTop="20dp"
                 android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
+                    android:visibility="gone"
+                    android:src="@drawable/process1">
+
+                </ImageView>
 
                 <com.kofigyan.stateprogressbar.StateProgressBar
                     android:id="@+id/state_progress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:visibility="visible"
                     app:spb_animationDuration="1000"
                     app:spb_currentStateDescriptionColor="@color/black"
                     app:spb_currentStateNumber="one"
+
                     app:spb_descriptionTopSpaceIncrementer="10dp"
                     app:spb_maxStateNumber="three"
-                    app:spb_stateBackgroundColor="#FBFBFB"
+                    app:spb_stateBackgroundColor="#C5C1C1"
                     app:spb_stateDescriptionColor="@color/black"
                     app:spb_stateForegroundColor="@color/colorPrimary"
-                    app:spb_stateNumberBackgroundColor="#808080"
-                    app:spb_stateNumberForegroundColor="#eeeeee"
+                    app:spb_stateNumberBackgroundColor="#C5C1C1"
+                    app:spb_stateNumberForegroundColor="@color/colorPrimary"
+                    app:spb_checkStateCompleted="true"
 
                     />
 
             </LinearLayout>
 
-            <include
-                layout="@layout/adress_list_single_item"
-                android:layout_marginTop="50dp"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"/>
-            <!--        <androidx.recyclerview.widget.RecyclerView-->
-            <!--            android:id="@+id/recycler_address"-->
-            <!--            android:layout_width="match_parent"-->
-            <!--            android:layout_marginTop="20dp"-->
-            <!--            android:layout_marginLeft="5dp"-->
-            <!--            android:layout_marginRight="5dp"-->
-            <!--            tools:itemCount="1"-->
-            <!--            tools:listitem="@layout/adress_list_single_item"-->
-            <!--            android:layout_height="match_parent" />-->
+            <!--            <include-->
+            <!--                layout="@layout/adress_list_single_item"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginTop="50dp" />-->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_address"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="5dp"
+                tools:itemCount="1"
+                tools:listitem="@layout/adress_list_single_item" />
 
         </LinearLayout>
 
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/flot_add_address"
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginRight="30dp"
-            android:layout_marginBottom="120dp"
-            android:background="#FA4248"
-            android:padding="0dp"
-            android:scaleType="fitXY"
-            android:src="@drawable/plus_icon"
-            app:borderWidth="0dp"
-            app:useCompatPadding="true" />
+
+            android:layout_marginEnd="25dp"
+            android:orientation="horizontal"
+            android:layout_marginBottom="80dp"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/flot_add_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="0dp"
+                android:scaleType="fitXY"
+                android:background="@null"
+                android:layout_gravity="center"
+                app:tint="@color/white"
+                android:src="@drawable/plus_icon"
+                app:borderWidth="0dp"
+                app:useCompatPadding="true" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:fontFamily="@font/roboto_medium"
+                android:gravity="center"
+                android:text="@string/add_new_address"
+                android:textColor="#686565"
+                android:textSize="15sp" />
+
+
+
+
+
+            <!--        <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+            <!--            android:id="@+id/flot_add_address"-->
+            <!--            android:layout_width="wrap_content"-->
+            <!--            android:layout_height="wrap_content"-->
+            <!--            android:layout_alignParentEnd="true"-->
+            <!--            android:layout_alignParentBottom="true"-->
+            <!--            android:layout_marginEnd="25dp"-->
+            <!--            android:layout_marginBottom="50dp"-->
+            <!--            android:padding="0dp"-->
+            <!--            android:background="#FA4248"-->
+            <!--            android:scaleType="fitXY"-->
+            <!--            android:src="@drawable/plus_icon"-->
+            <!--            app:borderWidth="0dp"-->
+            <!--            app:useCompatPadding="true" />-->
+        </LinearLayout>
+
 
         <LinearLayout
             android:id="@+id/linearLayout2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
+            android:background="#FCE9EB"
+            android:padding="10dp"
             android:orientation="horizontal"
             android:weightSum="1">
 
@@ -89,18 +142,19 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:layout_weight=".5"
                 android:orientation="vertical"
-                android:paddingLeft="10dp">
+                android:paddingStart="10dp">
 
                 <TextView
                     style="@style/table_textview"
-                    android:text="Total" />
+                    android:text="@string/total" />
 
                 <TextView
 
                     style="@style/table_textview_value"
+                    android:id="@+id/tv_total"
                     android:text="KD 3950" />
 
             </LinearLayout>
@@ -117,11 +171,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
 
-                    android:layout_marginRight="10dp"
+                    android:layout_marginEnd="10dp"
                     android:background="@drawable/bg_bottom_nav"
                     android:fontFamily="@font/roboto_medium"
                     android:gravity="center"
-                    android:text="Continue"
+                    android:text="@string/continue_"
                     android:textAllCaps="false"
                     android:textColor="#fff"
                     android:textSize="16dp" />

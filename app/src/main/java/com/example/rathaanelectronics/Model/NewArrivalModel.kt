@@ -312,5 +312,9 @@ class NewArrivalModel {
         @SerializedName("wishlist_exist")
         @Expose
         var wishlistExist: Int? = 0
+
+        @SerializedName("sameday_delivery")
+        @Expose
+        var samedayDelivery: String? = null
     }
 }

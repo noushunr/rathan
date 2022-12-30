@@ -3,8 +3,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="10dp"
-    android:layout_marginRight="10dp"
+    android:layout_marginStart="10dp"
+    android:layout_marginEnd="10dp"
     android:gravity="center|top"
 
     android:orientation="vertical">
@@ -21,7 +21,7 @@
             android:layout_height="50dp"
             android:layout_weight="2"
             android:visibility="gone"
-            android:gravity="center|left"
+            android:gravity="center|start"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -40,10 +40,10 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="30dp"
-                android:layout_marginLeft="20dp"
+                android:layout_marginStart="20dp"
                 android:layout_weight="1"
                 android:fontFamily="@font/roboto_medium"
-                android:gravity="center|left"
+                android:gravity="center|start"
                 android:text="All Category"
                 android:visibility="gone"
                 android:textColor="@color/black"
@@ -53,7 +53,7 @@
                 android:layout_width="0dp"
                 android:layout_height="30dp"
                 android:layout_weight="1"
-                android:gravity="center|right">
+                android:gravity="center|end">
 
             </LinearLayout>
 
@@ -71,34 +71,33 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_weight="2"
-            android:gravity="center|left"
+            android:gravity="center|start"
             android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginStart="10dp"
-                android:background="@drawable/bg_profile_menu"
                 android:gravity="center">
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    android:src="@drawable/icon_edit_profile" />
+                    android:src="@drawable/ic_category_new" />
 
             </LinearLayout>
 
             <TextView
 
-                android:text="All Category"
+                android:text="@string/all_category"
                 style="@style/nave_drawer_text_style" />
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="30dp"
                 android:layout_weight="1"
-                android:gravity="center|right">
+                android:gravity="center|end">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -123,34 +122,33 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_weight="2"
-            android:gravity="center|left"
+            android:gravity="center|start"
             android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginStart="10dp"
-                android:background="@drawable/bg_profile_menu"
                 android:gravity="center">
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    android:src="@drawable/icon_address" />
+                    android:src="@drawable/ic_store_new" />
 
             </LinearLayout>
 
             <TextView
 
-                android:text="Store Locator"
+                android:text="@string/store_locator"
                 style="@style/nave_drawer_text_style" />
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="30dp"
                 android:layout_weight="1"
-                android:gravity="center|right">
+                android:gravity="center|end">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -175,34 +173,34 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_weight="2"
-            android:gravity="center|left"
+            android:gravity="center|start"
             android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginStart="10dp"
-                android:background="@drawable/bg_profile_menu"
+                
                 android:gravity="center">
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    android:src="@drawable/icon_deals_offer" />
+                    android:src="@drawable/ic_deals_offers" />
 
             </LinearLayout>
 
             <TextView
                 style="@style/nave_drawer_text_style"
-                android:text="Deals&amp;Offer"
+                android:text="@string/deals_offer"
               />
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="30dp"
                 android:layout_weight="1"
-                android:gravity="center|right">
+                android:gravity="center|end">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -227,34 +225,34 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_weight="2"
-            android:gravity="center|left"
+            android:gravity="center|start"
             android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginStart="10dp"
-                android:background="@drawable/bg_profile_menu"
+                
                 android:gravity="center">
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    android:src="@drawable/icon_bundle_offer" />
+                    android:src="@drawable/ic_bundle_offers" />
 
             </LinearLayout>
 
             <TextView
                 style="@style/nave_drawer_text_style"
-                android:text="Bundle Offers"
+                android:text="@string/bundle_offers"
                />
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="30dp"
                 android:layout_weight="1"
-                android:gravity="center|right">
+                android:gravity="center|end">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -278,34 +276,34 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_weight="2"
-            android:gravity="center|left"
+            android:gravity="center|start"
             android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginStart="10dp"
-                android:background="@drawable/bg_profile_menu"
+                
                 android:gravity="center">
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    android:src="@drawable/icon_contac_us" />
+                    android:src="@drawable/ic_contact_us" />
 
             </LinearLayout>
 
             <TextView
                 style="@style/nave_drawer_text_style"
-                android:text="Contact Us"
+                android:text="@string/contact_us"
                 />
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="30dp"
                 android:layout_weight="1"
-                android:gravity="center|right">
+                android:gravity="center|end">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -330,35 +328,35 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_weight="2"
-            android:gravity="center|left"
+            android:gravity="center|start"
             android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginStart="10dp"
-                android:background="@drawable/bg_profile_menu"
+                
                 android:gravity="center">
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    android:src="@drawable/icon_installment_payment" />
+                    android:src="@drawable/ic_installment" />
 
             </LinearLayout>
 
             <TextView
 
                 style="@style/nave_drawer_text_style"
-                android:text="Installment Payment"
+                android:text="@string/installment_payment"
                />
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="30dp"
                 android:layout_weight="1"
-                android:gravity="center|right">
+                android:gravity="center|end">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -383,34 +381,34 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_weight="2"
-            android:gravity="center|left"
+            android:gravity="center|start"
             android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginStart="10dp"
-                android:background="@drawable/bg_profile_menu"
+                
                 android:gravity="center">
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    android:src="@drawable/icon_wishlist" />
+                    android:src="@drawable/ic_wishlist_new" />
 
             </LinearLayout>
 
             <TextView
                 style="@style/nave_drawer_text_style"
-                android:text="My Wishlist"
+                android:text="@string/my_wishlist"
                 />
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="30dp"
                 android:layout_weight="1"
-                android:gravity="center|right">
+                android:gravity="center|end">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -435,41 +433,44 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_weight="2"
-            android:gravity="center|left"
+            android:gravity="center|start"
             android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginStart="10dp"
-                android:background="@drawable/bg_profile_menu"
+                
                 android:gravity="center">
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    android:src="@drawable/icon_language" />
+                    android:src="@drawable/ic_language" />
 
             </LinearLayout>
 
             <TextView
 
-                android:text="Language"
+                android:text="@string/language"
                 style="@style/nave_drawer_text_style" />
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="30dp"
                 android:layout_weight="1"
-                android:gravity="center|left"
+                android:gravity="center|start"
                 android:paddingStart="50dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
+                    android:id="@+id/tv_language"
                     android:fontFamily="@font/roboto_bold"
                     android:text="En"
+                    android:layout_gravity="center"
+                    android:gravity="center"
                     android:textColor="@color/black"
                     android:textSize="14sp" />
 
@@ -491,34 +492,34 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_weight="2"
-            android:gravity="center|left"
+            android:gravity="center|start"
             android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginStart="10dp"
-                android:background="@drawable/bg_profile_menu"
+                
                 android:gravity="center">
 
                 <ImageView
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="148dp"
                     android:layout_margin="5dp"
-                    android:src="@drawable/icon_star" />
+                    android:src="@drawable/ic_terms" />
 
             </LinearLayout>
 
             <TextView
 
-                android:text="Terms&amp;Conditions"
+                android:text="@string/terms_amp_conditions"
                 style="@style/nave_drawer_text_style"/>
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="30dp"
                 android:layout_weight="1"
-                android:gravity="center|right">
+                android:gravity="center|end">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -542,34 +543,34 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_weight="2"
-            android:gravity="center|left"
+            android:gravity="center|start"
             android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginStart="10dp"
-                android:background="@drawable/bg_profile_menu"
+                
                 android:gravity="center">
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    android:src="@drawable/icon_star" />
+                    android:src="@drawable/ic_return_policy" />
 
             </LinearLayout>
 
             <TextView
                 style="@style/nave_drawer_text_style"
-                android:text="Return Policy"
+                android:text="@string/return_policy"
                  />
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="30dp"
                 android:layout_weight="1"
-                android:gravity="center|right">
+                android:gravity="center|end">
 
                 <ImageView
                     android:layout_width="wrap_content"

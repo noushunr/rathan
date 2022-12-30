@@ -52,5 +52,9 @@ class AllCategoriesModel {
         @SerializedName("category_date")
         @Expose
         var categoryDate: String? = null
+
+        @SerializedName("isCategorySelected")
+        @Expose
+        var isCategorySelected: Boolean = false
     }
 }

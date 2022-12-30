@@ -10,4 +10,5 @@ interface NewArrivalItemClick {
 
     fun onAddToWishListButtonClick(productId:String)
 
+    fun onDeleteFromWishListButtonClick(productId:String)
 }

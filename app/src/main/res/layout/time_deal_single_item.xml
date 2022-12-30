@@ -1,7 +1,8 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_marginRight="10dp"
+    android:layout_marginEnd="10dp"
+    android:id="@+id/coordinatorLayout_home"
     android:layout_height="wrap_content">
 
 
@@ -70,7 +71,7 @@
                     android:id="@+id/tv_label"
                     android:layout_marginTop="10dp"
                     android:fontFamily="@font/roboto_medium"
-                    android:text="Hurry up! offer ends in"
+                    tools:text="Hurry up! offer ends in"
                     android:textColor="@color/black"
                     android:textSize="15sp" />
                 <TextView
@@ -80,7 +81,7 @@
                     android:layout_marginTop="10dp"
                     android:visibility="gone"
                     android:fontFamily="@font/roboto_bold"
-                    android:text="Hurry up! offer ends in"
+                    tools:text="Hurry up! offer ends in"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
 
@@ -254,7 +255,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/ll_offer_stat"
-            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/bg_offer_float_offer"
             android:gravity="center">
@@ -264,7 +265,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/tv_offer_percentage"
                 android:gravity="center"
-                android:text=" 13 % offer"
+                tools:text=" 13 % offer"
                 android:padding="5dp"
                 android:textColor="@color/white"
                 android:textSize="12sp" />
@@ -274,10 +275,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/ll_offer_amount"
-            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
             android:layout_marginTop="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_alignParentRight="true"
+            android:layout_marginEnd="10dp"
+            android:layout_alignParentEnd="true"
 
             android:background="@drawable/bg_circle_primery_colour"
             android:gravity="center">
@@ -287,7 +288,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/tv_offer"
                 android:gravity="center"
-                android:text="save\nKD 28"
+                tools:text="save\nKD 28"
                 android:layout_gravity="center_vertical"
                 android:padding="8dp"
                 android:textStyle="bold"

@@ -9,11 +9,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.rathaanelectronics.Adapter.PickUpShop_list_Adapter
 import com.example.rathaanelectronics.Interface.PickUpStoreClickListener
+import com.example.rathaanelectronics.Managers.MyPreferenceManager
 import com.example.rathaanelectronics.Model.PickUpStoreModel
 import com.example.rathaanelectronics.R
 import com.example.rathaanelectronics.Rest.ApiConstants
@@ -39,12 +41,14 @@ class StoreLocatorFragment : Fragment(), PickUpStoreClickListener {
     private var param2: String? = null
     lateinit var recystorelocator: RecyclerView
     var PickUpStoreList: List<PickUpStoreModel.Detail> = ArrayList<PickUpStoreModel.Detail>()
+    lateinit var manager : MyPreferenceManager
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+        manager = MyPreferenceManager(context)
     }
 
     @SuppressLint("WrongConstant")
@@ -55,6 +59,8 @@ class StoreLocatorFragment : Fragment(), PickUpStoreClickListener {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_store_locator, container, false)
         recystorelocator = view.findViewById(R.id.recystorelocator) as RecyclerView
+        val ivBack = view.findViewById<ImageView>(R.id.iv_back)
+        ivBack.setOnClickListener { activity?.onBackPressed() }
         recystorelocator!!.layoutManager =
             LinearLayoutManager(activity, LinearLayout.VERTICAL, false)
         pickUpStoreList()
@@ -97,7 +103,8 @@ class StoreLocatorFragment : Fragment(), PickUpStoreClickListener {
                     recystorelocator!!.adapter = PickUpShop_list_Adapter(
                         requireActivity(),
                         PickUpStoreList,
-                        this@StoreLocatorFragment
+                        this@StoreLocatorFragment,
+                        manager?.locale.equals("ar")
                     )
 
 

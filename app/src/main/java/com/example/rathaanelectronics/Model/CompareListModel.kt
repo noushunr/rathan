@@ -55,6 +55,14 @@ class CompareListModel {
         @Expose
         var productShortDescArab: String? = null
 
+        @SerializedName("product_desc")
+        @Expose
+        var productDesc: String? = null
+
+        @SerializedName("product_desc_arab")
+        @Expose
+        var productDescArab: String? = null
+
         @SerializedName("product_instruction")
         @Expose
         var productInstruction: String? = null
@@ -75,6 +83,10 @@ class CompareListModel {
         @Expose
         var productAvailable: String? = null
 
+        @SerializedName("product_available_ar")
+        @Expose
+        var productAvailableArabic: String? = null
+
         @SerializedName("product_sku")
         @Expose
         var productSKU: String? = null
@@ -94,6 +106,10 @@ class CompareListModel {
         @SerializedName("product_delivery_or_pickup_title")
         @Expose
         var productDeliveryOrPickupTitle: String? = null
+
+        @SerializedName("product_delivery_or_pickup_title_ar")
+        @Expose
+        var productDeliveryOrPickupTitleArab: String? = null
 
         @SerializedName("product_delivery_or_pickup")
         @Expose

@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context=".Fragment.AddAddressFragment">
 
     <LinearLayout
+        android:id="@+id/ll_header"
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
         android:orientation="horizontal"
@@ -17,12 +18,13 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:id="@+id/ll_back"
             android:layout_weight=".2">
 
             <ImageView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginBottom="15dp"
                 android:layout_weight=".1"
@@ -44,7 +46,7 @@
                 android:fontFamily="@font/roboto_medium"
                 android:gravity="center"
 
-                android:text="Add Address"
+                android:text="@string/add_address"
                 android:textColor="@color/colorPrimary"
                 android:textSize="18sp" />
 
@@ -64,20 +66,23 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ll_header">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
             android:gravity="center|top"
             android:orientation="vertical">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/filledTextField"
                 style="@style/Address_form_TextInputLayout_style"
-                android:hint="First Name*">
+                android:hint="@string/first_name"
+                android:textColor="@color/black"
+                app:hintTextColor="@color/grey">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/firstNametxt"
@@ -89,28 +94,26 @@
             <com.google.android.material.textfield.TextInputLayout
 
                 style="@style/Address_form_TextInputLayout_style"
-                android:hint="Last Name*">
+                android:hint="@string/last_name">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/lastNametxt"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/white"
-                     />
+                    android:background="@color/white" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
 
                 style="@style/Address_form_TextInputLayout_style"
-                android:hint="Address Title*">
+                android:hint="@string/address">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/addrTitleEdttxt"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/white"
-                    />
+                    android:background="@color/white" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -123,34 +126,82 @@
                 android:orientation="horizontal"
                 android:weightSum="1">
 
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_weight=".5"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingHorizontal="15dp"
+                        android:text="@string/governarate"
+                        android:textSize="16sp"></TextView>
+
+                    <Spinner
+                        android:id="@+id/spnr_governarate"
+                        android:layout_width="fill_parent"
+                        android:layout_height="match_parent">
+
+                    </Spinner>
+
+                </LinearLayout>
+
                 <com.google.android.material.textfield.TextInputLayout
 
                     android:layout_width="0dp"
                     android:layout_height="60dp"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginEnd="10dp"
                     android:layout_weight=".5"
-                   app:boxStrokeWidth=".5dp"
                     android:backgroundTint="@color/colorPrimary"
-                    android:hint="Governarate*">
+                    android:hint="@string/governarate"
+                    android:visibility="gone"
+                    app:boxStrokeWidth=".5dp">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/governaratetxt"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@color/white" />
+                        android:background="@color/white"
+                        android:visibility="gone" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_weight=".5"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingHorizontal="15dp"
+                        android:text="@string/area"
+                        android:textSize="16sp"></TextView>
+
+                    <Spinner
+                        android:id="@+id/spnr_area"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                    </Spinner>
+
+                </LinearLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
 
                     android:layout_width="0dp"
                     android:layout_height="60dp"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
                     android:layout_weight=".5"
-                    app:boxStrokeWidth=".5dp"
                     android:backgroundTint="@color/colorPrimary"
-                    android:hint="Area*">
+                    android:hint="@string/area"
+                    android:visibility="gone"
+                    app:boxStrokeWidth=".5dp">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/areatxt"
@@ -166,7 +217,7 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Address_form_TextInputLayout_style"
-                android:hint="Block*">
+                android:hint="@string/block">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/blockEdttxt"
@@ -188,11 +239,11 @@
 
                     android:layout_width="0dp"
                     android:layout_height="60dp"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginEnd="10dp"
                     android:layout_weight=".5"
-                    app:boxStrokeWidth=".5dp"
                     android:backgroundTint="@color/colorPrimary"
-                    android:hint="Street Address">
+                    android:hint="@string/street_address"
+                    app:boxStrokeWidth=".5dp">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/streetEdttxt"
@@ -207,11 +258,11 @@
 
                     android:layout_width="0dp"
                     android:layout_height="60dp"
-                    app:boxStrokeWidth=".5dp"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
                     android:layout_weight=".5"
                     android:backgroundTint="@color/colorPrimary"
-                    android:hint="House/Building No*">
+                    android:hint="@string/house_building_no"
+                    app:boxStrokeWidth=".5dp">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/houseBuildiingNoEdttxt"
@@ -226,7 +277,8 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Address_form_TextInputLayout_style"
-                android:hint="City*">
+                android:visibility="gone"
+                android:hint="@string/city">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/cityEdttxt"
@@ -238,7 +290,7 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Address_form_TextInputLayout_style"
-                android:hint="Avenue">
+                android:hint="@string/avenue">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/avenueEdttxt"
@@ -261,18 +313,18 @@
 
                     android:layout_width="0dp"
                     android:layout_height="60dp"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginEnd="10dp"
                     android:layout_weight=".5"
-                    app:boxStrokeWidth=".5dp"
                     android:backgroundTint="@color/colorPrimary"
-                    android:hint="Mobile 1*">
+                    android:hint="@string/mobile_1"
+                    app:boxStrokeWidth=".5dp">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/mobileNoEdttxt"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="@color/white"
-                        android:inputType="number"/>
+                        android:inputType="number" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -281,18 +333,18 @@
 
                     android:layout_width="0dp"
                     android:layout_height="60dp"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
                     android:layout_weight=".5"
-                    app:boxStrokeWidth=".5dp"
                     android:backgroundTint="@color/colorPrimary"
-                    android:hint="Mobile 2">
+                    android:hint="@string/mobile_2"
+                    app:boxStrokeWidth=".5dp">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/secondMobileNoEdttxt"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="@color/white"
-                        android:inputType="number"/>
+                        android:inputType="number" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -301,7 +353,7 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Address_form_TextInputLayout_style"
-                android:hint="Email Address*">
+                android:hint="@string/email_address">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/emaiEdttxt"
@@ -314,15 +366,15 @@
             <Button
                 android:id="@+id/btn_sign_in"
                 android:layout_width="150dp"
-                android:layout_marginBottom="10dp"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="20dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
                 android:background="@drawable/bg_bottom_nav"
                 android:fontFamily="@font/roboto_medium"
-                android:text="Save"
+                android:text="@string/save"
                 android:textAllCaps="false"
                 android:textColor="#fff"
                 android:textSize="16dp" />
@@ -333,5 +385,15 @@
 
     </ScrollView>
 
+    <ProgressBar
+        android:id="@+id/progress_circular"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:indeterminate="true"
+        android:visibility="gone"
+        tools:visibility="visible" />
 
-</LinearLayout>
+</RelativeLayout>

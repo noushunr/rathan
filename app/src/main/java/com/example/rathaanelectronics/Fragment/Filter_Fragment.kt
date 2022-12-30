@@ -2,10 +2,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.RelativeLayout
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
@@ -18,6 +15,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import com.example.rathaanelectronics.Activity.MainActivity
 import com.example.rathaanelectronics.Fragment.Cart_Fragment
+import com.example.rathaanelectronics.Managers.MyPreferenceManager
+import com.google.android.material.slider.RangeSlider
+import com.google.android.material.slider.Slider
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -37,9 +37,12 @@ class Filter_Fragment : Fragment() {
     private var toolbar: Toolbar? = null
     private var Menufilter: MenuItem? = null
     var cart_Fragment = Cart_Fragment()
-
+    private var manager: MyPreferenceManager? = null
+    var min = 1000f
+    var max = 6000f
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        manager = MyPreferenceManager(activity)
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
@@ -54,25 +57,42 @@ class Filter_Fragment : Fragment() {
         // Inflate the layout for this fragment
 
         val view =inflater.inflate(R.layout.fragment_filter, container, false)
+        val ivBack = view.findViewById<ImageView>(R.id.iv_back)
+        ivBack.setOnClickListener { activity?.onBackPressed() }
+        val slider = view.findViewById<RangeSlider>(R.id.slider)
+//        slider.setRange(1000f,16000f)
         val close=view.findViewById<AppCompatButton>(R.id.close)
-
-        close.setOnClickListener { view ->
-             val subcategory = SubCategory_Fragment()
-             val transaction = activity?.supportFragmentManager?.beginTransaction()
-             transaction?.replace(R.id.frame, subcategory)
-             transaction?.addToBackStack(null)
-             transaction?.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-             transaction?.commit()
+        val apply=view.findViewById<AppCompatButton>(R.id.apply)
+        slider.addOnChangeListener { slider, value, fromUser ->
+            min = slider.values[0]
+            max = slider.values[1]
+        }
+        apply.setOnClickListener { view ->
+            var args = Bundle()
+            args.putFloat("min",min)
+            args.putFloat("max",max)
+            manager?.min = min
+            manager?.max = max
+            requireActivity().supportFragmentManager
+                .setFragmentResult("124", args)
+            activity?.onBackPressed()
 
         }
-
+        close.setOnClickListener { view ->
+            activity?.onBackPressed()
+        }
         return view
     }
 
 
+    fun RangeSlider.setRange(from: Float, to: Float) {
+        valueFrom = 0F
+        valueTo = to
+        valueFrom = from
+    }
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.cart_menu, menu)
-        this.Menufilter = menu.findItem(R.id.cart).setVisible(true)
+        this.Menufilter = menu.findItem(R.id.cart).setVisible(false)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
