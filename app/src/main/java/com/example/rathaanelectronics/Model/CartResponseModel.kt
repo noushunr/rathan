@@ -12,4 +12,8 @@ class CartResponseModel {
     @Expose
     var message: String? = null
 
+    @SerializedName("message_ar")
+    @Expose
+    var messageAr: String? = ""
+
 }

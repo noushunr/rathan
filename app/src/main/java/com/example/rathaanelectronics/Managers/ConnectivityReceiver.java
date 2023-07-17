@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import com.example.rathaanelectronics.MainApplication;
+
 
 public class ConnectivityReceiver extends BroadcastReceiver {
 

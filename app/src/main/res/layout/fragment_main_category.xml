@@ -102,7 +102,7 @@
             app:tabTextAppearance="@style/MineCustomTabText"
             app:tabTextColor="@color/colorPrimary" />
 
-        <com.example.rathaanelectronics.Common.CustomPager
+        <com.example.rathaanelectronics.Utils.CustomPager
             android:id="@+id/viewpager2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -40,7 +40,7 @@
     <string name="house_building_no"> رقم المنزل/المبنى *</string>
     <string name="avenue">السبيل</string>
     <string name="mobile_1"> رقم الموبيل 1*</string>
-    <string name="mobile_2"> رقم الموبيل 2 *</string>
+    <string name="mobile_2"> رقم الموبيل 2</string>
     <string name="email_address"> البريد الالكتروني *</string>
     <string name="save"> حفظ </string>
     <string name="city">مدينة*</string>
@@ -188,5 +188,7 @@
     <string name="legal_affairs">الشؤون القانونية</string>
     <string name="sale_wholesale">مبيعات / بيع كامل</string>
     <string name="customer_service">مركز خدمة العملاء</string>
+    <string name="select_date">حدد تاريخ</string>
+    <string name="invalid_mobile">رقم الجوال غير صالح</string>
 </resources>
 

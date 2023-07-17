@@ -11,7 +11,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name=".Managers.MainApplication"
+        android:name=".MainApplication"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:configChanges="locale|orientation"
@@ -20,19 +20,19 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.RathaanElectronics">
         <activity
-            android:name=".Activity.WebviewActivity"
+            android:name=".ui.Activity.WebviewActivity"
             android:exported="false" />
         <activity
-            android:name=".Activity.IntroActivity"
+            android:name=".ui.Activity.IntroActivity"
             android:exported="false" />
         <activity
-            android:name=".Activity.TestActivity"
+            android:name=".ui.Activity.TestActivity"
             android:exported="true" />
         <activity
-            android:name=".Activity.ForgotPassword"
+            android:name=".ui.Activity.ForgotPassword"
             android:exported="true" />
         <activity
-            android:name=".Activity.Thank_You_Activity"
+            android:name=".ui.Activity.ThankYouActivity"
             android:exported="true" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -47,13 +47,13 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".Activity.Sign_in_Activity"
+            android:name=".ui.Activity.SignInActivity"
             android:exported="true" />
         <activity
-            android:name=".Activity.Sign_up_Activity"
+            android:name=".ui.Activity.SignUpActivity"
             android:exported="true" />
         <activity
-            android:name=".Activity.MainActivity"
+            android:name=".ui.Activity.MainActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustPan">
 
@@ -65,7 +65,7 @@
             <!-- </intent-filter> -->
         </activity>
         <activity
-            android:name=".Activity.Splash_Screen_Activity"
+            android:name=".ui.Activity.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

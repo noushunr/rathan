@@ -12,6 +12,10 @@ class CommonResponseModel {
     @Expose
     var message: String? = null
 
+    @SerializedName("message_ar")
+    @Expose
+    var messageAr: String? = ""
+
     @SerializedName("error")
     @Expose
     var error: Error? = null

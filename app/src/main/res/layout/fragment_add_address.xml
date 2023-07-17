@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".Fragment.AddAddressFragment">
+    tools:context=".ui.Fragment.AddAddressFragment">
 
     <LinearLayout
         android:id="@+id/ll_header"
@@ -324,6 +324,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="@color/white"
+                        android:maxLength="8"
                         android:inputType="number" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -344,6 +345,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="@color/white"
+                        android:maxLength="8"
                         android:inputType="number" />
 
                 </com.google.android.material.textfield.TextInputLayout>

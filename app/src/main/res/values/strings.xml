@@ -43,7 +43,7 @@
     <string name="house_building_no">House/Building No*</string>
     <string name="avenue">Avenue</string>
     <string name="mobile_1">Mobile 1*</string>
-    <string name="mobile_2">Mobile 2*</string>
+    <string name="mobile_2">Mobile 2</string>
     <string name="email_address">Email Address*</string>
     <string name="save">Save</string>
     <string name="city">City*</string>
@@ -80,7 +80,7 @@
     <string name="price">Price</string>
     <string name="close">Close</string>
     <string name="filter">Filter</string>
-    <string name="hotdeals">HotDeals</string>
+    <string name="hotdeals">Hot Deals</string>
     <string name="new_arrival">New Arrival</string>
     <string name="top20">Top20</string>
     <string name="best_sellers">Best Sellers</string>
@@ -190,4 +190,6 @@
     <string name="legal_affairs">Legal Affairs</string>
     <string name="sale_wholesale">Sales / Whole Sale</string>
     <string name="customer_service">Customer Service Center</string>
+    <string name="select_date">Select Date</string>
+    <string name="invalid_mobile">Invalid Mobile Number</string>
 </resources>

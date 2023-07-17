@@ -24,7 +24,9 @@ class ProductDetailsModel {
     @Expose
     var prodAttrs: List<ProdAttrs>? = null
 
-
+    @SerializedName("product_pics")
+    @Expose
+    var productPics: List<String>? = null
 
     inner class ProductData{
         @SerializedName("product_id")
@@ -150,6 +152,8 @@ class ProductDetailsModel {
         @SerializedName("product_spoffer_oldprice_show")
         @Expose
         var productOldPriceShow: String? = "0"
+
+
 
     }
 

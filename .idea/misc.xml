@@ -80,6 +80,7 @@
         <entry key="..\:/Users/DELL/StudioProjects/rathan/app/src/main/res/layout/fragment_terms_condition.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/DELL/StudioProjects/rathan/app/src/main/res/layout/fragment_wish_list_.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/DELL/StudioProjects/rathan/app/src/main/res/layout/iteam_deals_offer.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/DELL/StudioProjects/rathan/app/src/main/res/layout/item_image.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/DELL/StudioProjects/rathan/app/src/main/res/layout/item_loyalty.xml" value="0.176" />
         <entry key="..\:/Users/DELL/StudioProjects/rathan/app/src/main/res/layout/item_pager.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/DELL/StudioProjects/rathan/app/src/main/res/layout/item_reasons.xml" value="0.12590579710144928" />
@@ -104,8 +105,10 @@
         <entry key="..\:/Users/DELL/StudioProjects/rathan/app/src/main/res/menu/bottom_nav_menu.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/DELL/StudioProjects/rathan/app/src/main/res/menu/cart_menu.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/DELL/StudioProjects/rathan/app/src/main/res/menu/drawer_nav_menu.xml" value="0.25025641025641027" />
+        <entry key="..\:/Users/DELL/StudioProjects/rathan/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1785" />
+        <entry key="..\:/Users/DELL/StudioProjects/rathan/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.124" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK" />
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="corretto-11" project-jdk-type="JavaSDK" />
 </project>

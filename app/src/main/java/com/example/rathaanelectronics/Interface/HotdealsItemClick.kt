@@ -12,4 +12,6 @@ interface HotdealsItemClick {
 
     fun onDeleteFromWishListButtonClick(productId:String)
 
+    fun onAddToCart(productId: String)
+
 }

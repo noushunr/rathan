@@ -33,6 +33,8 @@
                 android:layout_marginStart="5dp"
                 android:layout_marginEnd="10dp"
                 android:layout_marginTop="5dp"
+                android:gravity="start"
+                android:layout_gravity="start"
                 android:orientation="vertical">
 
                 <TextView
@@ -41,7 +43,8 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_medium"
                     android:text="username"
-                    android:gravity="center|start"
+                    android:gravity="start"
+                    android:layout_gravity="start"
                     android:layout_marginBottom="5dp"
                     android:textColor="#686565"
                     android:textSize="18sp" />
@@ -52,6 +55,8 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto"
                     android:text="5th Floor, abcon atruum"
+                    android:gravity="start"
+                    android:layout_gravity="start"
                     android:textColor="#686565"
                     android:textSize="14sp" />
 
@@ -60,6 +65,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto"
+                    android:gravity="start"
+                    android:layout_gravity="start"
                     android:text="Ahmed Al sharq, Kuwait"
                     android:textColor="#686565"
                     android:textSize="14sp" />
@@ -71,6 +78,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"
                     android:fontFamily="@font/roboto"
+                    android:gravity="start"
+                    android:layout_gravity="start"
                     android:text="Mob: +965 123 4569"
                     android:textColor="#686565"
                     android:textSize="14sp" />
@@ -80,6 +89,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto"
+                    android:gravity="start"
+                    android:layout_gravity="start"
                     android:text="E-mail: info@gmail.com"
                     android:textColor="#686565"
                     android:textSize="14sp" />
